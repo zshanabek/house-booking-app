@@ -1,53 +1,24 @@
-from django.shortcuts import render
-from rest_framework import generics, permissions
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
+from rest_framework import filters
 from rest_framework import status
-from .serializers import *
-from .models import Photo
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-size = 3
+from django_filters.rest_framework import DjangoFilterBackend
+
+from house.serializers import MySerialzer
+from house.models import (
+    House, Photo, AccommodationHouse
+)
 
 
 class MyViewSet(ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     queryset = House.objects.all()
     serializer_class = MySerialzer
-
-    def list(self, request):
-
-        if request.query_params.get('page') is not None:
-            page = int(request.query_params.get('page'))
-            if page == 1:
-                go_previos = None
-                go_next = 2
-                queryset = House.objects.all()[:size]
-            else:
-                limit = size * page
-                offset = size * (page - 1)
-                queryset = House.objects.all()[offset:limit]
-                if House.objects.latest('id') not in queryset:
-                    go_previos = page - 1
-                    go_next = page + 1
-                else:
-                    go_previos = page - 1
-                    go_next = None
-        else:
-            go_previos = None
-            go_next = 2
-            queryset = House.objects.all()[0:size]
-
-        serializer = MySerialzer(queryset, many=True)
-
-        obj = {
-            'count': len(serializer.data),
-            'previos': go_previos,
-            'next': go_next,
-            'result': serializer.data
-        }
-
-        return Response(obj)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    search_fields = ('address', 'city')
+    filterset_fields = ('floor', 'rooms')
 
     def create(self, requests):
         serializer = MySerialzer(data=requests.data)
@@ -57,12 +28,14 @@ class MyViewSet(ModelViewSet):
             try:
                 photos = requests.data.getlist('photos')
                 accoms = requests.data.getlist('accoms')
-                print(accoms)
                 for photo in photos:
-                    Photo.objects.create(image=photo, house_id=house.id)
+                    Photo.objects.create(
+                        image=photo, house_id=house.id
+                    )
                 for accom in accoms:
                     AccommodationHouse.objects.create(
-                        house_id=house.id, accom_id=accom)
+                        house_id=house.id, accom_id=accom
+                    )
                 res['response'] = True
             except Exception:
                 res['response'] = False
