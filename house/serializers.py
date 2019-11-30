@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from .models import *
+from house import models as house_models
 
 
 class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Photo
-        fields = ['image']
+        model = house_models.Photo
+        fields = ('image',)
 
 
 class AccommodationHouseSerialzer(serializers.ModelSerializer):
     class Meta:
-        model = AccommodationHouse
-        fields = ['accom']
+        model = house_models.AccommodationHouse
+        fields = ('accom',)
 
 
 class MySerialzer(serializers.ModelSerializer):
@@ -26,7 +26,12 @@ class MySerialzer(serializers.ModelSerializer):
         return obj.houseaccoms.values_list('accom', flat=True)
 
     class Meta:
-        model = House
-        fields = ['id', 'user', 'rooms', 'floor',
-                  'address', 'longitude', 'latitude', 'city',
-                  'house_type', 'price', 'status', 'status',  'photos', 'houseaccoms', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        model = house_models.House
+        fields = (
+            'id', 'user', 'rooms', 'floor',
+            'address', 'longitude', 'latitude', 'city',
+            'house_type', 'price', 'status', 'status',
+            'photos', 'houseaccoms', 'mon', 'tue',
+            'wed', 'thu', 'fri', 'sat',
+            'sun'
+        )
