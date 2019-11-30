@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import *
+from house import models as house_models
 
 
-admin.site.register(House)
-admin.site.register(Accommodation)
-admin.site.register(Room)
-admin.site.register(HouseRoom)
-admin.site.register(Photo)
-admin.site.register(AccommodationHouse)
-admin.site.register(HouseType)
+admin.site.register(house_models.House)
+admin.site.register(house_models.Accommodation)
+admin.site.register(house_models.Room)
+admin.site.register(house_models.HouseRoom)
+admin.site.register(house_models.Photo)
+admin.site.register(house_models.AccommodationHouse)
+admin.site.register(house_models.HouseType)
