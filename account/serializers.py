@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from utils.sms import  SMS
 from .models import *
 from django.contrib.auth import authenticate
 from .models import *
@@ -29,9 +30,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         if len(validated_data['password']) < 8:
             raise serializers.ValidationError(
                 'Password must have at least 8 chars.')
-        user = User.objects.create_user(validated_data['email'], phone=validated_data['phone'], first_name=validated_data[
-            'first_name'], last_name=validated_data['last_name'], gender=validated_data['gender'],
-            birth_day=validated_data['birth_day'], password=validated_data['password'])
+        user = User.objects.create_user(
+            validated_data['email'], phone=validated_data['phone'],
+            first_name=validated_data['first_name'], last_name=validated_data['last_name'],
+            gender=validated_data['gender'], birth_day=validated_data['birth_day'],
+            password=validated_data['password']
+        )
         return user
 
 

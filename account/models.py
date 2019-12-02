@@ -13,7 +13,7 @@ class User(AbstractBaseUser):
     user_type = models.BooleanField(default=False)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -40,3 +40,13 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
+class OTP(models.Model):
+    phone = models.CharField(max_length=255, unique=True)
+    code = models.CharField(max_length=4)
+    attempts = models.IntegerField(default=3)
+    ban_date = models.DateTimeField(default=None, null=True)
+
+    def __str__(self):
+        return self.phone
