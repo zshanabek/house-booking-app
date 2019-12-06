@@ -1,6 +1,5 @@
 from rest_framework import filters
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -13,7 +12,6 @@ from house.models import (
 
 
 class MyViewSet(ModelViewSet):
-    parser_classes = (MultiPartParser, FormParser)
     queryset = House.objects.all()
     serializer_class = MySerialzer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
@@ -24,21 +22,18 @@ class MyViewSet(ModelViewSet):
         serializer = MySerialzer(data=requests.data)
         res = {}
         if serializer.is_valid():
-            house = serializer.save()
-            try:
-                photos = requests.data.getlist('photos')
-                accoms = requests.data.getlist('accoms')
-                for photo in photos:
-                    Photo.objects.create(
-                        image=photo, house_id=house.id
-                    )
-                for accom in accoms:
-                    AccommodationHouse.objects.create(
-                        house_id=house.id, accom_id=accom
-                    )
-                res['response'] = True
-            except Exception:
-                res['response'] = False
+            house = serializer.save(user=self.request.user)
+            photos = list(requests.data['photos'])
+            accoms = list(requests.data['accoms'])
+            for photo in photos:
+                Photo.objects.create(
+                    image=photo, house_id=house.id
+                )
+            for accom in accoms:
+                AccommodationHouse.objects.create(
+                    house_id=house.id, accom_id=accom
+                )
+            res['response'] = True
         else:
             res['response'] = False
             res['errors'] = serializer.errors

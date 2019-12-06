@@ -18,6 +18,7 @@ class AccommodationHouseSerialzer(serializers.ModelSerializer):
 class MySerialzer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     houseaccoms = serializers.SerializerMethodField()
+    user = serializers.ReadOnlyField(source='user.email')
 
     def get_photos(self, obj):
         return obj.photos.values_list('image', flat=True)
