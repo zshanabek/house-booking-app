@@ -31,7 +31,5 @@ class MySerialzer(serializers.ModelSerializer):
             'id', 'user', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'city',
             'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms', 'mon', 'tue',
-            'wed', 'thu', 'fri', 'sat',
-            'sun'
+            'photos', 'houseaccoms'
         )

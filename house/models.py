@@ -24,13 +24,6 @@ class House(models.Model):
         HouseType, on_delete=models.CASCADE, related_name='house_types')
     price = models.IntegerField()
     status = models.IntegerField()
-    mon = models.BooleanField()
-    tue = models.BooleanField()
-    wed = models.BooleanField()
-    thu = models.BooleanField()
-    fri = models.BooleanField()
-    sat = models.BooleanField()
-    sun = models.BooleanField()
 
     @property
     def photos(self):
@@ -80,3 +73,18 @@ class AccommodationHouse(models.Model):
         House, on_delete=models.CASCADE, related_name='houseaccoms')
     accom = models.ForeignKey(
         Accommodation, on_delete=models.CASCADE, related_name='accommodations')
+
+
+class Review(models.Model):
+    client = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='clients')
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='reviews')
+    body = models.CharField(max_length=1000)
+
+
+class Favourite(models.Model):
+    buyer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='buyers')
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='favourites')

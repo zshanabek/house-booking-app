@@ -9,7 +9,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from .models import *
 import pytz
-
+import pdb
 utc = pytz.timezone('Asia/Almaty')
 
 
@@ -45,8 +45,8 @@ class RegisterView(generics.GenericAPIView):
 # Login
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
-
     def post(self, request, *args, **kwargs):
+        pdb.set_trace()
         serializer = self.get_serializer(data=request.data)
         # serializer.is_valid(raise_exception=True)
         if serializer.is_valid():

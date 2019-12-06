@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'house',  # own
     'knox',
     'corsheaders',
-    'django_cleanup'
+    'django_cleanup',
+    'django_seed'
 ]
 
 MIDDLEWARE = [
@@ -65,11 +66,11 @@ ROOT_URLCONF = 'akv.urls'
 AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
-    ),
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    # TODO: Change it to 10 or 100, after inserting records to DB
     'PAGE_SIZE': 2,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
@@ -127,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'en-US'
 
 TIME_ZONE = 'Asia/Almaty'
 
