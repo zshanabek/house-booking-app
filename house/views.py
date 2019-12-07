@@ -5,21 +5,21 @@ from rest_framework.viewsets import ModelViewSet
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from house.serializers import MySerialzer
+from house.serializers import HouseSerializer
 from house.models import (
     House, Photo, AccommodationHouse
 )
 
 
-class MyViewSet(ModelViewSet):
+class HouseViewSet(ModelViewSet):
     queryset = House.objects.all()
-    serializer_class = MySerialzer
+    serializer_class = HouseSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('address', 'city')
     filterset_fields = ('floor', 'rooms')
 
     def create(self, requests):
-        serializer = MySerialzer(data=requests.data)
+        serializer = HouseSerializer(data=requests.data)
         res = {}
         if serializer.is_valid():
             house = serializer.save(user=self.request.user)

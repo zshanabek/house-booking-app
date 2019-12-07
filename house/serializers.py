@@ -15,7 +15,7 @@ class AccommodationHouseSerialzer(serializers.ModelSerializer):
         fields = ('accom',)
 
 
-class MySerialzer(serializers.ModelSerializer):
+class HouseSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     houseaccoms = serializers.SerializerMethodField()
     user = serializers.ReadOnlyField(source='user.email')
