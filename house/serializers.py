@@ -9,10 +9,16 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ('image',)
 
 
+class AccommodationSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.Accommodation
+        fields = ('name',)
+
+
 class AccommodationHouseSerialzer(serializers.ModelSerializer):
     class Meta:
         model = house_models.AccommodationHouse
-        fields = ('accom',)
+        fields = ('accom', 'house',)
 
 
 class HouseSerializer(serializers.ModelSerializer):
@@ -42,3 +48,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Review
         fields = ('id', 'user', 'house', 'body')
+
+
+class HouseTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.HouseType
+        fields = ('id', 'name', 'description')

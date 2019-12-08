@@ -5,9 +5,9 @@ from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from house.serializers import HouseSerializer, ReviewSerializer
+from house.serializers import HouseSerializer, ReviewSerializer, AccommodationHouseSerialzer, AccommodationSerialzer, HouseTypeSerializer
 from house.models import (
-    House, Photo, AccommodationHouse, Review, Favourite
+    House, Photo, Accommodation, AccommodationHouse, HouseType, Review, Favourite
 )
 
 
@@ -30,7 +30,7 @@ class HouseViewSet(ModelViewSet):
                     image=photo, house_id=house.id
                 )
             for accom in accoms:
-                AccommodationHouse.ModelViewSetobjects.create(
+                AccommodationHouse.objects.create(
                     house_id=house.id, accom_id=accom
                 )
             res['response'] = True
@@ -39,6 +39,29 @@ class HouseViewSet(ModelViewSet):
             res['errors'] = serializer.errors
 
         return Response(res, status=status.HTTP_200_OK)
+
+
+class HouseViewSet(ModelViewSet):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    search_fields = ('address', 'city')
+    filterset_fields = ('floor', 'rooms')
+
+
+class AccommodationViewSet(ModelViewSet):
+    queryset = Accommodation.objects.all()
+    serializer_class = HouseSerializer
+
+
+class AccommodationHouseViewSet(ModelViewSet):
+    queryset = AccommodationHouse.objects.all()
+    serializer_class = HouseSerializer
+
+
+class HouseTypeViewSet(ModelViewSet):
+    queryset = HouseType.objects.all()
+    serializer_class = HouseSerializer
 
 
 class ReviewViewSet(ModelViewSet):
