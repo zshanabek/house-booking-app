@@ -76,15 +76,15 @@ class AccommodationHouse(models.Model):
 
 
 class Review(models.Model):
-    client = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='clients')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE)
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='reviews')
+        House, on_delete=models.CASCADE)
     body = models.CharField(max_length=1000)
 
 
 class Favourite(models.Model):
-    buyer = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='buyers')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE)
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='favourites')
+        House, on_delete=models.CASCADE)

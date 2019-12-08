@@ -34,3 +34,11 @@ class HouseSerializer(serializers.ModelSerializer):
             'house_type', 'price', 'status', 'status',
             'photos', 'houseaccoms'
         )
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+    house = serializers.ReadOnlyField(source='house.id')
+    class Meta:
+        model = house_models.Review
+        fields = ('id', 'user', 'house', 'body')

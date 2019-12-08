@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'knox',
     'corsheaders',
     'django_cleanup',
+    'django_extensions',
     'django_seed'
 ]
 
