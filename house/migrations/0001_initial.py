@@ -35,13 +35,6 @@ class Migration(migrations.Migration):
                 ('city', models.CharField(max_length=255)),
                 ('price', models.IntegerField()),
                 ('status', models.IntegerField()),
-                ('mon', models.BooleanField()),
-                ('tue', models.BooleanField()),
-                ('wed', models.BooleanField()),
-                ('thu', models.BooleanField()),
-                ('fri', models.BooleanField()),
-                ('sat', models.BooleanField()),
-                ('sun', models.BooleanField()),
             ],
         ),
         migrations.CreateModel(
