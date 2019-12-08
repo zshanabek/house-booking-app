@@ -41,14 +41,6 @@ class HouseViewSet(ModelViewSet):
         return Response(res, status=status.HTTP_200_OK)
 
 
-class HouseViewSet(ModelViewSet):
-    queryset = House.objects.all()
-    serializer_class = HouseSerializer
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
-    search_fields = ('address', 'city')
-    filterset_fields = ('floor', 'rooms')
-
-
 class AccommodationViewSet(ModelViewSet):
     queryset = Accommodation.objects.all()
     serializer_class = HouseSerializer
