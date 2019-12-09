@@ -11,13 +11,14 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class HouseSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
-    houseaccoms = serializers.SerializerMethodField()
-
     user = UserSerializer(read_only=True)
-    city = CitySerializer(read_only=True)
+    city = serializers.ReadOnlyField(source='employee.email')
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
+
+    photos = serializers.SerializerMethodField()
+    houseaccoms = serializers.SerializerMethodField()
+    houserules = serializers.SerializerMethodField()
     
     def get_photos(self, obj):
         return obj.photos.values_list('image', flat=True)
@@ -25,13 +26,16 @@ class HouseSerializer(serializers.ModelSerializer):
     def get_houseaccoms(self, obj):
         return obj.houseaccoms.values_list('accom', flat=True)
 
+    def get_houserules(self, obj):
+        return obj.houserules.values_list('rule', flat=True)
+    
     class Meta:
         model = house_models.House
         fields = (
             'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 
             'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms', 'user', 'city'
+            'photos', 'houseaccoms', 'houserules', 'user', 'city'
         )
         
 
