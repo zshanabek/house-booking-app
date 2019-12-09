@@ -24,6 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('account.urls')),
     path('api/', include('house.urls')),
-    url(r'^media/(?P<path>.*)$', serve,
-        {'document_root': settings.MEDIA_ROOT, })
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, })
 ]

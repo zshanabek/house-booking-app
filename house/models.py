@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
+from django.utils import timezone
 
 
 class HouseType(models.Model):
@@ -11,19 +12,31 @@ class HouseType(models.Model):
         return self.name
 
 
+class City(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class NearBuilding(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class House(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='users')
     rooms = models.IntegerField()
     floor = models.IntegerField()
     address = models.CharField(max_length=255)
     longitude = models.FloatField()
     latitude = models.FloatField()
-    city = models.CharField(max_length=255)
-    house_type = models.ForeignKey(
-        HouseType, on_delete=models.CASCADE, related_name='house_types')
     price = models.IntegerField()
     status = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE, related_name='house_types')
 
     @property
     def photos(self):
@@ -33,6 +46,9 @@ class House(models.Model):
     def houseaccoms(self):
         return self.accommodationhouse.all()
 
+    @property
+    def nearbuildings(self):
+        return self.nearbuilding.all()
 
 class Room(models.Model):
     name = models.CharField(max_length=255)
@@ -75,16 +91,21 @@ class AccommodationHouse(models.Model):
         Accommodation, on_delete=models.CASCADE, related_name='accommodations')
 
 
-class Review(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE)
+class NearBuildingHouse(models.Model):
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE)
+        House, on_delete=models.CASCADE, related_name='housenearbuildings')
+    nearbuilding = models.ForeignKey(
+        NearBuilding, on_delete=models.CASCADE, related_name='nearbuildings')
+
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)
     body = models.CharField(max_length=1000)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    created_at = models.DateTimeField(default=timezone.now)
 
 
 class Favourite(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE)
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    house = models.ForeignKey(House, on_delete=models.CASCADE)

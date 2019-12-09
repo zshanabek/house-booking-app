@@ -5,9 +5,9 @@ from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from house.serializers import HouseSerializer, ReviewSerializer, AccommodationHouseSerialzer, AccommodationSerialzer, HouseTypeSerializer
+from house.serializers import HouseSerializer, ReviewSerializer, AccommodationHouseSerialzer, AccommodationSerialzer, HouseTypeSerializer, CitySerialzer, NearBuildingSerialzer, NearBuildingHouseSerialzer
 from house.models import (
-    House, Photo, Accommodation, AccommodationHouse, HouseType, Review, Favourite
+    House, Photo, Accommodation, AccommodationHouse, HouseType, Review, Favourite, City, NearBuilding, NearBuildingHouse
 )
 
 
@@ -43,17 +43,32 @@ class HouseViewSet(ModelViewSet):
 
 class AccommodationViewSet(ModelViewSet):
     queryset = Accommodation.objects.all()
-    serializer_class = HouseSerializer
+    serializer_class = AccommodationSerialzer
+    pagination_class = None
 
 
 class AccommodationHouseViewSet(ModelViewSet):
     queryset = AccommodationHouse.objects.all()
-    serializer_class = HouseSerializer
+    serializer_class = AccommodationHouseSerialzer
+    pagination_class = None
+
+
+class NearBuildingViewSet(ModelViewSet):
+    queryset = NearBuilding.objects.all()
+    serializer_class = NearBuildingSerialzer
+    pagination_class = None
+
+
+class NearBuildingHouseViewSet(ModelViewSet):
+    queryset = NearBuildingHouse.objects.all()
+    serializer_class = NearBuildingHouseSerialzer
+    pagination_class = None
 
 
 class HouseTypeViewSet(ModelViewSet):
     queryset = HouseType.objects.all()
-    serializer_class = HouseSerializer
+    serializer_class = HouseTypeSerializer
+    pagination_class = None
 
 
 class ReviewViewSet(ModelViewSet):
@@ -75,3 +90,9 @@ class ReviewViewSet(ModelViewSet):
             res['errors'] = serializer.errors
 
         return Response(res, status=status.HTTP_200_OK)
+
+
+class CityViewSet(ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerialzer
+    pagination_class = None

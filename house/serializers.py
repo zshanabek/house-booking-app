@@ -12,13 +12,31 @@ class PhotoSerializer(serializers.ModelSerializer):
 class AccommodationSerialzer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Accommodation
-        fields = ('name',)
+        fields = ('id', 'name',)
 
 
 class AccommodationHouseSerialzer(serializers.ModelSerializer):
     class Meta:
         model = house_models.AccommodationHouse
-        fields = ('accom', 'house',)
+        fields = ('id', 'accom', 'house',)
+
+
+class NearBuildingSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.NearBuilding
+        fields = ('id', 'name',)
+
+
+class NearBuildingHouseSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.NearBuildingHouse
+        fields = ('id', 'nearbuilding', 'house',)
+
+
+class CitySerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.City
+        fields = ('id', 'name',)
 
 
 class HouseSerializer(serializers.ModelSerializer):
