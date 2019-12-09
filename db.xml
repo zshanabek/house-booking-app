@@ -70,6 +70,20 @@
     <object model="house.nearbuilding" pk="9">
         <field name="name" type="CharField">Акимат</field>
     </object>
+    <object model="house.house" pk="1">
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Omarova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">1</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
     <object model="house.accommodation" pk="1">
         <field name="name" type="CharField">Чайник</field>
     </object>
@@ -87,5 +101,23 @@
     </object>
     <object model="house.accommodation" pk="6">
         <field name="name" type="CharField">Аптечка</field>
+    </object>
+    <object model="house.review" pk="1">
+        <field name="body" type="CharField">damir</field>
+        <field name="rating" type="IntegerField">4</field>
+        <field name="created_at" type="DateTimeField">2019-12-09T13:31:45.113145+00:00</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="house" rel="ManyToOneRel" to="house.house">1</field>
+    </object>
+    <object model="knox.authtoken" pk="cbf7da781d9d33f3174b445edf0b2f0e737e0ba3d2a9032c8306cb13ba5b0e038e2fc09f52c258c322579928774c987d735ef394675c9cce9f95b93da35c19b2">
+        <field name="token_key" type="CharField">a5272de8</field>
+        <field name="salt" type="CharField">fe50587378f100b1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="created" type="DateTimeField">2019-12-09T13:26:22.407722+00:00</field>
+        <field name="expiry" type="DateTimeField">2019-12-09T23:26:22.407287+00:00</field>
     </object>
 </django-objects>
