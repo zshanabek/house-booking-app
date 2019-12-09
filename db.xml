@@ -1,2 +1,542 @@
 <?xml version="1.0" encoding="utf-8"?>
-<django-objects version="1.0"><object model="account.user" pk="1"><field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field><field name="last_login" type="DateTimeField">2019-12-09T11:56:45.799689+00:00</field><field name="email" type="CharField">admin@mail.com</field><field name="phone" type="CharField">87785547554</field><field name="birth_day" type="DateField">2012-12-12</field><field name="gender" type="IntegerField">1</field><field name="user_type" type="BooleanField">False</field><field name="first_name" type="CharField">Zhunisali</field><field name="last_name" type="CharField">Shanabek</field><field name="is_active" type="BooleanField">True</field><field name="is_staff" type="BooleanField">True</field><field name="is_superuser" type="BooleanField">True</field></object><object model="house.housetype" pk="1"><field name="name" type="CharField">Квартира</field><field name="description" type="TextField"></field></object><object model="house.housetype" pk="2"><field name="name" type="CharField">Дом</field><field name="description" type="TextField"></field></object><object model="house.city" pk="1"><field name="name" type="CharField">Астана</field></object><object model="house.city" pk="2"><field name="name" type="CharField">Алматы</field></object><object model="house.city" pk="3"><field name="name" type="CharField">Шымкент</field></object><object model="house.city" pk="4"><field name="name" type="CharField">Семей</field></object><object model="house.city" pk="5"><field name="name" type="CharField">Павлодар</field></object><object model="house.city" pk="6"><field name="name" type="CharField">Тараз</field></object><object model="house.city" pk="7"><field name="name" type="CharField">Актобе</field></object>
+<django-objects version="1.0">
+    <object model="account.user" pk="1">
+        <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
+        <field name="last_login" type="DateTimeField">2019-12-09T11:56:45.799689+00:00</field>
+        <field name="email" type="CharField">admin@mail.com</field>
+        <field name="phone" type="CharField">87785547554</field>
+        <field name="birth_day" type="DateField">2012-12-12</field>
+        <field name="gender" type="IntegerField">1</field>
+        <field name="user_type" type="BooleanField">False</field>
+        <field name="first_name" type="CharField">Zhunisali</field>
+        <field name="last_name" type="CharField">Shanabek</field>
+        <field name="is_active" type="BooleanField">True</field>
+        <field name="is_staff" type="BooleanField">True</field>
+        <field name="is_superuser" type="BooleanField">True</field>
+    </object>
+    <object model="house.housetype" pk="1">
+        <field name="name" type="CharField">Квартира</field>
+        <field name="description" type="TextField"></field>
+    </object>
+    <object model="house.housetype" pk="2">
+        <field name="name" type="CharField">Дом</field>
+        <field name="description" type="TextField"></field>
+    </object>
+    <object model="house.city" pk="1">
+        <field name="name" type="CharField">Астана</field>
+    </object>
+    <object model="house.city" pk="2">
+        <field name="name" type="CharField">Алматы</field>
+    </object>
+    <object model="house.city" pk="3">
+        <field name="name" type="CharField">Шымкент</field>
+    </object>
+    <object model="house.city" pk="4">
+        <field name="name" type="CharField">Семей</field>
+    </object>
+    <object model="house.city" pk="5">
+        <field name="name" type="CharField">Павлодар</field>
+    </object>
+    <object model="house.city" pk="6">
+        <field name="name" type="CharField">Тараз</field>
+    </object>
+    <object model="house.city" pk="7">
+        <field name="name" type="CharField">Актобе</field>
+    </object>
+    <object model="house.house" pk="1">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Omarova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">1</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="2">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Omarova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">1</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="3">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="4">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="5">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="6">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="7">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="8">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="9">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="10">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="11">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="12">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="13">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="14">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="15">
+        <field name="name" type="CharField">house</field>
+        <field name="description" type="CharField">ok</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="16">
+        <field name="name" type="CharField"></field>
+        <field name="description" type="CharField"></field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.house" pk="17">
+        <field name="name" type="CharField">1</field>
+        <field name="description" type="CharField">1</field>
+        <field name="rooms" type="IntegerField">3</field>
+        <field name="floor" type="IntegerField">6</field>
+        <field name="address" type="CharField">Ryskulova</field>
+        <field name="longitude" type="FloatField">3.077363</field>
+        <field name="latitude" type="FloatField">50.644228</field>
+        <field name="price" type="IntegerField">213</field>
+        <field name="status" type="IntegerField">1</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="city" rel="ManyToOneRel" to="house.city">3</field>
+        <field name="house_type" rel="ManyToOneRel" to="house.housetype">1</field>
+    </object>
+    <object model="house.nearbuilding" pk="1">
+        <field name="name" type="CharField">Больница</field>
+    </object>
+    <object model="house.nearbuilding" pk="2">
+        <field name="name" type="CharField">Парк</field>
+    </object>
+    <object model="house.nearbuilding" pk="3">
+        <field name="name" type="CharField">Автовокзал</field>
+    </object>
+    <object model="house.nearbuilding" pk="4">
+        <field name="name" type="CharField">Аптека</field>
+    </object>
+    <object model="house.nearbuilding" pk="5">
+        <field name="name" type="CharField">Кинотеатр</field>
+    </object>
+    <object model="house.nearbuilding" pk="6">
+        <field name="name" type="CharField">Детский сад</field>
+    </object>
+    <object model="house.nearbuilding" pk="7">
+        <field name="name" type="CharField">ЦОН</field>
+    </object>
+    <object model="house.nearbuilding" pk="8">
+        <field name="name" type="CharField">Школа</field>
+    </object>
+    <object model="house.nearbuilding" pk="9">
+        <field name="name" type="CharField">Акимат</field>
+    </object>
+    <object model="house.rule" pk="1">
+        <field name="name" type="CharField">Не курить</field>
+    </object>
+    <object model="house.rule" pk="2">
+        <field name="name" type="CharField">Никакого алкоголя</field>
+    </object>
+    <object model="house.rule" pk="3">
+        <field name="name" type="CharField">Не шуметь</field>
+    </object>
+    <object model="house.rule" pk="4">
+        <field name="name" type="CharField">Не сорить</field>
+    </object>
+    <object model="house.rule" pk="5">
+        <field name="name" type="CharField">Не больше 2-х гостей</field>
+    </object>
+    <object model="house.rule" pk="6">
+        <field name="name" type="CharField">Без животных</field>
+    </object>
+    <object model="house.rulehouse" pk="1">
+        <field name="house" rel="ManyToOneRel" to="house.house">13</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">5</field>
+    </object>
+    <object model="house.rulehouse" pk="2">
+        <field name="house" rel="ManyToOneRel" to="house.house">14</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">5</field>
+    </object>
+    <object model="house.rulehouse" pk="3">
+        <field name="house" rel="ManyToOneRel" to="house.house">14</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">6</field>
+    </object>
+    <object model="house.rulehouse" pk="4">
+        <field name="house" rel="ManyToOneRel" to="house.house">15</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">5</field>
+    </object>
+    <object model="house.rulehouse" pk="5">
+        <field name="house" rel="ManyToOneRel" to="house.house">15</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">6</field>
+    </object>
+    <object model="house.rulehouse" pk="6">
+        <field name="house" rel="ManyToOneRel" to="house.house">16</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">5</field>
+    </object>
+    <object model="house.rulehouse" pk="7">
+        <field name="house" rel="ManyToOneRel" to="house.house">16</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">6</field>
+    </object>
+    <object model="house.rulehouse" pk="8">
+        <field name="house" rel="ManyToOneRel" to="house.house">17</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">5</field>
+    </object>
+    <object model="house.rulehouse" pk="9">
+        <field name="house" rel="ManyToOneRel" to="house.house">17</field>
+        <field name="rule" rel="ManyToOneRel" to="house.rule">6</field>
+    </object>
+    <object model="house.accommodation" pk="1">
+        <field name="name" type="CharField">Чайник</field>
+    </object>
+    <object model="house.accommodation" pk="2">
+        <field name="name" type="CharField">Wi-Fi</field>
+    </object>
+    <object model="house.accommodation" pk="3">
+        <field name="name" type="CharField">Отопление</field>
+    </object>
+    <object model="house.accommodation" pk="4">
+        <field name="name" type="CharField">Фен</field>
+    </object>
+    <object model="house.accommodation" pk="5">
+        <field name="name" type="CharField">Кондиционер</field>
+    </object>
+    <object model="house.accommodation" pk="6">
+        <field name="name" type="CharField">Аптечка</field>
+    </object>
+    <object model="house.accommodationhouse" pk="1">
+        <field name="house" rel="ManyToOneRel" to="house.house">2</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="2">
+        <field name="house" rel="ManyToOneRel" to="house.house">2</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="3">
+        <field name="house" rel="ManyToOneRel" to="house.house">3</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="4">
+        <field name="house" rel="ManyToOneRel" to="house.house">3</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="5">
+        <field name="house" rel="ManyToOneRel" to="house.house">4</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="6">
+        <field name="house" rel="ManyToOneRel" to="house.house">4</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="7">
+        <field name="house" rel="ManyToOneRel" to="house.house">5</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="8">
+        <field name="house" rel="ManyToOneRel" to="house.house">5</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="9">
+        <field name="house" rel="ManyToOneRel" to="house.house">7</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="10">
+        <field name="house" rel="ManyToOneRel" to="house.house">7</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="11">
+        <field name="house" rel="ManyToOneRel" to="house.house">8</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="12">
+        <field name="house" rel="ManyToOneRel" to="house.house">8</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="13">
+        <field name="house" rel="ManyToOneRel" to="house.house">9</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="14">
+        <field name="house" rel="ManyToOneRel" to="house.house">9</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="15">
+        <field name="house" rel="ManyToOneRel" to="house.house">13</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="16">
+        <field name="house" rel="ManyToOneRel" to="house.house">13</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="17">
+        <field name="house" rel="ManyToOneRel" to="house.house">13</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">3</field>
+    </object>
+    <object model="house.accommodationhouse" pk="18">
+        <field name="house" rel="ManyToOneRel" to="house.house">14</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="19">
+        <field name="house" rel="ManyToOneRel" to="house.house">14</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="20">
+        <field name="house" rel="ManyToOneRel" to="house.house">14</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">3</field>
+    </object>
+    <object model="house.accommodationhouse" pk="21">
+        <field name="house" rel="ManyToOneRel" to="house.house">15</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="22">
+        <field name="house" rel="ManyToOneRel" to="house.house">15</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="23">
+        <field name="house" rel="ManyToOneRel" to="house.house">15</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">3</field>
+    </object>
+    <object model="house.accommodationhouse" pk="24">
+        <field name="house" rel="ManyToOneRel" to="house.house">16</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="25">
+        <field name="house" rel="ManyToOneRel" to="house.house">16</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="26">
+        <field name="house" rel="ManyToOneRel" to="house.house">16</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">3</field>
+    </object>
+    <object model="house.accommodationhouse" pk="27">
+        <field name="house" rel="ManyToOneRel" to="house.house">17</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">1</field>
+    </object>
+    <object model="house.accommodationhouse" pk="28">
+        <field name="house" rel="ManyToOneRel" to="house.house">17</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">2</field>
+    </object>
+    <object model="house.accommodationhouse" pk="29">
+        <field name="house" rel="ManyToOneRel" to="house.house">17</field>
+        <field name="accom" rel="ManyToOneRel" to="house.accommodation">3</field>
+    </object>
+    <object model="house.review" pk="1">
+        <field name="body" type="CharField">damir</field>
+        <field name="rating" type="IntegerField">4</field>
+        <field name="created_at" type="DateTimeField">2019-12-09T13:31:45.113145+00:00</field>
+        <field name="user" rel="ManyToOneRel" to="account.user">
+            <natural>admin@mail.com</natural>
+        </field>
+        <field name="house" rel="ManyToOneRel" to="house.house">1</field>
+    </object>
+</django-objects>
