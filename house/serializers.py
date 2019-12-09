@@ -4,6 +4,37 @@ from account.serializers import UserSerializer
 from account.models import User
 
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.City
+        fields = ('id', 'name',)
+
+
+class HouseSerializer(serializers.ModelSerializer):
+    photos = serializers.SerializerMethodField()
+    houseaccoms = serializers.SerializerMethodField()
+
+    user = UserSerializer(read_only=True) 
+    city = CitySerializer(read_only=True) 
+    city_id = serializers.PrimaryKeyRelatedField(
+        queryset=house_models.City.objects.all(), source='city', write_only=True)
+    
+    def get_photos(self, obj):
+        return obj.photos.values_list('image', flat=True)
+
+    def get_houseaccoms(self, obj):
+        return obj.houseaccoms.values_list('accom', flat=True)
+
+    class Meta:
+        model = house_models.House
+        fields = (
+            'id', 'user', 'city_id', 'rooms', 'floor',
+            'address', 'longitude', 'latitude', 'city',
+            'house_type', 'price', 'status', 'status',
+            'photos', 'houseaccoms'
+        )
+        
+
 class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -35,37 +66,10 @@ class NearBuildingHouseSerializer(serializers.ModelSerializer):
         fields = ('id', 'nearbuilding', 'house',)
 
 
-class CitySerializer(serializers.ModelSerializer):
+class RuleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = house_models.City
+        model = house_models.Rule
         fields = ('id', 'name',)
-
-
-class HouseSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
-    houseaccoms = serializers.SerializerMethodField()
-
-    user = UserSerializer(read_only=True) 
-
-    city = CitySerializer(read_only=True) 
-    city_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.City.objects.all(), source='city', write_only=True)
-    
-    def get_photos(self, obj):
-        return obj.photos.values_list('image', flat=True)
-
-    def get_houseaccoms(self, obj):
-        return obj.houseaccoms.values_list('accom', flat=True)
-
-    class Meta:
-        model = house_models.House
-        fields = (
-            'id', 'user', 'city_id', 'rooms', 'floor',
-            'address', 'longitude', 'latitude', 'city',
-            'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms'
-        )
-        
 
 
 class ReviewSerializer(serializers.ModelSerializer):

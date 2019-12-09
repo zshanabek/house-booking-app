@@ -19,13 +19,6 @@ class City(models.Model):
         return self.name
 
 
-class NearBuilding(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
 class House(models.Model):
     rooms = models.IntegerField()
     floor = models.IntegerField()
@@ -47,8 +40,32 @@ class House(models.Model):
         return self.accommodationhouse.all()
 
     @property
-    def nearbuildings(self):
+    def housenearbuildings(self):
         return self.nearbuilding.all()
+
+    @property
+    def houserules(self):
+        return self.rule.all()
+
+
+class NearBuilding(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Rule(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class RuleHouse(models.Model):
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='houserules')
+    rule = models.ForeignKey(Rule, on_delete=models.CASCADE, related_name='rules')
+
 
 class Room(models.Model):
     name = models.CharField(max_length=255)

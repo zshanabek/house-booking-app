@@ -12,4 +12,4 @@ admin.site.register(house_models.HouseType)
 admin.site.register(house_models.NearBuilding)
 admin.site.register(house_models.NearBuildingHouse)
 admin.site.register(house_models.City)
-
+admin.site.register(house_models.Rule)
