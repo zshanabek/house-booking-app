@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
-from house.serializers import HouseSerializer, ReviewSerializer, AccommodationHouseSerialzer, AccommodationSerialzer, HouseTypeSerializer, CitySerialzer, NearBuildingSerialzer, NearBuildingHouseSerialzer
+from house.serializers import HouseSerializer, ReviewSerializer, \
+AccommodationHouseSerializer, AccommodationSerializer,\
+HouseTypeSerializer, CitySerializer, NearBuildingSerializer, NearBuildingHouseSerializer
 from house.models import (
     House, Photo, Accommodation, AccommodationHouse, HouseType, Review, Favourite, City, NearBuilding, NearBuildingHouse
 )
@@ -43,25 +44,25 @@ class HouseViewSet(ModelViewSet):
 
 class AccommodationViewSet(ModelViewSet):
     queryset = Accommodation.objects.all()
-    serializer_class = AccommodationSerialzer
+    serializer_class = AccommodationSerializer
     pagination_class = None
 
 
 class AccommodationHouseViewSet(ModelViewSet):
     queryset = AccommodationHouse.objects.all()
-    serializer_class = AccommodationHouseSerialzer
+    serializer_class = AccommodationHouseSerializer
     pagination_class = None
 
 
 class NearBuildingViewSet(ModelViewSet):
     queryset = NearBuilding.objects.all()
-    serializer_class = NearBuildingSerialzer
+    serializer_class = NearBuildingSerializer
     pagination_class = None
 
 
 class NearBuildingHouseViewSet(ModelViewSet):
     queryset = NearBuildingHouse.objects.all()
-    serializer_class = NearBuildingHouseSerialzer
+    serializer_class = NearBuildingHouseSerializer
     pagination_class = None
 
 
@@ -94,5 +95,5 @@ class ReviewViewSet(ModelViewSet):
 
 class CityViewSet(ModelViewSet):
     queryset = City.objects.all()
-    serializer_class = CitySerialzer
+    serializer_class = CitySerializer
     pagination_class = None

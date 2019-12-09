@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from house import models as house_models
+from account.serializers import UserSerializer
+from account.models import User
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -9,31 +11,31 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ('image',)
 
 
-class AccommodationSerialzer(serializers.ModelSerializer):
+class AccommodationSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Accommodation
         fields = ('id', 'name',)
 
 
-class AccommodationHouseSerialzer(serializers.ModelSerializer):
+class AccommodationHouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.AccommodationHouse
         fields = ('id', 'accom', 'house',)
 
 
-class NearBuildingSerialzer(serializers.ModelSerializer):
+class NearBuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.NearBuilding
         fields = ('id', 'name',)
 
 
-class NearBuildingHouseSerialzer(serializers.ModelSerializer):
+class NearBuildingHouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.NearBuildingHouse
         fields = ('id', 'nearbuilding', 'house',)
 
 
-class CitySerialzer(serializers.ModelSerializer):
+class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.City
         fields = ('id', 'name',)
@@ -42,8 +44,15 @@ class CitySerialzer(serializers.ModelSerializer):
 class HouseSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     houseaccoms = serializers.SerializerMethodField()
-    user = serializers.ReadOnlyField(source='user.email')
 
+    user = UserSerializer(read_only=True) 
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user', write_only=True)
+
+    city = CitySerializer(read_only=True) 
+    city_id = serializers.PrimaryKeyRelatedField(
+        queryset=house_models.City.objects.all(), source='city', write_only=True)
+    
     def get_photos(self, obj):
         return obj.photos.values_list('image', flat=True)
 
@@ -53,19 +62,21 @@ class HouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'user', 'rooms', 'floor',
+            'id', 'user', 'user_id', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'city',
             'house_type', 'price', 'status', 'status',
             'photos', 'houseaccoms'
         )
+        
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
     house = serializers.ReadOnlyField(source='house.id')
+
     class Meta:
         model = house_models.Review
-        fields = ('id', 'user', 'house', 'body')
+        fields = ('id', 'user', 'house', 'body', 'rating', 'created_at')
 
 
 class HouseTypeSerializer(serializers.ModelSerializer):
