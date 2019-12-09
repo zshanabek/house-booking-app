@@ -20,6 +20,8 @@ class City(models.Model):
 
 
 class House(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=1000)
     rooms = models.IntegerField()
     floor = models.IntegerField()
     address = models.CharField(max_length=255)

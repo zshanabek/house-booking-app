@@ -14,8 +14,8 @@ class HouseSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     houseaccoms = serializers.SerializerMethodField()
 
-    user = UserSerializer(read_only=True) 
-    city = CitySerializer(read_only=True) 
+    user = UserSerializer(read_only=True)
+    city = CitySerializer(read_only=True)
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
     
@@ -28,10 +28,10 @@ class HouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'user', 'city_id', 'rooms', 'floor',
-            'address', 'longitude', 'latitude', 'city',
+            'id', 'name', 'description', 'city_id', 'rooms', 'floor',
+            'address', 'longitude', 'latitude', 
             'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms'
+            'photos', 'houseaccoms', 'user', 'city'
         )
         
 
