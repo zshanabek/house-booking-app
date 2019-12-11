@@ -20,7 +20,7 @@ class HouseViewSet(ModelViewSet):
         res = {}
         if serializer.is_valid():
             house = serializer.save(user=self.request.user)
-            photos = list(request.data['photos'])
+            photos = request.data.getlist('photos')
             accoms = list(request.data['accoms'])
             rules = list(request.data['rules'])
             for photo in photos:
@@ -86,11 +86,16 @@ class ReviewViewSet(ModelViewSet):
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
         if serializer.is_valid():
             r = serializer.save(house=house, user=self.request.user)
+            summ = 0
+            reviews = house.review_set
+            for review in reviews.all():
+                summ += review.stars
+            house.rating = round(summ/reviews.count() * 2) / 2
+            house.save()
             res['response'] = True
         else:
             res['response'] = False
             res['errors'] = serializer.errors
-
         return Response(res, status=status.HTTP_200_OK)
 
 

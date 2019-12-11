@@ -13,9 +13,9 @@ class CitySerializer(serializers.ModelSerializer):
 class HouseSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     city = serializers.ReadOnlyField(source='employee.email')
+    rating = serializers.ReadOnlyField()
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
-
     photos = serializers.SerializerMethodField()
     houseaccoms = serializers.SerializerMethodField()
     houserules = serializers.SerializerMethodField()
@@ -35,9 +35,9 @@ class HouseSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 
             'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms', 'houserules', 'user', 'city'
+            'photos', 'houseaccoms', 'houserules', 'user', 'city', 'rating'
         )
-        
+
 
 class PhotoSerializer(serializers.ModelSerializer):
 
@@ -82,10 +82,15 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = house_models.Review
-        fields = ('id', 'user', 'house', 'body', 'rating', 'created_at')
+        fields = ('id', 'user', 'house', 'body', 'stars', 'created_at')
 
 
 class HouseTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.HouseType
         fields = ('id', 'name', 'description')
+
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    house = serializers.ReadOnlyField(source='house.id')

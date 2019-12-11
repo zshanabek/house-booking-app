@@ -29,6 +29,7 @@ class House(models.Model):
     latitude = models.FloatField()
     price = models.IntegerField()
     status = models.IntegerField()
+    rating = models.FloatField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE, related_name='house_types')
@@ -119,7 +120,7 @@ class NearBuildingHouse(models.Model):
 
 class Review(models.Model):
     body = models.CharField(max_length=1000)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(House, on_delete=models.CASCADE)
