@@ -30,6 +30,8 @@ class House(models.Model):
     price = models.IntegerField()
     status = models.IntegerField()
     rating = models.FloatField(default=0)
+    guests = models.IntegerField()
+    beds = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE, related_name='house_types')
@@ -39,16 +41,16 @@ class House(models.Model):
         return self.photo_set.all()
 
     @property
-    def houseaccoms(self):
+    def house_accoms(self):
         return self.accommodationhouse.all()
 
     @property
-    def housenearbuildings(self):
-        return self.nearbuilding.all()
+    def house_near_buildings(self):
+        return self.nearbuildinghouse.all()
 
     @property
-    def houserules(self):
-        return self.rule.all()
+    def house_rules(self):
+        return self.rulehouse.all()
 
 
 class NearBuilding(models.Model):
@@ -66,7 +68,7 @@ class Rule(models.Model):
 
 
 class RuleHouse(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='houserules')
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='house_rules')
     rule = models.ForeignKey(Rule, on_delete=models.CASCADE, related_name='rules')
 
 
@@ -106,16 +108,16 @@ class Accommodation(models.Model):
 
 class AccommodationHouse(models.Model):
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='houseaccoms')
+        House, on_delete=models.CASCADE, related_name='house_accoms')
     accom = models.ForeignKey(
         Accommodation, on_delete=models.CASCADE, related_name='accommodations')
 
 
 class NearBuildingHouse(models.Model):
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='housenearbuildings')
-    nearbuilding = models.ForeignKey(
-        NearBuilding, on_delete=models.CASCADE, related_name='nearbuildings')
+        House, on_delete=models.CASCADE, related_name='house_near_buildings')
+    near_building = models.ForeignKey(
+        NearBuilding, on_delete=models.CASCADE, related_name='near_buildings')
 
 
 class Review(models.Model):
@@ -129,3 +131,9 @@ class Review(models.Model):
 class Favourite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(House, on_delete=models.CASCADE)
+
+
+class FreeDateInterval(models.Model):
+    date_start = models.DateField((""), auto_now=False, auto_now_add=False)
+    date_end = models.DateField((""), auto_now=False, auto_now_add=False)
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='house_free_dates')

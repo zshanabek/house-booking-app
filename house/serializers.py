@@ -12,30 +12,34 @@ class CitySerializer(serializers.ModelSerializer):
 
 class HouseSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    city = serializers.ReadOnlyField(source='employee.email')
+    city = serializers.ReadOnlyField(source='city.name')
     rating = serializers.ReadOnlyField()
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
     photos = serializers.SerializerMethodField()
-    houseaccoms = serializers.SerializerMethodField()
-    houserules = serializers.SerializerMethodField()
-    
+    house_accoms = serializers.SerializerMethodField()
+    house_rules = serializers.SerializerMethodField()
+    house_near_buildings = serializers.SerializerMethodField()
+
     def get_photos(self, obj):
         return obj.photos.values_list('image', flat=True)
 
-    def get_houseaccoms(self, obj):
-        return obj.houseaccoms.values_list('accom', flat=True)
+    def get_house_accoms(self, obj):
+        return obj.house_accoms.values_list('accom', flat=True)
 
-    def get_houserules(self, obj):
-        return obj.houserules.values_list('rule', flat=True)
+    def get_house_rules(self, obj):
+        return obj.house_rules.values_list('rule', flat=True)
+        
+    def get_house_near_buildings(self, obj):
+        return obj.house_near_buildings.values_list('near_building', flat=True)
+    
     
     class Meta:
         model = house_models.House
         fields = (
             'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 
-            'house_type', 'price', 'status', 'status',
-            'photos', 'houseaccoms', 'houserules', 'user', 'city', 'rating'
+            'house_type', 'price', 'status', 'beds', 'guests', 'rating', 'city', 'photos', 'house_accoms', 'house_rules', 'house_near_buildings', 'user'
         )
 
 
@@ -67,7 +71,7 @@ class NearBuildingSerializer(serializers.ModelSerializer):
 class NearBuildingHouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.NearBuildingHouse
-        fields = ('id', 'nearbuilding', 'house',)
+        fields = ('id', 'near_building', 'house',)
 
 
 class RuleSerializer(serializers.ModelSerializer):
@@ -94,3 +98,10 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 class FavouriteSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     house = serializers.ReadOnlyField(source='house.id')
+
+
+class FreeDateIntervalSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = house_models.FreeDateInterval
+        fields = ('date_start', 'date_end')

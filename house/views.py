@@ -9,11 +9,11 @@ from house import models as house_models
 
 
 class HouseViewSet(ModelViewSet):
-    queryset = house_models.House.objects.all()
+    queryset = house_models.House.objects.order_by('-rating')
     serializer_class = home_serializers.HouseSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
-    search_fields = ('address', 'city')
-    filterset_fields = ('floor', 'rooms')
+    search_fields = ('address', 'city__name')
+    filterset_fields = ('floor', 'rooms', 'beds', 'price', 'house_type')
 
     def create(self, request):
         serializer = home_serializers.HouseSerializer(data=request.data)
@@ -23,6 +23,7 @@ class HouseViewSet(ModelViewSet):
             photos = request.data.getlist('photos')
             accoms = list(request.data['accoms'])
             rules = list(request.data['rules'])
+            near_buildings = list(request.data['near_buildings'])
             for photo in photos:
                 house_models.Photo.objects.create(
                     image=photo, house_id=house.id
@@ -34,6 +35,10 @@ class HouseViewSet(ModelViewSet):
             for rule in rules:
                 house_models.RuleHouse.objects.create(
                     house_id=house.id, rule_id=rule
+                )
+            for organ in near_buildings:
+                house_models.NearBuildingHouse.objects.create(
+                    house_id=house.id, near_building_id=organ
                 )
             res['response'] = True
         else:
@@ -109,3 +114,30 @@ class RuleViewSet(ModelViewSet):
     queryset = house_models.Rule.objects.all()
     serializer_class = home_serializers.RuleSerializer
     pagination_class = None
+
+
+class FavouriteViewSet(ModelViewSet):
+    queryset = house_models.Favourite.objects.all()
+    serializer_class = home_serializers.FavouriteSerializer
+    pagination_class = None
+
+
+class FreeDateIntervalViewSet(ModelViewSet):
+    queryset = house_models.FreeDateInterval.objects.all()
+    serializer_class = home_serializers.FreeDateIntervalSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return house_models.FreeDateInterval.objects.filter(house=self.kwargs['house_pk'])
+
+    def create(self, request, *args, **kwargs):
+        serializer = home_serializers.FreeDateIntervalSerializer(data=request.data)
+        res = {}
+        house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
+        if serializer.is_valid():
+            r = serializer.save(house=house)
+            res['response'] = True
+        else:
+            res['response'] = False
+            res['errors'] = serializer.errors
+        return Response(res, status=status.HTTP_200_OK)
