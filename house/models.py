@@ -6,7 +6,6 @@ from django.utils import timezone
 
 class HouseType(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
 
     def __str__(self):
         return self.name
@@ -67,11 +66,6 @@ class Rule(models.Model):
         return self.name
 
 
-class RuleHouse(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='house_rules')
-    rule = models.ForeignKey(Rule, on_delete=models.CASCADE, related_name='rules')
-
-
 class Room(models.Model):
     name = models.CharField(max_length=255)
     is_room = models.BooleanField()
@@ -113,6 +107,13 @@ class AccommodationHouse(models.Model):
         Accommodation, on_delete=models.CASCADE, related_name='accommodations')
 
 
+class RuleHouse(models.Model):
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='house_rules')
+    rule = models.ForeignKey(
+        Rule, on_delete=models.CASCADE, related_name='rules')
+
+
 class NearBuildingHouse(models.Model):
     house = models.ForeignKey(
         House, on_delete=models.CASCADE, related_name='house_near_buildings')
@@ -136,4 +137,5 @@ class Favourite(models.Model):
 class FreeDateInterval(models.Model):
     date_start = models.DateField((""), auto_now=False, auto_now_add=False)
     date_end = models.DateField((""), auto_now=False, auto_now_add=False)
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='house_free_dates')
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='house_free_dates')

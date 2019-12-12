@@ -23,6 +23,7 @@ class HouseViewSet(ModelViewSet):
             photos = request.data.getlist('photos')
             accoms = list(request.data['accoms'])
             rules = list(request.data['rules'])
+            free_dates = list(request.data['free_dates'])
             near_buildings = list(request.data['near_buildings'])
             for photo in photos:
                 house_models.Photo.objects.create(
@@ -39,6 +40,11 @@ class HouseViewSet(ModelViewSet):
             for organ in near_buildings:
                 house_models.NearBuildingHouse.objects.create(
                     house_id=house.id, near_building_id=organ
+                )
+            for d in free_dates:
+                house_models.FreeDateInterval.objects.create(
+                    house_id=house.id, date_start=d['date_start'], 
+                    date_end=d['date_end']
                 )
             res['response'] = True
         else:
