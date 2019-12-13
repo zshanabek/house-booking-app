@@ -7,14 +7,16 @@ from django_filters.rest_framework import DjangoFilterBackend
 from house import serializers as home_serializers
 from house import models as house_models
 import json
+from url_filter.integrations.drf import DjangoFilterBackend
 
 
 class HouseViewSet(ModelViewSet):
-    queryset = house_models.House.objects.order_by('-rating')
+    queryset = house_models.House.objects.all()
     serializer_class = home_serializers.HouseSerializer
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    filter_backends = [DjangoFilterBackend]
     search_fields = ('address', 'city__name')
-    filterset_fields = ('floor', 'rooms', 'beds', 'price', 'house_type', 'rating')
+    filter_fields = ['floor', 'rooms', 'beds', 'price', 'house_type', 'rating']
+    ordering_fields = ['rating', 'price']
 
     def create(self, request):
         serializer = home_serializers.HouseSerializer(data=request.data)
@@ -130,6 +132,10 @@ class FavouriteViewSet(ModelViewSet):
     queryset = house_models.Favourite.objects.all()
     serializer_class = home_serializers.FavouriteSerializer
     pagination_class = None
+
+    def get_queryset(self):
+        user = self.request.user
+        return house_models.Favourite.objects.filter(user=user)
 
 
 class FreeDateIntervalViewSet(ModelViewSet):
