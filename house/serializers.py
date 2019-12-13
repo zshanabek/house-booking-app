@@ -93,7 +93,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class HouseTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.HouseType
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name')
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
