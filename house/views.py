@@ -134,9 +134,19 @@ class FavouriteViewSet(ModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
-        user = self.request.user
-        return house_models.Favourite.objects.filter(user=user)
-
+        return house_models.Favourite.objects.filter(user=self.request.user.id)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = home_serializers.FavouriteSerializer(data=request.data)
+        res = {}
+        house = get_object_or_404(house_models.Favourite, pk=kwargs['house_pk'])
+        if serializer.is_valid():
+            r = serializer.save(house=house, user=self.request.user)
+            res['response'] = True
+        else:
+            res['response'] = False
+            res['errors'] = serializer.errors
+        return Response(res, status=status.HTTP_200_OK)
 
 class FreeDateIntervalViewSet(ModelViewSet):
     queryset = house_models.FreeDateInterval.objects.all()

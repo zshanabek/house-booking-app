@@ -99,9 +99,13 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.id')
     house = serializers.ReadOnlyField(source='house.id')
+    house_id = serializers.PrimaryKeyRelatedField(
+        queryset=house_models.House.objects.all(), source='house', write_only=True)
 
+    class Meta:
+        model = house_models.Review
+        fields = ('id', 'house')
 
 class FreeDateIntervalSerializer(serializers.ModelSerializer):
 
