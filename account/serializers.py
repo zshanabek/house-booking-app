@@ -5,19 +5,20 @@ from django.contrib.auth import authenticate
 from .models import *
 
 
-# User Serializer
 class UserSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
-
-    def get_name(self, object):
-        return object.first_name + " " + object.last_name
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'gender', 'phone', 'name', 'birth_day')
+        fields = ('id', 'email', 'gender', 'phone',
+            'first_name', 'last_name', 'birth_day')
 
 
-# Register Serializer
+class UserShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name')
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

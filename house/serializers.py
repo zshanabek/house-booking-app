@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from house import models as house_models
-from account.serializers import UserSerializer
+from account.serializers import UserShortSerializer
 from account.models import User
 
 
@@ -11,7 +11,7 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class HouseSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserShortSerializer(read_only=True)
     city = serializers.ReadOnlyField(source='city.name')
     rating = serializers.ReadOnlyField()
     city_id = serializers.PrimaryKeyRelatedField(
@@ -97,7 +97,7 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = serializers.ReadOnlyField(source='user.id')
     house = serializers.ReadOnlyField(source='house.id')
 
 

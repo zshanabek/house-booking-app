@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from house import serializers as home_serializers
 from house import models as house_models
+import json
 
 
 class HouseViewSet(ModelViewSet):
@@ -23,16 +24,19 @@ class HouseViewSet(ModelViewSet):
             photos = request.data.getlist('photos')
             accoms = list(request.data['accoms'])
             rules = list(request.data['rules'])
-            free_dates = list(request.data['free_dates'])
+            free_dates = json.loads(request.data['free_dates'])
             near_buildings = list(request.data['near_buildings'])
+
             for photo in photos:
                 house_models.Photo.objects.create(
                     image=photo, house_id=house.id
                 )
+
             for accom in accoms:
                 house_models.AccommodationHouse.objects.create(
                     house_id=house.id, accom_id=accom
                 )
+
             for rule in rules:
                 house_models.RuleHouse.objects.create(
                     house_id=house.id, rule_id=rule
@@ -43,7 +47,7 @@ class HouseViewSet(ModelViewSet):
                 )
             for d in free_dates:
                 house_models.FreeDateInterval.objects.create(
-                    house_id=house.id, date_start=d['date_start'], 
+                    house_id=house.id, date_start=d['date_start'],
                     date_end=d['date_end']
                 )
             res['response'] = True
@@ -137,7 +141,8 @@ class FreeDateIntervalViewSet(ModelViewSet):
         return house_models.FreeDateInterval.objects.filter(house=self.kwargs['house_pk'])
 
     def create(self, request, *args, **kwargs):
-        serializer = home_serializers.FreeDateIntervalSerializer(data=request.data)
+        serializer = home_serializers.FreeDateIntervalSerializer(
+            data=request.data)
         res = {}
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
         if serializer.is_valid():
