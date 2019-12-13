@@ -13,6 +13,7 @@ class CitySerializer(serializers.ModelSerializer):
 class HouseSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
     city = serializers.ReadOnlyField(source='city.name')
+    house_type = serializers.ReadOnlyField(source='house_type.name')
     rating = serializers.ReadOnlyField()
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
@@ -29,16 +30,15 @@ class HouseSerializer(serializers.ModelSerializer):
 
     def get_house_rules(self, obj):
         return obj.house_rules.values_list('rule', flat=True)
-        
+
     def get_house_near_buildings(self, obj):
         return obj.house_near_buildings.values_list('near_building', flat=True)
-    
-    
+
     class Meta:
         model = house_models.House
         fields = (
             'id', 'name', 'description', 'city_id', 'rooms', 'floor',
-            'address', 'longitude', 'latitude', 
+            'address', 'longitude', 'latitude',
             'house_type', 'price', 'status', 'beds', 'guests', 'rating', 'city',
             'photos', 'house_accoms', 'house_rules', 'house_near_buildings', 'user'
         )

@@ -31,9 +31,11 @@ class House(models.Model):
     rating = models.FloatField(default=0)
     guests = models.IntegerField()
     beds = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE, related_name='house_types')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='users')
+    house_type = models.ForeignKey(
+        HouseType, on_delete=models.CASCADE, related_name='house_types')
 
     @property
     def photos(self):
@@ -123,7 +125,8 @@ class NearBuildingHouse(models.Model):
 
 class Review(models.Model):
     body = models.CharField(max_length=1000)
-    stars = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    stars = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(House, on_delete=models.CASCADE)
