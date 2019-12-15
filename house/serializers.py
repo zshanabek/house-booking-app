@@ -99,7 +99,7 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    house = HouseSerializer()
+    house = HouseSerializer(read_only=True)
 
     class Meta:
         model = house_models.Favourite
