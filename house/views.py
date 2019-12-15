@@ -138,9 +138,23 @@ class FavouriteViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = home_serializers.FavouriteSerializer(data=request.data)
+        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if serializer.is_valid():
-            r = serializer.save(user=self.request.user)
+            if house_models.Favourite.objects.filter(house=house.id).exists() == False:
+                r = serializer.save(user=self.request.user, house=house)
+            res['response'] = True
+        else:
+            res['response'] = False
+            res['errors'] = serializer.errors
+        return Response(res, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        serializer = home_serializers.FavouriteSerializer(data=request.data)
+        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
+        res = {}
+        if serializer.is_valid() and house_models.Favourite.objects.filter(house=house.id).exists():
+            house_models.Favourite.objects.filter(house=house.id).delete()
             res['response'] = True
         else:
             res['response'] = False
