@@ -141,7 +141,7 @@ class FavouriteViewSet(ModelViewSet):
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if serializer.is_valid():
-            if house_models.Favourite.objects.filter(house=house.id).exists() == False:
+            if house_models.Favourite.objects.filter(house=house.id, user=self.request.user).exists() == False:
                 r = serializer.save(user=self.request.user, house=house)
             res['response'] = True
         else:
@@ -153,7 +153,7 @@ class FavouriteViewSet(ModelViewSet):
         serializer = home_serializers.FavouriteSerializer(data=request.data)
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
-        if serializer.is_valid() and house_models.Favourite.objects.filter(house=house.id).exists():
+        if house_models.Favourite.objects.filter(house=house.id).exists():
             house_models.Favourite.objects.filter(house=house.id).delete()
             res['response'] = True
         else:

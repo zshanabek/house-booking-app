@@ -19,10 +19,14 @@ class HouseSerializer(serializers.ModelSerializer):
     rating = serializers.ReadOnlyField()
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
+    is_favourite = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
     house_accoms = serializers.SerializerMethodField()
     house_rules = serializers.SerializerMethodField()
-    house_near_buildings = serializers.SerializerMethodField()
+    house_near_buildings = serializers.SerializerMethodField()  
+
+    def get_is_favourite(self, obj):
+        return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
 
     def get_photos(self, obj):
         return obj.photos.values_list('image', flat=True)
@@ -41,7 +45,7 @@ class HouseSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'house_type_id', 'price',
-            'status', 'beds', 'guests', 'rating', 'city', 'photos',
+            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'photos',
             'house_accoms', 'house_rules', 'house_near_buildings', 'user'
         )
 
@@ -104,6 +108,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Favourite
         fields = ('house',)
+
 
 class FreeDateIntervalSerializer(serializers.ModelSerializer):
 
