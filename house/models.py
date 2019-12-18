@@ -3,6 +3,18 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from django.utils import timezone
 
+class Accommodation(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class Rule(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 
 class HouseType(models.Model):
     name = models.CharField(max_length=255)
@@ -12,6 +24,13 @@ class HouseType(models.Model):
 
 
 class City(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class NearBuilding(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -36,36 +55,13 @@ class House(models.Model):
         User, on_delete=models.CASCADE, related_name='users')
     house_type = models.ForeignKey(
         HouseType, on_delete=models.CASCADE, related_name='house_types')
+    rules = models.ManyToManyField(Rule)
+    accommodations = models.ManyToManyField(Accommodation)
+    near_buildings = models.ManyToManyField(NearBuilding)
 
     @property
     def photos(self):
         return self.photo_set.all()
-
-    @property
-    def house_accoms(self):
-        return self.accommodationhouse.all()
-
-    @property
-    def house_near_buildings(self):
-        return self.nearbuildinghouse.all()
-
-    @property
-    def house_rules(self):
-        return self.rulehouse.all()
-
-
-class NearBuilding(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
-class Rule(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 
 class Room(models.Model):
@@ -93,34 +89,6 @@ class Photo(models.Model):
 
     def __str__(self):
         return "{} | {}".format(self.house, self.image)
-
-
-class Accommodation(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
-class AccommodationHouse(models.Model):
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='house_accoms')
-    accom = models.ForeignKey(
-        Accommodation, on_delete=models.CASCADE, related_name='accommodations')
-
-
-class RuleHouse(models.Model):
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='house_rules')
-    rule = models.ForeignKey(
-        Rule, on_delete=models.CASCADE, related_name='rules')
-
-
-class NearBuildingHouse(models.Model):
-    house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='house_near_buildings')
-    near_building = models.ForeignKey(
-        NearBuilding, on_delete=models.CASCADE, related_name='near_buildings')
 
 
 class Review(models.Model):

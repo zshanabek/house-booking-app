@@ -24,29 +24,13 @@ class HouseViewSet(ModelViewSet):
         if serializer.is_valid():
             house = serializer.save(user=self.request.user)
             photos = request.data.getlist('photos')
-            accoms = list(request.data['accoms'])
-            rules = list(request.data['rules'])
             free_dates = json.loads(request.data['free_dates'])
-            near_buildings = list(request.data['near_buildings'])
 
             for photo in photos:
                 house_models.Photo.objects.create(
                     image=photo, house_id=house.id
                 )
 
-            for accom in accoms:
-                house_models.AccommodationHouse.objects.create(
-                    house_id=house.id, accom_id=accom
-                )
-
-            for rule in rules:
-                house_models.RuleHouse.objects.create(
-                    house_id=house.id, rule_id=rule
-                )
-            for organ in near_buildings:
-                house_models.NearBuildingHouse.objects.create(
-                    house_id=house.id, near_building_id=organ
-                )
             for d in free_dates:
                 house_models.FreeDateInterval.objects.create(
                     house_id=house.id, date_start=d['date_start'],
@@ -66,21 +50,9 @@ class AccommodationViewSet(ModelViewSet):
     pagination_class = None
 
 
-class AccommodationHouseViewSet(ModelViewSet):
-    queryset = house_models.AccommodationHouse.objects.all()
-    serializer_class = home_serializers.AccommodationHouseSerializer
-    pagination_class = None
-
-
 class NearBuildingViewSet(ModelViewSet):
     queryset = house_models.NearBuilding.objects.all()
     serializer_class = home_serializers.NearBuildingSerializer
-    pagination_class = None
-
-
-class NearBuildingHouseViewSet(ModelViewSet):
-    queryset = house_models.NearBuildingHouse.objects.all()
-    serializer_class = home_serializers.NearBuildingHouseSerializer
     pagination_class = None
 
 
