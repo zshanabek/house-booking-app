@@ -8,6 +8,8 @@ from house import serializers as home_serializers
 from house import models as house_models
 import json
 from url_filter.integrations.drf import DjangoFilterBackend
+from django.db.models import Q
+from datetime import datetime
 
 
 class HouseViewSet(ModelViewSet):
@@ -19,8 +21,16 @@ class HouseViewSet(ModelViewSet):
     ordering_fields = ['rating', 'price']
 
     def get_queryset(self):
+        dates = self.request.query_params.get('dates', None)
         rules = self.request.query_params.get('rules', None)
-        queryset = house_models.House.objects
+        queryset = house_models.House.objects.all()
+        date_start = self.request.query_params.get('date_start', None)
+        date_end = self.request.query_params.get('date_end', None)
+        if date_start and date_end:
+            date_start = datetime.strptime(date_start, '%Y-%m-%d')
+            date_end = datetime.strptime(date_end, '%Y-%m-%d')
+            queryset = queryset.filter(
+                Q(free_dates__date_start__lte=date_start), Q(free_dates__date_end__lte=date_end))
         if rules:
             rules = rules.split(',')
             queryset = queryset.filter(rules__id__in=rules)
