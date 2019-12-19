@@ -15,8 +15,14 @@ class HouseViewSet(ModelViewSet):
     serializer_class = home_serializers.HouseSerializer
     filter_backends = [DjangoFilterBackend]
     search_fields = ('address', 'city__name')
-    filter_fields = ['floor', 'rooms', 'beds', 'price', 'house_type', 'rating']
+    filter_fields = ['floor', 'rooms', 'beds', 'price', 'house_type', 'rating', 'rules']
     ordering_fields = ['rating', 'price']
+
+    def get_queryset(self):
+        rules = self.request.query_params.get('rules', None)
+        if rules:
+            queryset = house_models.House.objects.filter(rules__name=str(rules))
+        return queryset
 
     def create(self, request):
         serializer = home_serializers.HouseSerializer(data=request.data)

@@ -3,11 +3,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from django.utils import timezone
 
+
 class Accommodation(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
 
 class Rule(models.Model):
     name = models.CharField(max_length=255)

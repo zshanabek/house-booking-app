@@ -15,7 +15,7 @@ favourites_delete = house_views.FavouriteViewSet.as_view({
 })
 
 router = routers.SimpleRouter()
-router.register(r'houses', house_views.HouseViewSet)
+router.register(r'houses', house_views.HouseViewSet, 'House')
 router.register(r'house_types', house_views.HouseTypeViewSet)
 router.register(r'cities', house_views.CityViewSet)
 router.register(r'accommodations', house_views.AccommodationViewSet)
