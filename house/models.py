@@ -65,6 +65,9 @@ class House(models.Model):
     def photos(self):
         return self.photo_set.all()
 
+    def __str__(self):
+        return self.name
+
 
 class Room(models.Model):
     name = models.CharField(max_length=255)
