@@ -42,16 +42,16 @@ class NearBuilding(models.Model):
 class House(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=1000)
-    rooms = models.IntegerField()
-    floor = models.IntegerField()
     address = models.CharField(max_length=255)
     longitude = models.FloatField()
     latitude = models.FloatField()
-    price = models.IntegerField()
-    status = models.IntegerField()
     rating = models.FloatField(default=0)
-    guests = models.IntegerField()
-    beds = models.IntegerField()
+    status = models.IntegerField()
+    price = models.IntegerField(validators=[MinValueValidator(0)])
+    beds = models.IntegerField(validators=[MinValueValidator(0)])
+    guests = models.IntegerField(validators=[MinValueValidator(0)])
+    rooms = models.IntegerField(validators=[MinValueValidator(0)])
+    floor = models.IntegerField()
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='users')
@@ -60,10 +60,6 @@ class House(models.Model):
     rules = models.ManyToManyField(Rule)
     accommodations = models.ManyToManyField(Accommodation)
     near_buildings = models.ManyToManyField(NearBuilding)
-
-    @property
-    def photos(self):
-        return self.photo_set.all()
 
     def __str__(self):
         return self.name

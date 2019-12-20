@@ -10,6 +10,14 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
+class PhotoSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(max_length=None, use_url=True)
+
+    class Meta:
+        model = house_models.Photo
+        fields = ('image',)
+
+
 class RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Rule
@@ -38,7 +46,7 @@ class HouseSerializer(serializers.ModelSerializer):
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
     is_favourite = serializers.SerializerMethodField()
-    photos = serializers.SerializerMethodField()
+    photos = PhotoSerializer(many=True, read_only=True)
     rules = serializers.PrimaryKeyRelatedField(
         many=True, queryset=house_models.Rule.objects.all())
     accommodations = serializers.PrimaryKeyRelatedField(
@@ -49,9 +57,6 @@ class HouseSerializer(serializers.ModelSerializer):
     def get_is_favourite(self, obj):
         return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
 
-    def get_photos(self, obj):
-        return obj.photos.values_list('image', flat=True)
-
     class Meta:
         model = house_models.House
         fields = (
@@ -60,13 +65,6 @@ class HouseSerializer(serializers.ModelSerializer):
             'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'photos',
             'accommodations', 'near_buildings', 'rules', 'user'
         )
-
-
-class PhotoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = house_models.Photo
-        fields = ('image',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
