@@ -44,6 +44,7 @@ class RegisterView(generics.GenericAPIView):
 # Login
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         # serializer.is_valid(raise_exception=True)
@@ -64,7 +65,7 @@ class LoginView(generics.GenericAPIView):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserView(generics.RetrieveAPIView):
+class UserView(generics.RetrieveAPIView, generics.UpdateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
@@ -72,7 +73,6 @@ class UserView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
-        print(self.request.user)
         return self.request.user
 
 
@@ -154,5 +154,6 @@ def verify_view(request):
                 otp.attempts -= 1
                 otp.save()
                 return Response(
-                    {'response': False, 'message': "Осталось попыток {}".format(otp.attempts)}
+                    {'response': False,
+                        'message': "Осталось попыток {}".format(otp.attempts)}
                 )
