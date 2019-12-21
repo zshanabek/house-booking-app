@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
     'account',  # own
     'house',  # own
+    'reservation', # own
     'knox',
     'corsheaders',
     'django_cleanup',

@@ -14,7 +14,7 @@ from datetime import datetime
 
 class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.all()
-    serializer_class = home_serializers.HouseSerializer
+    serializer_class = home_serializers.HouseDetailSerializer
     filter_backends = [DjangoFilterBackend]
     search_fields = ('address',)
     filter_fields = ['floor', 'rooms', 'beds',
@@ -38,7 +38,7 @@ class HouseViewSet(ModelViewSet):
         return queryset
 
     def create(self, request):
-        serializer = home_serializers.HouseSerializer(data=request.data)
+        serializer = home_serializers.HouseDetailSerializer(data=request.data)
         res = {}
         if serializer.is_valid():
             house = serializer.save(user=self.request.user)

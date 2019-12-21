@@ -36,7 +36,31 @@ class NearBuildingSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class HouseSerializer(serializers.ModelSerializer):
+class HouseListSerializer(serializers.ModelSerializer):
+    house_type = serializers.ReadOnlyField(source='house_type.name')
+    is_favourite = serializers.SerializerMethodField()
+    photos = serializers.SerializerMethodField()
+
+    def get_photos(self, obj):
+        p_qs = house_models.Photo.objects.filter(house=obj)
+        if len(p_qs) == 0:
+            return None
+        photos = PhotoSerializer(p_qs, many=True).data
+        return photos
+
+    def get_is_favourite(self, obj):
+        return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
+
+    class Meta:
+        model = house_models.House
+        fields = (
+            'name', 'description', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+        )
+
+        read_only_fields = ['rating']
+
+
+class HouseDetailSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
     city = serializers.ReadOnlyField(source='city.name')
     house_type_id = serializers.PrimaryKeyRelatedField(
@@ -46,7 +70,7 @@ class HouseSerializer(serializers.ModelSerializer):
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
     is_favourite = serializers.SerializerMethodField()
-    photos = PhotoSerializer(many=True, read_only=True)
+    photos = serializers.SerializerMethodField()
     rules = serializers.PrimaryKeyRelatedField(
         many=True, queryset=house_models.Rule.objects.all())
     accommodations = serializers.PrimaryKeyRelatedField(
@@ -56,6 +80,13 @@ class HouseSerializer(serializers.ModelSerializer):
 
     def get_is_favourite(self, obj):
         return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
+
+    def get_photos(self, obj):
+        p_qs = house_models.Photo.objects.filter(house=obj)
+        if len(p_qs) == 0:
+            return None
+        photos = PhotoSerializer(p_qs, many=True).data
+        return photos
 
     class Meta:
         model = house_models.House
@@ -83,7 +114,7 @@ class HouseTypeSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    house = HouseSerializer(read_only=True)
+    house = HouseListSerializer(read_only=True)
 
     class Meta:
         model = house_models.Favourite

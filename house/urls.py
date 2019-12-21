@@ -1,30 +1,30 @@
 from django.urls import path, include
 from rest_framework_nested import routers
-from house import views as house_views
+from house import views as hviews
 
-favourites_list = house_views.FavouriteViewSet.as_view({
+favourites_list = hviews.FavouriteViewSet.as_view({
     'get': 'list'
 })
 
-favourites_create = house_views.FavouriteViewSet.as_view({
+favourites_create = hviews.FavouriteViewSet.as_view({
     'post': 'create'
 })
 
-favourites_delete = house_views.FavouriteViewSet.as_view({
+favourites_delete = hviews.FavouriteViewSet.as_view({
     'delete': 'destroy'
 })
 
 router = routers.SimpleRouter()
-router.register(r'houses', house_views.HouseViewSet, 'House')
-router.register(r'house_types', house_views.HouseTypeViewSet)
-router.register(r'cities', house_views.CityViewSet)
-router.register(r'accommodations', house_views.AccommodationViewSet)
-router.register(r'near_buildings', house_views.NearBuildingViewSet)
-router.register(r'rules', house_views.RuleViewSet)
+router.register(r'houses', hviews.HouseViewSet, 'House')
+router.register(r'house_types', hviews.HouseTypeViewSet)
+router.register(r'cities', hviews.CityViewSet)
+router.register(r'accommodations', hviews.AccommodationViewSet)
+router.register(r'near_buildings', hviews.NearBuildingViewSet)
+router.register(r'rules', hviews.RuleViewSet)
 
 houses_router = routers.NestedSimpleRouter(router, r'houses', lookup='house')
-houses_router.register(r'reviews', house_views.ReviewViewSet)
-houses_router.register(r'free_dates', house_views.FreeDateIntervalViewSet)
+houses_router.register(r'reviews', hviews.ReviewViewSet)
+houses_router.register(r'free_dates', hviews.FreeDateIntervalViewSet)
 
 urlpatterns = [
     path('favourites/', favourites_list),
