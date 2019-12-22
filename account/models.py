@@ -10,7 +10,8 @@ class User(AbstractBaseUser):
     birth_day = models.DateField()
     gender = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(2)])
-    user_type = models.BooleanField(default=False)
+    user_type = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(2)])
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
@@ -20,8 +21,8 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone', 'birth_day', 'gender',
-    'first_name', 'last_name', ]
+    REQUIRED_FIELDS = ['phone', 'birth_day', 'gender', 'user_type',
+                       'first_name', 'last_name']
 
     def __str__(self):
         return self.email
