@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from utils.sms import  SMS
+from utils.sms import SMS
 from .models import *
 from django.contrib.auth import authenticate
 from .models import *
@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'gender', 'user_type', 'phone',
-            'first_name', 'last_name', 'birth_day')
+                  'first_name', 'last_name', 'birth_day')
 
 
 class UserShortSerializer(serializers.ModelSerializer):

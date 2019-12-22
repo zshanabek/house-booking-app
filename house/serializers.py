@@ -4,12 +4,6 @@ from account.serializers import UserShortSerializer
 from account.models import User
 
 
-class CitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = house_models.City
-        fields = ('id', 'name',)
-
-
 class PhotoSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True)
 
@@ -110,6 +104,12 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         )
 
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = house_models.City
+        fields = ('id', 'name',)
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.email')
     house = serializers.ReadOnlyField(source='house.id')
@@ -133,8 +133,8 @@ class FavouriteSerializer(serializers.ModelSerializer):
         fields = ('house',)
 
 
-class FreeDateIntervalSerializer(serializers.ModelSerializer):
+class BlockedDateIntervalSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = house_models.FreeDateInterval
+        model = house_models.BlockedDateInterval
         fields = ('date_start', 'date_end')

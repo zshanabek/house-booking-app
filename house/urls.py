@@ -24,7 +24,7 @@ router.register(r'rules', hviews.RuleViewSet)
 
 houses_router = routers.NestedSimpleRouter(router, r'houses', lookup='house')
 houses_router.register(r'reviews', hviews.ReviewViewSet)
-houses_router.register(r'free_dates', hviews.FreeDateIntervalViewSet)
+houses_router.register(r'blocked_dates', hviews.BlockedDateIntervalViewSet)
 
 urlpatterns = [
     path('favourites/', favourites_list),

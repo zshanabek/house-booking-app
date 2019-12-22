@@ -44,7 +44,7 @@ class HouseViewSet(ModelViewSet):
             date_start = datetime.strptime(date_start, '%Y-%m-%d')
             date_end = datetime.strptime(date_end, '%Y-%m-%d')
             queryset = queryset.filter(
-                Q(free_dates__date_start__lte=date_start), Q(free_dates__date_end__lte=date_end))
+                Q(blocked_dates__date_start__lte=date_start), Q(blocked_dates__date_end__lte=date_end))
         if rules:
             rules = rules.split(',')
             queryset = queryset.filter(rules__id__in=rules)
@@ -63,15 +63,15 @@ class HouseViewSet(ModelViewSet):
 
         house = serializer.save(user=self.request.user)
         photos = request.data.getlist('photos')
-        free_dates = json.loads(request.data['free_dates'])
+        blocked_dates = json.loads(request.data['blocked_dates'])
 
         for photo in photos:
             house_models.Photo.objects.create(
                 image=photo, house_id=house.id
             )
 
-        for d in free_dates:
-            house_models.FreeDateInterval.objects.create(
+        for d in blocked_dates:
+            house_models.BlockedDateInterval.objects.create(
                 house_id=house.id, date_start=d['date_start'],
                 date_end=d['date_end']
             )
@@ -175,16 +175,16 @@ class FavouriteViewSet(ModelViewSet):
         return Response(res, status=status.HTTP_200_OK)
 
 
-class FreeDateIntervalViewSet(ModelViewSet):
-    queryset = house_models.FreeDateInterval.objects.all()
-    serializer_class = home_serializers.FreeDateIntervalSerializer
+class BlockedDateIntervalViewSet(ModelViewSet):
+    queryset = house_models.BlockedDateInterval.objects.all()
+    serializer_class = home_serializers.BlockedDateIntervalSerializer
     pagination_class = None
 
     def get_queryset(self):
-        return house_models.FreeDateInterval.objects.filter(house=self.kwargs['house_pk'])
+        return house_models.BlockedDateInterval.objects.filter(house=self.kwargs['house_pk'])
 
     def create(self, request, *args, **kwargs):
-        serializer = home_serializers.FreeDateIntervalSerializer(
+        serializer = home_serializers.BlockedDateIntervalSerializer(
             data=request.data)
         res = {}
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])

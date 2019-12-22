@@ -106,11 +106,11 @@ class Favourite(models.Model):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
 
 
-class FreeDateInterval(models.Model):
+class BlockedDateInterval(models.Model):
     date_start = models.DateField((""), auto_now=False, auto_now_add=False)
     date_end = models.DateField((""), auto_now=False, auto_now_add=False)
     house = models.ForeignKey(
-        House, on_delete=models.CASCADE, related_name='free_dates')
+        House, on_delete=models.CASCADE, related_name='blocked_dates')
 
     def __str__(self):
         return "{}-{}".format(self.date_start.strftime("%Y-%m-%d"), self.date_end.strftime("%Y-%m-%d"))
