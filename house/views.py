@@ -21,6 +21,18 @@ class HouseViewSet(ModelViewSet):
                      'price', 'house_type', 'rating', 'city']
     ordering_fields = ['rating', 'price']
 
+    action_serializers = {
+        'retrieve': home_serializers.HouseDetailSerializer,
+        'list': home_serializers.HouseListSerializer,
+        'create': home_serializers.HouseCreateSerializer
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            if self.action in self.action_serializers:
+                return self.action_serializers[self.action]
+        return super(HouseViewSet, self).get_serializer_class()
+
     def get_queryset(self):
         dates = self.request.query_params.get('dates', None)
         rules = self.request.query_params.get('rules', None)
@@ -38,7 +50,8 @@ class HouseViewSet(ModelViewSet):
         return queryset
 
     def create(self, request):
-        serializer = home_serializers.HouseDetailSerializer(data=request.data)
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=request.data)
         res = {}
         if serializer.is_valid():
             house = serializer.save(user=self.request.user)

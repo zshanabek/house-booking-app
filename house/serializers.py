@@ -54,29 +54,19 @@ class HouseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'name', 'description', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+            'id', 'name', 'description', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
         )
-
-        read_only_fields = ['rating']
 
 
 class HouseDetailSerializer(serializers.ModelSerializer):
-    user = UserShortSerializer(read_only=True)
+    user = UserShortSerializer()
     city = serializers.ReadOnlyField(source='city.name')
-    house_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
     house_type = serializers.ReadOnlyField(source='house_type.name')
-    rating = serializers.ReadOnlyField()
-    city_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.City.objects.all(), source='city', write_only=True)
     is_favourite = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
-    rules = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.Rule.objects.all())
-    accommodations = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.Accommodation.objects.all())
-    near_buildings = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.NearBuilding.objects.all())
+    rules = RuleSerializer(many=True)
+    accommodations = AccommodationSerializer(many=True)
+    near_buildings = NearBuildingSerializer(many=True)
 
     def get_is_favourite(self, obj):
         return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
@@ -91,10 +81,31 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'city_id', 'rooms', 'floor',
-            'address', 'longitude', 'latitude', 'house_type', 'house_type_id', 'price',
+            'id', 'name', 'description', 'rooms', 'floor',
+            'address', 'longitude', 'latitude', 'house_type', 'price',
             'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'photos',
             'accommodations', 'near_buildings', 'rules', 'user'
+        )
+
+
+class HouseCreateSerializer(serializers.ModelSerializer):
+    house_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
+    city_id = serializers.PrimaryKeyRelatedField(
+        queryset=house_models.City.objects.all(), source='city', write_only=True)
+    rules = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=house_models.Rule.objects.all())
+    accommodations = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=house_models.Accommodation.objects.all())
+    near_buildings = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=house_models.NearBuilding.objects.all())
+
+    class Meta:
+        model = house_models.House
+        fields = (
+            'name', 'description', 'city_id', 'rooms', 'floor',
+            'address', 'longitude', 'latitude', 'house_type_id', 'price',
+            'beds', 'guests', 'accommodations', 'near_buildings', 'rules'
         )
 
 
