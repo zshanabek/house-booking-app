@@ -55,7 +55,7 @@ class HouseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'city', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+            'id', 'name', 'description', 'city', 'longitude', 'latitude', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
         )
 
 
