@@ -37,6 +37,7 @@ class NearBuildingSerializer(serializers.ModelSerializer):
 
 
 class HouseListSerializer(serializers.ModelSerializer):
+    city = serializers.ReadOnlyField(source='city.name')
     house_type = serializers.ReadOnlyField(source='house_type.name')
     is_favourite = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
@@ -54,7 +55,7 @@ class HouseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+            'id', 'name', 'description', 'city', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
         )
 
 
