@@ -54,9 +54,9 @@ class House(models.Model):
     floor = models.IntegerField()
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='users')
+        User, on_delete=models.CASCADE)
     house_type = models.ForeignKey(
-        HouseType, on_delete=models.CASCADE, related_name='house_types')
+        HouseType, on_delete=models.CASCADE)
     rules = models.ManyToManyField(Rule)
     accommodations = models.ManyToManyField(Accommodation)
     near_buildings = models.ManyToManyField(NearBuilding)

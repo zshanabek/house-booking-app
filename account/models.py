@@ -9,9 +9,9 @@ class User(AbstractBaseUser):
     phone = models.CharField(max_length=255, unique=True)
     birth_day = models.DateField()
     gender = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(2)])
+        validators=[MinValueValidator(0), MaxValueValidator(1)])
     user_type = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(2)])
+        validators=[MinValueValidator(0), MaxValueValidator(1)])
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)

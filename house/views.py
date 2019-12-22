@@ -10,15 +10,16 @@ import json
 from url_filter.integrations.drf import DjangoFilterBackend
 from django.db.models import Q
 from datetime import datetime
+from rest_framework.decorators import action
 
 
 class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.all()
     serializer_class = home_serializers.HouseDetailSerializer
     filter_backends = [DjangoFilterBackend]
-    search_fields = ('address',)
+    search_fields = ['address', ]
     filter_fields = ['floor', 'rooms', 'beds',
-                     'price', 'house_type', 'rating', 'city']
+                     'price', 'house_type', 'rating', 'city', 'user']
     ordering_fields = ['rating', 'price']
 
     action_serializers = {
@@ -53,27 +54,35 @@ class HouseViewSet(ModelViewSet):
         serializer = self.get_serializer_class()
         serializer = serializer(data=request.data)
         res = {}
-        if serializer.is_valid():
-            house = serializer.save(user=self.request.user)
-            photos = request.data.getlist('photos')
-            free_dates = json.loads(request.data['free_dates'])
 
-            for photo in photos:
-                house_models.Photo.objects.create(
-                    image=photo, house_id=house.id
-                )
-
-            for d in free_dates:
-                house_models.FreeDateInterval.objects.create(
-                    house_id=house.id, date_start=d['date_start'],
-                    date_end=d['date_end']
-                )
-            res['response'] = True
-        else:
+        serializer.is_valid(raise_exception=True)
+        if (self.request.user.user_type != 1):
             res['response'] = False
-            res['errors'] = serializer.errors
+            res['errors'] = 'Forbidden to create. Only hosts can create houses'
+            return Response(res, status=status.HTTP_403_FORBIDDEN)
 
+        house = serializer.save(user=self.request.user)
+        photos = request.data.getlist('photos')
+        free_dates = json.loads(request.data['free_dates'])
+
+        for photo in photos:
+            house_models.Photo.objects.create(
+                image=photo, house_id=house.id
+            )
+
+        for d in free_dates:
+            house_models.FreeDateInterval.objects.create(
+                house_id=house.id, date_start=d['date_start'],
+                date_end=d['date_end']
+            )
+        res['response'] = True
         return Response(res, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    def my(self, request, *args, **kwargs):
+        queryset = house_models.House.objects.filter(user=request.user.id)
+        serializer = home_serializers.HouseListSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class AccommodationViewSet(ModelViewSet):

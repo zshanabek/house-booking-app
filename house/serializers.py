@@ -50,12 +50,12 @@ class HouseListSerializer(serializers.ModelSerializer):
         return photos
 
     def get_is_favourite(self, obj):
-        return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
+        return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
 
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'city', 'longitude', 'latitude', 'rooms', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+            'id', 'name', 'city', 'longitude', 'latitude', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
         )
 
 
