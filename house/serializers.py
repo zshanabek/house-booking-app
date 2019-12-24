@@ -44,7 +44,9 @@ class HouseListSerializer(serializers.ModelSerializer):
         return photos
 
     def get_is_favourite(self, obj):
-        return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        if self.context['request'].user.id is not None:
+            return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        return None
 
     class Meta:
         model = house_models.House
@@ -64,7 +66,9 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     near_buildings = NearBuildingSerializer(many=True)
 
     def get_is_favourite(self, obj):
-        return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        if self.context['request'].user.id is not None:
+            return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        return None
 
     def get_photos(self, obj):
         p_qs = house_models.Photo.objects.filter(house=obj)
