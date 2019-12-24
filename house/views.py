@@ -18,7 +18,7 @@ class HouseViewSet(ModelViewSet):
     serializer_class = home_serializers.HouseDetailSerializer
     filter_backends = [DjangoFilterBackend]
     search_fields = ['address', ]
-    filter_fields = ['floor', 'rooms', 'beds',
+    filter_fields = ['floor', 'rooms', 'beds', 'guests',
                      'price', 'house_type', 'rating', 'city', 'user']
     ordering_fields = ['rating', 'price']
 
@@ -76,7 +76,7 @@ class HouseViewSet(ModelViewSet):
                 date_end=d['date_end']
             )
         res['response'] = True
-        return Response(res, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'])
     def my(self, request, *args, **kwargs):

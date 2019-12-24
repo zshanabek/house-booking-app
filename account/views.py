@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from knox.models import AuthToken
+from rest_framework.authtoken.models import Token
 from .serializers import *
 import datetime
 from django.shortcuts import get_object_or_404
@@ -20,25 +20,17 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        if serializer.is_valid():
-            user = serializer.save()
-            _, token = AuthToken.objects.create(user)
-            user = UserSerializer(
-                user, context=self.get_serializer_context()).data
-            response = {
-                'response': True,
-                'token': token,
-                'user': user
-            }
-            return Response(response, status=status.HTTP_200_OK)
-        else:
-            errors = serializer.errors
-            x = next(iter(errors))
-            error = errors[x][0]
-            data = {'response': False,
-                    'error_message': error, }
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token, _ = Token.objects.get_or_create(user=user)
+        user = UserSerializer(
+            user, context=self.get_serializer_context()).data
+        response = {
+            'response': True,
+            'token': token.key,
+            'user': user
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 # Login
@@ -47,22 +39,17 @@ class LoginView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        if serializer.is_valid():
-            user = serializer.validated_data
-            _, token = AuthToken.objects.create(user)
-            user = UserSerializer(
-                user, context=self.get_serializer_context()).data
-            response = {
-                'response': True,
-                'token': token,
-                'user': user
-            }
-            return Response(response, status=status.HTTP_200_OK)
-        else:
-            data = {'response': False,
-                    'error_message': 'Invalid login or password'}
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        token, _ = Token.objects.get_or_create(user=user)
+        user = UserSerializer(
+            user, context=self.get_serializer_context()).data
+        response = {
+            'response': True,
+            'token': token.key,
+            'user': user
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class UserView(generics.RetrieveAPIView, generics.UpdateAPIView):
