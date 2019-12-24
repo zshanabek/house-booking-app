@@ -64,7 +64,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     near_buildings = NearBuildingSerializer(many=True)
 
     def get_is_favourite(self, obj):
-        return house_models.Favourite.objects.filter(user=obj.user, house=obj).exists()
+        return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
 
     def get_photos(self, obj):
         p_qs = house_models.Photo.objects.filter(house=obj)
