@@ -17,6 +17,8 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    userpic = models.ImageField(
+        upload_to='userpics', max_length=254, blank=True, null=True)
 
     objects = UserManager()
 
