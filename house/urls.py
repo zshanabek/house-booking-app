@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework_nested import routers
 from house import views as hviews
+from rest_framework.routers import DefaultRouter
+
 
 favourites_list = hviews.FavouriteViewSet.as_view({
     'get': 'list'
@@ -14,7 +16,7 @@ favourites_delete = hviews.FavouriteViewSet.as_view({
     'delete': 'destroy'
 })
 
-router = routers.SimpleRouter()
+router = DefaultRouter()
 router.register(r'houses', hviews.HouseViewSet, 'House')
 router.register(r'house_types', hviews.HouseTypeViewSet)
 router.register(r'cities', hviews.CityViewSet)

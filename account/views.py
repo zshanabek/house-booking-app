@@ -33,7 +33,7 @@ class RegisterView(generics.GenericAPIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
-# Login
+# Login and Logout
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -50,6 +50,10 @@ class LoginView(generics.GenericAPIView):
             'user': user
         }
         return Response(response, status=status.HTTP_200_OK)
+
+    def delete(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserView(generics.RetrieveAPIView, generics.UpdateAPIView):
