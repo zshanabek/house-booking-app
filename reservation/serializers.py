@@ -6,6 +6,13 @@ from account.models import User
 from house.serializers import HouseListSerializer
 
 
+class ReservationDatesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reservation
+        fields = ('check_in', 'check_out')
+
+
 class ReservationSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
     house = HouseListSerializer(read_only=True)

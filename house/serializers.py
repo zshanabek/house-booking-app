@@ -51,7 +51,7 @@ class HouseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'city', 'longitude', 'latitude', 'house_type', 'price', 'status', 'beds', 'rating',  'is_favourite', 'photos'
+            'id', 'name', 'city', 'longitude', 'latitude', 'house_type', 'price', 'status', 'beds', 'rating', 'is_favourite', 'photos'
         )
 
 
@@ -102,7 +102,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'name', 'description', 'city_id', 'rooms', 'floor',
+            'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type_id', 'price',
             'beds', 'guests', 'accommodations', 'near_buildings', 'rules'
         )
@@ -141,4 +141,4 @@ class BlockedDateIntervalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = house_models.BlockedDateInterval
-        fields = ('date_start', 'date_end')
+        fields = ('check_in', 'check_out')

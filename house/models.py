@@ -60,7 +60,7 @@ class House(models.Model):
     near_buildings = models.ManyToManyField(NearBuilding)
 
     def __str__(self):
-        return self.name
+        return "{} {}".format(self.id, self.name)
 
 
 class Room(models.Model):
@@ -105,10 +105,10 @@ class Favourite(models.Model):
 
 
 class BlockedDateInterval(models.Model):
-    date_start = models.DateField((""), auto_now=False, auto_now_add=False)
-    date_end = models.DateField((""), auto_now=False, auto_now_add=False)
+    check_in = models.DateField()
+    check_out = models.DateField()
     house = models.ForeignKey(
         House, on_delete=models.CASCADE, related_name='blocked_dates')
 
     def __str__(self):
-        return "{}-{}".format(self.date_start.strftime("%Y-%m-%d"), self.date_end.strftime("%Y-%m-%d"))
+        return "{} - {}".format(self.check_in.strftime("%Y/%m/%d"), self.check_out.strftime("%Y/%m/%d"))

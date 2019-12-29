@@ -11,6 +11,8 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from django.db.models import Q
 from datetime import datetime
 from rest_framework.decorators import action
+from reservation.models import Reservation
+from reservation.serializers import ReservationDatesSerializer
 
 
 class HouseViewSet(ModelViewSet):
@@ -38,13 +40,13 @@ class HouseViewSet(ModelViewSet):
         dates = self.request.query_params.get('dates', None)
         rules = self.request.query_params.get('rules', None)
         queryset = house_models.House.objects.all()
-        date_start = self.request.query_params.get('date_start', None)
-        date_end = self.request.query_params.get('date_end', None)
-        if date_start and date_end:
-            date_start = datetime.strptime(date_start, '%Y-%m-%d')
-            date_end = datetime.strptime(date_end, '%Y-%m-%d')
+        check_in = self.request.query_params.get('check_in', None)
+        check_out = self.request.query_params.get('check_out', None)
+        if check_in and check_out:
+            check_in = datetime.strptime(check_in, '%Y-%m-%d')
+            check_out = datetime.strptime(check_out, '%Y-%m-%d')
             queryset = queryset.filter(
-                Q(blocked_dates__date_start__lte=date_start), Q(blocked_dates__date_end__lte=date_end))
+                Q(blocked_dates__check_in__lte=check_in), Q(blocked_dates__check_out__lte=check_out))
         if rules:
             rules = rules.split(',')
             queryset = queryset.filter(rules__id__in=rules)
@@ -66,15 +68,12 @@ class HouseViewSet(ModelViewSet):
         blocked_dates = json.loads(request.data['blocked_dates'])
 
         for photo in photos:
-            house_models.Photo.objects.create(
-                image=photo, house_id=house.id
-            )
+            house_models.Photo.objects.create(image=photo, house_id=house.id)
 
-        for d in blocked_dates:
-            house_models.BlockedDateInterval.objects.create(
-                house_id=house.id, date_start=d['date_start'],
-                date_end=d['date_end']
-            )
+        dserializer = home_serializers.BlockedDateIntervalSerializer(
+            data=blocked_dates, many=True)
+        dserializer.is_valid(raise_exception=True)
+        dserializer.save(house=house)
         res['response'] = True
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -184,14 +183,19 @@ class BlockedDateIntervalViewSet(ModelViewSet):
         return house_models.BlockedDateInterval.objects.filter(house=self.kwargs['house_pk'])
 
     def create(self, request, *args, **kwargs):
-        serializer = home_serializers.BlockedDateIntervalSerializer(
-            data=request.data)
         res = {}
+        serializer = self.get_serializer(data=request.data, many=True)
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
-        if serializer.is_valid():
-            r = serializer.save(house=house)
-            res['response'] = True
-        else:
-            res['response'] = False
-            res['errors'] = serializer.errors
-        return Response(res, status=status.HTTP_200_OK)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(house=house)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def list(self, request, *args, **kwargs):
+        house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
+        queryset = house_models.BlockedDateInterval.objects.filter(house=house)
+        rqueryset = Reservation.objects.filter(
+            house=house, accepted_house=True)
+        serializer = self.get_serializer(queryset, many=True)
+        rserializer = ReservationDatesSerializer(rqueryset, many=True)
+        dates = serializer.data + rserializer.data
+        return Response(dates)
