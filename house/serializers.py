@@ -138,7 +138,8 @@ class FavouriteSerializer(serializers.ModelSerializer):
 
 
 class BlockedDateIntervalSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer(read_only=True, source='house.user')
 
     class Meta:
         model = house_models.BlockedDateInterval
-        fields = ('check_in', 'check_out')
+        fields = ('check_in', 'check_out', 'user')

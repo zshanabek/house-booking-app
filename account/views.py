@@ -59,10 +59,6 @@ class LoginView(generics.GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class UserpicUploadView(APIView):
-    parser_class = (FileUploadParser,)
-
-
 class UserView(GenericAPIView, UpdateModelMixin, RetrieveModelMixin):
     permission_classes = [
         permissions.IsAuthenticated,

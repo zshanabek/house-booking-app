@@ -149,7 +149,7 @@ class FavouriteViewSet(ModelViewSet):
         return house_models.Favourite.objects.filter(user=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
-        serializer = home_serializers.FavouriteSerializer(data=request.data)
+        serializer = self.get_serializer_class(data=request.data)
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if serializer.is_valid():

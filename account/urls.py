@@ -7,6 +7,5 @@ urlpatterns = [
     path('auth/logout', LoginView.as_view()),
     path('auth/user', UserView.as_view()),
     path('auth/send_code', code_view),
-    path('auth/verify', verify_view),
-    path('upload', UserpicUploadView.as_view()),
+    path('auth/verify', verify_view)
 ]
