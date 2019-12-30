@@ -96,8 +96,10 @@ class Review(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
-
+    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='reviews')
+    
+    def __str__(self):
+        return '%s' % (self.body)
 
 class Favourite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -4,6 +4,15 @@ from account.serializers import UserShortSerializer
 from account.models import User
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+    house = serializers.ReadOnlyField(source='house.id')
+
+    class Meta:
+        model = house_models.Review
+        fields = ('id', 'user', 'house', 'body', 'stars', 'created_at')
+
+
 class PhotoSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True)
 
@@ -64,6 +73,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     rules = RuleSerializer(many=True)
     accommodations = AccommodationSerializer(many=True)
     near_buildings = NearBuildingSerializer(many=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     def get_is_favourite(self, obj):
         if self.context['request'].user.id is not None:
@@ -83,7 +93,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'price',
             'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'photos',
-            'accommodations', 'near_buildings', 'rules', 'user'
+            'accommodations', 'near_buildings', 'rules', 'user', 'reviews'
         )
 
 
@@ -112,15 +122,6 @@ class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.City
         fields = ('id', 'name',)
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
-    house = serializers.ReadOnlyField(source='house.id')
-
-    class Meta:
-        model = house_models.Review
-        fields = ('id', 'user', 'house', 'body', 'stars', 'created_at')
 
 
 class HouseTypeSerializer(serializers.ModelSerializer):
