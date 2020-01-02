@@ -97,17 +97,59 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         )
 
 
+class RuleRelatedField(serializers.RelatedField):
+    def display_value(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        return str(value)
+
+    def to_internal_value(self, data):
+        if (house_models.Rule.objects.filter(name=data).exists() == False):
+            new_rule = house_models.Rule.objects.create(name=data)
+        return house_models.Rule.objects.get(name=data)
+
+
+class AccommodationRelatedField(serializers.RelatedField):
+    def display_value(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        return str(value)
+
+    def to_internal_value(self, data):
+        if (house_models.Accommodation.objects.filter(name=data).exists() == False):
+            new_rule = house_models.Accommodation.objects.create(name=data)
+        return house_models.Accommodation.objects.get(name=data)
+
+
+class NearBuildingRelatedField(serializers.RelatedField):
+    def display_value(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        return str(value)
+
+    def to_internal_value(self, data):
+        if (house_models.NearBuilding.objects.filter(name=data).exists() == False):
+            new_rule = house_models.NearBuilding.objects.create(name=data)
+        return house_models.NearBuilding.objects.get(name=data)
+
+
 class HouseCreateSerializer(serializers.ModelSerializer):
     house_type_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
     city_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.City.objects.all(), source='city', write_only=True)
-    rules = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.Rule.objects.all())
-    accommodations = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.Accommodation.objects.all())
-    near_buildings = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=house_models.NearBuilding.objects.all())
+    rules = RuleRelatedField(
+        queryset=house_models.Rule.objects.all(),
+        many=True)
+    accommodations = AccommodationRelatedField(
+        queryset=house_models.Accommodation.objects.all(),
+        many=True)
+    near_buildings = NearBuildingRelatedField(
+        queryset=house_models.NearBuilding.objects.all(),
+        many=True)
 
     class Meta:
         model = house_models.House
