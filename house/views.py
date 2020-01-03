@@ -116,7 +116,7 @@ class ReviewViewSet(ModelViewSet):
         if serializer.is_valid():
             r = serializer.save(house=house, user=self.request.user)
             summ = 0
-            reviews = house.review_set
+            reviews = house.reviews
             for review in reviews.all():
                 summ += review.stars
             house.rating = round(summ/reviews.count() * 2) / 2
