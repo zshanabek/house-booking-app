@@ -44,6 +44,7 @@ class HouseListSerializer(serializers.ModelSerializer):
     house_type = serializers.ReadOnlyField(source='house_type.name')
     is_favourite = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
+    accommodations = AccommodationSerializer(many=True)
 
     def get_photos(self, obj):
         p_qs = house_models.Photo.objects.filter(house=obj)
@@ -60,8 +61,7 @@ class HouseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'city', 'longitude', 'latitude', 'house_type', 'price', 'status', 'beds', 'rooms', 'rating', 'is_favourite', 'photos'
-        )
+            'id', 'name', 'city', 'longitude', 'latitude', 'house_type', 'price', 'status', 'beds', 'rooms', 'rating', 'is_favourite', 'photos', 'accommodations')
 
 
 class HouseDetailSerializer(serializers.ModelSerializer):
