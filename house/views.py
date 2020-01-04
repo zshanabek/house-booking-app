@@ -18,7 +18,7 @@ from reservation.serializers import ReservationDatesSerializer
 class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.all()
     serializer_class = home_serializers.HouseDetailSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ['address', ]
     filter_fields = ['floor', 'rooms', 'beds', 'guests',
                      'price', 'house_type', 'rating', 'city', 'user']
