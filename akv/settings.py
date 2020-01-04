@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_cleanup',
     'django_extensions',
-    'django_seed',
     'phonenumber_field'
 ]
 
