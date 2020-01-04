@@ -43,11 +43,12 @@ INSTALLED_APPS = [
     'django_filters',
     'account',  # own
     'house',  # own
-    'reservation', # own
+    'reservation',  # own
     'corsheaders',
     'django_cleanup',
     'django_extensions',
-    'django_seed'
+    'django_seed',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
@@ -125,6 +126,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': False,
+    'SET_PASSWORD_RETYPE': True,
+    'LOGIN_FIELD': 'email',
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -145,8 +155,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/static-root/'
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = '/var/www/media-root/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

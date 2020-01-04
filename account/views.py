@@ -1,80 +1,14 @@
 from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.mixins import UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
-from rest_framework.generics import GenericAPIView
-from rest_framework.parsers import FileUploadParser
-from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.authtoken.models import Token
 from .serializers import *
 import datetime
-from django.shortcuts import get_object_or_404
 from .models import *
 import pytz
 utc = pytz.timezone('Asia/Almaty')
-
-
-# Register
-class RegisterView(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        token, _ = Token.objects.get_or_create(user=user)
-        user = UserSerializer(
-            user, context=self.get_serializer_context()).data
-        response = {
-            'response': True,
-            'token': token.key,
-            'user': user
-        }
-        return Response(response, status=status.HTTP_200_OK)
-
-
-# Login and Logout
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        token, _ = Token.objects.get_or_create(user=user)
-        user = UserSerializer(
-            user, context=self.get_serializer_context()).data
-        response = {
-            'response': True,
-            'token': token.key,
-            'user': user
-        }
-        return Response(response, status=status.HTTP_200_OK)
-
-    def delete(self, request, format=None):
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
-
-
-class UserView(GenericAPIView, UpdateModelMixin, RetrieveModelMixin):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    def put(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
 
 @api_view(['POST'])
