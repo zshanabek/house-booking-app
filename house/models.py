@@ -52,6 +52,7 @@ class House(models.Model):
     guests = models.PositiveIntegerField()
     rooms = models.PositiveIntegerField()
     floor = models.IntegerField()
+    verified = models.BooleanField(default=False)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE)

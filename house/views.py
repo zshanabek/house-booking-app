@@ -21,7 +21,7 @@ class HouseViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ['address', ]
     filter_fields = ['floor', 'rooms', 'beds', 'guests',
-                     'price', 'house_type', 'rating', 'city', 'user']
+                     'price', 'house_type', 'rating', 'city', 'user', 'verified']
     ordering_fields = ['rating', 'price']
 
     action_serializers = {
