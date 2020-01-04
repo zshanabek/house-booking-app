@@ -41,13 +41,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
-    'account',  # own
-    'house',  # own
-    'reservation', # own
     'corsheaders',
     'django_cleanup',
     'django_extensions',
-    'django_seed'
+    'widget_tweaks',
+    'account',  # own
+    'house',  # own
+    'reservation',  # own
+    'chat'  # own
 ]
 
 MIDDLEWARE = [

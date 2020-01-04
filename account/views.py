@@ -1,3 +1,5 @@
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.mixins import UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin
@@ -75,6 +77,19 @@ class UserView(GenericAPIView, UpdateModelMixin, RetrieveModelMixin):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+# Decorator to make the view csrf excempt.
+@csrf_exempt
+def user_list(request, pk=None):
+    if request.method == 'GET':
+        if pk:
+            users = User.objects.filter(id=pk)
+        else:
+            users = User.objects.all()
+        serializer = UserSerializer(
+            users, many=True, context={'request': request})
+        return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['POST'])
