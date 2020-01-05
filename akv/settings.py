@@ -40,20 +40,31 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'djoser',
     'django_filters',
-    'account',  # own
-    'house',  # own
-    'reservation',  # own
     'corsheaders',
     'django_cleanup',
     'django_extensions',
-    'phonenumber_field'
+    'phonenumber_field',
+    # own apps
+    'account',
+    'house',
+    'reservation',
+    'chat',
+    'notifications'
 ]
+
+# Celery settings
+CELERY_TASK_ALWAYS_EAGER = True
+
+# notifications settings
+NOTIFICATIONS_CHANNELS = {
+    'websocket': 'chat.channels.BroadCastWebSocketChannel'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

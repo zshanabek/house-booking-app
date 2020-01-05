@@ -52,12 +52,12 @@ def code_view(request):
                 return Response(message, status=sms_status)
         else:
             return Response(
-                {'response': False, 'message': 'Такого пользователя нету'},
+                {'response': False, 'message': 'Такого пользователя нет'},
                 status=status.HTTP_404_NOT_FOUND
             )
     else:
         return Response(
-            {'response': False, 'message': 'Нету номера телефона'},
+            {'response': False, 'message': 'Нет номера телефона'},
             status=status.HTTP_400_BAD_REQUEST
         )
 
