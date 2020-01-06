@@ -154,7 +154,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name'
+            'id',
             # 'id', 'name', 'description', 'city_id', 'rooms', 'floor',
             # 'address', 'longitude', 'latitude', 'house_type_id', 'price',
             # 'beds', 'guests', 'accommodations', 'near_buildings', 'rules'
