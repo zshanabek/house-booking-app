@@ -137,26 +137,27 @@ class NearBuildingRelatedField(serializers.RelatedField):
 
 
 class HouseCreateSerializer(serializers.ModelSerializer):
-    house_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
-    city_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.City.objects.all(), source='city', write_only=True)
-    rules = RuleRelatedField(
-        queryset=house_models.Rule.objects.all(),
-        many=True)
-    accommodations = AccommodationRelatedField(
-        queryset=house_models.Accommodation.objects.all(),
-        many=True)
-    near_buildings = NearBuildingRelatedField(
-        queryset=house_models.NearBuilding.objects.all(),
-        many=True)
+    # house_type_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
+    # city_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=house_models.City.objects.all(), source='city', write_only=True)
+    # rules = RuleRelatedField(
+    #     queryset=house_models.Rule.objects.all(),
+    #     many=True)
+    # accommodations = AccommodationRelatedField(
+    #     queryset=house_models.Accommodation.objects.all(),
+    #     many=True)
+    # near_buildings = NearBuildingRelatedField(
+    #     queryset=house_models.NearBuilding.objects.all(),
+    #     many=True)
 
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'city_id', 'rooms', 'floor',
-            'address', 'longitude', 'latitude', 'house_type_id', 'price',
-            'beds', 'guests', 'accommodations', 'near_buildings', 'rules'
+            'id', 'name'
+            # 'id', 'name', 'description', 'city_id', 'rooms', 'floor',
+            # 'address', 'longitude', 'latitude', 'house_type_id', 'price',
+            # 'beds', 'guests', 'accommodations', 'near_buildings', 'rules'
         )
 
 
