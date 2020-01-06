@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
-    'corsheaders',
     'django_cleanup',
     'django_extensions',
     'phonenumber_field',
@@ -51,7 +50,8 @@ INSTALLED_APPS = [
     'house',
     'reservation',
     'chat',
-    'notifications'
+    'notifications',
+    'corsheaders'
 ]
 
 # Celery settings
