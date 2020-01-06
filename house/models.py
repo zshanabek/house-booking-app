@@ -53,6 +53,10 @@ class House(models.Model):
     rooms = models.PositiveIntegerField()
     floor = models.IntegerField()
     verified = models.BooleanField(default=False)
+    discount7days = models.PositiveIntegerField(
+        default=0, validators=[MaxValueValidator(100)])
+    discount30days = models.PositiveIntegerField(
+        default=0, validators=[MaxValueValidator(100)])
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE)
@@ -97,10 +101,12 @@ class Review(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    house = models.ForeignKey(House, on_delete=models.CASCADE, related_name='reviews')
-    
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='reviews')
+
     def __str__(self):
         return '%s' % (self.body)
+
 
 class Favourite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

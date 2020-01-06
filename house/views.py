@@ -57,10 +57,6 @@ class HouseViewSet(ModelViewSet):
         serializer = serializer(data=request.data)
         res = {}
         serializer.is_valid(raise_exception=True)
-        if (self.request.user.user_type != 1):
-            res['response'] = False
-            res['errors'] = 'Forbidden to create. Only hosts can create houses'
-            return Response(res, status=status.HTTP_403_FORBIDDEN)
         house = serializer.save(user=self.request.user)
         photos = request.data.getlist('photos')
         blocked_dates = json.loads(request.data['blocked_dates'])
