@@ -65,8 +65,8 @@ class HouseViewSet(ModelViewSet):
         house = serializer.save(user=self.request.user, description='f', city_id=1, rooms=4, floor=4,
                                 address='f', longitude=1, latitude=1, house_type_id=1, price=1, beds=1, guests=1)
         photos = request.data.getlist('photos')
-        blocked_dates = json.loads(request.data['blocked_dates'])
-
+        # blocked_dates = json.loads(request.data['blocked_dates'])
+        blocked_dates=[]
         for photo in photos:
             house_models.Photo.objects.create(image=photo, house_id=house.id)
 
