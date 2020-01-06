@@ -144,6 +144,9 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SET_PASSWORD_RETYPE': True,
     'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'token': 'account.serializers.LoginTokenSerializer',
+    }
 }
 
 
