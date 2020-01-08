@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/', include('house.urls')),
     path('api/', include('reservation.urls')),
     path('api/', include('chat.urls')),
-    re_path('.*', TemplateView.as_view(template_name = 'index.html'))
+    # re_path('.*', TemplateView.as_view(template_name = 'index.html'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
