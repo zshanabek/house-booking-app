@@ -146,6 +146,8 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
         'token': 'account.serializers.LoginTokenSerializer',
+        'user': 'account.serializers.UserSerializer',
+        'current_user': 'account.serializers.UserSerializer'
     }
 }
 

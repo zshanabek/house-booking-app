@@ -54,7 +54,7 @@ class HouseListSerializer(serializers.ModelSerializer):
         return photos
 
     def get_is_favourite(self, obj):
-        if self.context['request'].user.id is not None:
+        if 'request' in self.context and self.context['request'].user.id is not None:
             return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
         return False
 
