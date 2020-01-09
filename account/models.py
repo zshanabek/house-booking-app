@@ -11,8 +11,6 @@ class User(AbstractBaseUser):
     birth_day = models.DateField()
     gender = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(1)])
-    user_type = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(1)])
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=False)
@@ -22,11 +20,12 @@ class User(AbstractBaseUser):
         upload_to='userpics', max_length=254, blank=True, null=True)
 
     objects = UserManager()
-
+    EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone', 'birth_day', 'gender', 'user_type',
-                       'first_name', 'last_name']
-
+    REQUIRED_FIELDS = ['phone', 'birth_day',
+                       'gender', 'first_name', 'last_name']
+    FIELDS_TO_UPDATE = ['birth_day',
+                       'gender', 'first_name', 'last_name']
     def __str__(self):
         return f"{self.email} - {self.first_name} {self.last_name}"
 

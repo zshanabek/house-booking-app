@@ -13,6 +13,8 @@ from datetime import datetime
 from rest_framework.decorators import action
 from reservation.models import Reservation
 from reservation.serializers import ReservationDatesSerializer
+from .permissions import IsOwnerOrReadOnly
+from rest_framework import permissions
 
 
 class HouseViewSet(ModelViewSet):
@@ -23,7 +25,8 @@ class HouseViewSet(ModelViewSet):
     filter_fields = ['floor', 'rooms', 'beds', 'guests',
                      'price', 'house_type', 'rating', 'city', 'user', 'verified']
     ordering_fields = ['rating', 'price']
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
     action_serializers = {
         'retrieve': home_serializers.HouseDetailSerializer,
         'list': home_serializers.HouseListSerializer,
@@ -186,7 +189,7 @@ class BlockedDateIntervalViewSet(ModelViewSet):
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
         queryset = house_models.BlockedDateInterval.objects.filter(house=house)
         rqueryset = Reservation.objects.filter(
-            house=house, accepted_house=True)
+            house=house, accepted_house=True, status=0)
         serializer = self.get_serializer(queryset, many=True)
         rserializer = ReservationDatesSerializer(rqueryset, many=True)
         dates = serializer.data + rserializer.data

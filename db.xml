@@ -6,7 +6,6 @@
         <field name="phone" type="CharField">87785547554</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
-        <field name="user_type" type="IntegerField">1</field>
         <field name="first_name" type="CharField">Zhunisali</field>
         <field name="last_name" type="CharField">Shanabek</field>
         <field name="is_active" type="BooleanField">True</field>
@@ -19,7 +18,6 @@
         <field name="phone" type="CharField">87785547555</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
-        <field name="user_type" type="IntegerField">1</field>
         <field name="first_name" type="CharField">Admin</field>
         <field name="last_name" type="CharField">1</field>
         <field name="is_active" type="BooleanField">True</field>
@@ -32,7 +30,6 @@
         <field name="phone" type="CharField">87785547556</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
-        <field name="user_type" type="IntegerField">0</field>
         <field name="first_name" type="CharField">Admin</field>
         <field name="last_name" type="CharField">2</field>
         <field name="is_active" type="BooleanField">True</field>
@@ -45,7 +42,6 @@
         <field name="phone" type="CharField">87785547557</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
-        <field name="user_type" type="IntegerField">0</field>
         <field name="first_name" type="CharField">Admin</field>
         <field name="last_name" type="CharField">3</field>
         <field name="is_active" type="BooleanField">True</field>
