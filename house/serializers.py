@@ -5,7 +5,7 @@ from account.models import User
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
+    user = UserShortSerializer(read_only=True)
     house = serializers.ReadOnlyField(source='house.id')
 
     class Meta:
