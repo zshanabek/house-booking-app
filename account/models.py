@@ -24,8 +24,9 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'birth_day',
                        'gender', 'first_name', 'last_name']
-    FIELDS_TO_UPDATE = ['birth_day',
-                       'gender', 'first_name', 'last_name']
+    FIELDS_TO_UPDATE = ['birth_day', 'email',
+                        'gender', 'first_name', 'last_name']
+
     def __str__(self):
         return f"{self.email} - {self.first_name} {self.last_name}"
 

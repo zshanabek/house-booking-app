@@ -15,6 +15,20 @@ from reservation.models import Reservation
 from reservation.serializers import ReservationDatesSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import permissions
+from rest_framework import generics, mixins
+
+
+class HouseUserList(mixins.ListModelMixin,
+                    generics.GenericAPIView):
+
+    serializer_class = home_serializers.HouseListSerializer
+
+    def get_queryset(self):
+        qs = house_models.House.objects.filter(user=self.request.user.id)
+        return qs
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 class HouseViewSet(ModelViewSet):
@@ -71,12 +85,6 @@ class HouseViewSet(ModelViewSet):
         dserializer.save(house=house)
         res['response'] = True
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['GET'])
-    def my(self, request, *args, **kwargs):
-        queryset = house_models.House.objects.filter(user=request.user.id)
-        serializer = home_serializers.HouseListSerializer(queryset, many=True)
-        return Response(serializer.data)
 
 
 class AccommodationViewSet(ModelViewSet):

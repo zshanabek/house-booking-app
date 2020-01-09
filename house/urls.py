@@ -33,5 +33,6 @@ urlpatterns = [
     path('houses/<int:pk>/save_favourite/', favourites_create),
     path('houses/<int:pk>/cancel_favourite/', favourites_delete),
     path('', include(router.urls)),
-    path('', include(houses_router.urls))
+    path('', include(houses_router.urls)),
+    path('my_houses/', hviews.HouseUserList.as_view())
 ]
