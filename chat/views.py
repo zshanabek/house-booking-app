@@ -5,11 +5,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from notifications.signals import notify
+from django.db.models import Q
+
 
 class ChatSessionView(APIView):
     """Manage Chat sessions."""
 
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        chat_sessions = ChatSession.objects.filter(
+            Q(user1=user) | Q(user2=user))
+
+        sessions = [session.to_json() for session in chat_sessions]
+        return Response(sessions)
 
     def post(self, request, *args, **kwargs):
         """create a new chat session."""
@@ -20,7 +30,7 @@ class ChatSessionView(APIView):
         chat_session = ChatSession.objects.create(user1=user1, user2=user2)
 
         return Response({
-            'status': 'SUCCESS', 'uri': chat_session.uri,
+            'status': 'Success', 'uri': chat_session.uri,
             'message': 'New chat session created'
         })
 
@@ -66,13 +76,13 @@ class ChatSessionMessageView(APIView):
                 'uri': chat_session.uri,
                 'message': message,
                 'user': deserialize_user(user),
-             }
+            }
         }
         notify.send(
             sender=self.__class__, **notif_args, channels=['websocket']
         )
 
-        return Response ({
-            'status': 'SUCCESS', 'uri': chat_session.uri, 'message': message,
+        return Response({
+            'status': 'Success', 'uri': chat_session.uri, 'message': message,
             'user': deserialize_user(user)
         })

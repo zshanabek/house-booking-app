@@ -76,6 +76,8 @@ ROOT_URLCONF = 'akv.urls'
 
 AUTH_USER_MODEL = 'account.User'
 
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
