@@ -1,7 +1,5 @@
 from account.models import User
-from .models import (
-    ChatSession, ChatSessionMember, ChatSessionMessage, deserialize_user
-)
+from .models import (ChatSession, ChatSessionMessage, deserialize_user)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,41 +13,15 @@ class ChatSessionView(APIView):
 
     def post(self, request, *args, **kwargs):
         """create a new chat session."""
-        user = request.user
+        email = request.data['email']
+        user1 = request.user
+        user2 = User.objects.get(email=email)
 
-        chat_session = ChatSession.objects.create(owner=user)
+        chat_session = ChatSession.objects.create(user1=user1, user2=user2)
 
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri,
             'message': 'New chat session created'
-        })
-
-    def patch(self, request, *args, **kwargs):
-        """Add a user to a chat session."""
-
-        uri = kwargs['uri']
-        email = request.data['email']
-        user = User.objects.get(email=email)
-
-        chat_session = ChatSession.objects.get(uri=uri)
-        owner = chat_session.owner
-
-        if owner != user:  # Only allow non owners join the room
-            chat_session.members.get_or_create(
-                user=user, chat_session=chat_session
-            )
-
-        owner = deserialize_user(owner)
-        members = [
-            deserialize_user(chat_session.user)
-            for chat_session in chat_session.members.all()
-        ]
-        members.insert(0, owner)  # Make the owner the first member
-
-        return Response({
-            'status': 'SUCCESS', 'members': members,
-            'message': '{} {} joined that chat'.format(user.first_name, user.last_name), 
-            'user': deserialize_user(user)
         })
 
 
@@ -84,8 +56,9 @@ class ChatSessionMessageView(APIView):
         )
         notif_args = {
             'source': user,
-            'source_display_name': user.first_name,
-            'category': 'chat', 'action': 'Sent',
+            'source_display_name': user.full_name(),
+            'category': 'chat',
+            'action': 'Sent',
             'obj': chat_session_message.id,
             'short_description': 'You have a new message',
             'silent': True,
