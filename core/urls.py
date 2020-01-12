@@ -6,7 +6,7 @@ from core.api import MessageModelViewSet, ChatModelViewSet
 
 router = DefaultRouter()
 router.register(r'messages', MessageModelViewSet, base_name='message-api')
-router.register(r'chats', ChatModelViewSet)
+router.register(r'chat_sessions', ChatModelViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

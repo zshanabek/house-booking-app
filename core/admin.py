@@ -3,12 +3,12 @@ from core.models import MessageModel
 
 
 class MessageModelAdmin(ModelAdmin):
-    readonly_fields = ('timestamp',)
+    readonly_fields = ('created_at', 'updated_at')
     search_fields = ('id', 'body', 'user__email', 'recipient__email')
-    list_display = ('id', 'user', 'recipient', 'timestamp', 'characters')
+    list_display = ('id', 'user', 'recipient', 'created_at', 'updated_at', 'characters')
     list_display_links = ('id',)
     list_filter = ('user', 'recipient')
-    date_hierarchy = 'timestamp'
+    date_hierarchy = 'created_at'
 
 
 site.register(MessageModel, MessageModelAdmin)

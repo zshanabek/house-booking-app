@@ -45,7 +45,6 @@ class ChatModelViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         messages = MessageModel.objects.filter(Q(recipient=request.user) | Q(
             user=request.user))
-
         user_ids = messages.values_list('user_id', flat=True)
         recipient_ids = messages.values_list('recipient_id', flat=True)
         ids = list(user_ids) + list(recipient_ids)
