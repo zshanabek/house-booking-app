@@ -34,5 +34,6 @@ urlpatterns = [
     path('houses/<int:pk>/cancel_favourite/', favourites_delete),
     path('', include(router.urls)),
     path('', include(houses_router.urls)),
-    path('my_houses/', hviews.HouseUserList.as_view())
+    path('my_houses/', hviews.HouseUserList.as_view()),
+    path('coordinates/', hviews.HouseCoordinatesList.as_view())
 ]

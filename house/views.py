@@ -1,3 +1,4 @@
+import json
 from rest_framework import filters
 from rest_framework import status
 from rest_framework.response import Response
@@ -6,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from house import serializers as home_serializers
 from house import models as house_models
-import json
 from url_filter.integrations.drf import DjangoFilterBackend
 from django.db.models import Q
 from datetime import datetime
@@ -26,6 +26,19 @@ class HouseUserList(mixins.ListModelMixin,
     def get_queryset(self):
         qs = house_models.House.objects.filter(user=self.request.user.id)
         return qs
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class HouseCoordinatesList(mixins.ListModelMixin,
+                           generics.GenericAPIView):
+    queryset = house_models.House.objects.all()
+    serializer_class = home_serializers.HouseCoordinatesSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = ['city', ]
+    search_fields = ['address', ]
+    ordering_fields = ['rating', 'price']
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

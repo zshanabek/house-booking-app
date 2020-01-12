@@ -39,6 +39,13 @@ class NearBuildingSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
+class HouseCoordinatesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = house_models.House
+        fields = ('id', 'name', 'longitude', 'latitude', 'city')
+
+
 class HouseListSerializer(serializers.ModelSerializer):
     city = serializers.ReadOnlyField(source='city.name')
     house_type = serializers.ReadOnlyField(source='house_type.name')
