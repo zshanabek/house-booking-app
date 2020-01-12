@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     'django_cleanup',
     'django_extensions',
     'phonenumber_field',
+    'channels',
     # own apps
     'account',
     'house',
     'reservation',
     'chat',
+    'core',
     'notifications',
     'corsheaders'
 ]
@@ -76,7 +78,8 @@ ROOT_URLCONF = 'akv.urls'
 
 AUTH_USER_MODEL = 'account.User'
 
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.AllowAllUsersModelBackend']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -151,6 +154,8 @@ DJOSER = {
     }
 }
 
+MESSAGES_TO_LOAD = 15
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -185,3 +190,20 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 django_heroku.settings(locals())
+
+# Import local_settings.py
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
+ASGI_APPLICATION = 'akv.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

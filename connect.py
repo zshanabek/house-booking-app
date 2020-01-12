@@ -24,8 +24,8 @@ def on_open(ws):
 
 if __name__ == "__main__":
     websocket.enableTrace(True)
-    # ws = websocket.WebSocketApp("ws://localhost:8081/9034beb4072d4a5",
-    ws = websocket.WebSocketApp("ws://akv-technopark.herokuapp.com:44810/3ca5b05abc2c463",
+    ws = websocket.WebSocketApp("ws://localhost:8000/ws?token=64346f05509d5bcc4a0c7672626fd2ee1334593a",
+    # ws = websocket.WebSocketApp("ws://akv-technopark.herokuapp.com:44810/3ca5b05abc2c463",
                                 on_message=on_message,
                                 on_error=on_error,
                                 on_close=on_close)
