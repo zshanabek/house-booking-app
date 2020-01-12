@@ -23,11 +23,10 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('account.urls')),
-    path('api/auth/', include('djoser.urls')),  
+    path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/', include('house.urls')),
     path('api/', include('reservation.urls')),
-    path('api/', include('chat.urls')),
     path('api/', include('core.urls')),
     # re_path('.*', TemplateView.as_view(template_name = 'index.html'))
 ]

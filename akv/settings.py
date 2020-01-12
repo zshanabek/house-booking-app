@@ -49,19 +49,9 @@ INSTALLED_APPS = [
     'account',
     'house',
     'reservation',
-    'chat',
     'core',
-    'notifications',
     'corsheaders'
 ]
-
-# Celery settings
-CELERY_TASK_ALWAYS_EAGER = True
-
-# notifications settings
-NOTIFICATIONS_CHANNELS = {
-    'websocket': 'chat.channels.BroadCastWebSocketChannel'
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
