@@ -5,4 +5,3 @@ from core.middlewares import TokenAuthMiddlewareStack
 application = ProtocolTypeRouter({
     "websocket": TokenAuthMiddlewareStack(core_routing.websocket_urlpatterns)
 })
-
