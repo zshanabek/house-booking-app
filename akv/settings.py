@@ -180,7 +180,6 @@ django_heroku.settings(locals())
 
 ASGI_APPLICATION = 'akv.routing.application'
 
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
