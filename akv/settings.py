@@ -176,8 +176,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-django_heroku.settings(locals())
-
 ASGI_APPLICATION = 'akv.routing.application'
 
 CHANNEL_LAYERS = {
@@ -188,3 +186,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+django_heroku.settings(locals())

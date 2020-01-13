@@ -1,9 +1,9 @@
 
 # chat/consumers.py
 
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from django.contrib.auth.models import AnonymousUser
+from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.exceptions import DenyConnection
 
 
