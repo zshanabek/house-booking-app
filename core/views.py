@@ -6,8 +6,13 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication
 from akv import settings
-from core.serializers import MessageModelSerializer, UserModelSerializer
-from core.models import MessageModel
+from core.serializers import MessageModelSerializer, UserModelSerializer, ImageSerializer
+from core.models import Message, Image
+
+
+def modify_data(message, image):
+    l = {'message': message, 'image': image}
+    return l
 
 
 class MessagePagination(PageNumberPagination):
@@ -15,9 +20,25 @@ class MessagePagination(PageNumberPagination):
 
 
 class MessageModelViewSet(ModelViewSet):
-    queryset = MessageModel.objects.all()
+    queryset = Message.objects.all()
     serializer_class = MessageModelSerializer
     pagination_class = MessagePagination
+
+    def perform_create(self, serializer):
+        recipient = self.request.data['recipient']
+        res = {}
+        if recipient == self.request.user.email:
+            res['response'] = False
+            res['errors'] = "User can't send message to himself"
+            return Response(res, status=status.HTTP_403_FORBIDDEN)
+        serializer.is_valid(raise_exception=True)
+        message = serializer.save()
+        images = dict((self.request.data).lists())['images']
+        for name in images:
+            modified_data = modify_data(message.id, name)
+            file_serializer = ImageSerializer(data=modified_data)
+            if file_serializer.is_valid(raise_exception=True):
+                file_serializer.save()
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.queryset.filter(Q(recipient=request.user) |
@@ -43,7 +64,7 @@ class ChatModelViewSet(ModelViewSet):
     serializer_class = UserModelSerializer
 
     def list(self, request, *args, **kwargs):
-        messages = MessageModel.objects.filter(Q(recipient=request.user) | Q(
+        messages = Message.objects.filter(Q(recipient=request.user) | Q(
             user=request.user))
         user_ids = messages.values_list('user_id', flat=True)
         recipient_ids = messages.values_list('recipient_id', flat=True)

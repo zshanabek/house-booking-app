@@ -1,8 +1,10 @@
 from account.models import User
 from django.db.models import (
     Model, TextField, DateTimeField, ForeignKey, CASCADE)
+from django.db import models
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+
 
 def deserialize_user(user):
     return {
@@ -19,7 +21,7 @@ class TrackableDateModel(Model):
         abstract = True
 
 
-class MessageModel(TrackableDateModel):
+class Message(TrackableDateModel):
     user = ForeignKey(User, on_delete=CASCADE, verbose_name='user',
                       related_name='from_user', db_index=True)
     recipient = ForeignKey(User, on_delete=CASCADE,
@@ -39,18 +41,9 @@ class MessageModel(TrackableDateModel):
         """
         Inform client there is a new message.
         """
-        notification = {
-            'type': 'recieve_group_message',
-            'user': deserialize_user(self.user),
-            'message': self.to_json()
-        }
-
+        notification = {'type': 'recieve_group_message', 'user': deserialize_user(
+            self.user), 'message': self.to_json()}
         channel_layer = get_channel_layer()
-        print("sender: {}; {}; {}".format(self.user.id,
-                                          self.user.email, self.user.full_name()))
-        print("receive {}; {}; {}".format(self.recipient.id,
-                                          self.recipient.email, self.recipient.full_name()))
-
         async_to_sync(channel_layer.group_send)(
             "{}".format(self.user.id), notification)
         async_to_sync(channel_layer.group_send)(
@@ -63,13 +56,26 @@ class MessageModel(TrackableDateModel):
         """
         new = self.id
         self.body = self.body.strip()  # Trimming whitespaces from the body
-        super(MessageModel, self).save(*args, **kwargs)
+        super(Message, self).save(*args, **kwargs)
         if new is None:
             self.notify_ws_clients()
 
-    # Meta
     class Meta:
         app_label = 'core'
         verbose_name = 'message'
         verbose_name_plural = 'messages'
         ordering = ('-created_at',)
+
+
+def nameFile(instance, filename):
+    return '/'.join(['message_images', filename])
+
+
+class Image(Model):
+    message = models.ForeignKey(
+        Message, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(
+        upload_to=nameFile, max_length=254, blank=True, null=True)
+
+    def __str__(self):
+        return "{} | {}".format(self.message.body, self.image)
