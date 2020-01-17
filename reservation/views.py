@@ -7,13 +7,13 @@ from rest_framework import viewsets
 from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from .permissions import IsOwner, IsHouseOwner
+from .permissions import IsGuest, IsHost
 
 
-class ReservationViewSet(viewsets.ModelViewSet):
+class ReservationHostViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.IsAuthenticated, IsHouseOwner]
+    permission_classes = [permissions.IsAuthenticated, IsHost]
 
     def get_queryset(self):
         houses = self.request.user.house_set.all()
@@ -39,13 +39,13 @@ class ReservationViewSet(viewsets.ModelViewSet):
         return Response(res, status=status.HTTP_204_NO_CONTENT)
 
 
-class ReservationOwnerViewSet(viewsets.ModelViewSet):
+class ReservationGuestViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsGuest]
 
     def get_queryset(self):
-        return Reservation.objects.filter(user=self.request.user.id)
+        return Reservation.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -54,6 +54,10 @@ class ReservationOwnerViewSet(viewsets.ModelViewSet):
         if request.data['guests'] >= house.guests:
             res['response'] = False
             res['errors'] = "The number of booking guests can't exceed the number of house guests"
+            return Response(res, status=status.HTTP_403_FORBIDDEN)
+        if house.user == request.user:
+            res['response'] = False
+            res['errors'] = "User can't reserve own house"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
