@@ -8,6 +8,7 @@ from rest_framework.authentication import SessionAuthentication
 from akv import settings
 from core.serializers import MessageModelSerializer, UserModelSerializer, ImageSerializer
 from core.models import Message, Image
+from rest_framework import permissions
 
 
 def modify_data(message, image):
@@ -23,6 +24,7 @@ class MessageModelViewSet(ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageModelSerializer
     pagination_class = MessagePagination
+    permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         recipient = self.request.data['recipient']
@@ -62,6 +64,7 @@ class MessageModelViewSet(ModelViewSet):
 class ChatModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         messages = Message.objects.filter(Q(recipient=request.user) | Q(

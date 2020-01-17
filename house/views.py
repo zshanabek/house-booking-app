@@ -23,6 +23,7 @@ class HouseUserList(mixins.ListModelMixin,
                     generics.GenericAPIView):
 
     serializer_class = home_serializers.HouseListSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         qs = house_models.House.objects.filter(user=self.request.user.id)
@@ -174,6 +175,7 @@ class FavouriteViewSet(ModelViewSet):
     queryset = house_models.Favourite.objects.all()
     serializer_class = home_serializers.FavouriteSerializer
     pagination_class = None
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return house_models.Favourite.objects.filter(user=self.request.user.id)
