@@ -174,7 +174,6 @@ class RuleViewSet(ModelViewSet):
 class FavouriteViewSet(ModelViewSet):
     queryset = house_models.Favourite.objects.all()
     serializer_class = home_serializers.FavouriteSerializer
-    pagination_class = None
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
@@ -185,7 +184,8 @@ class FavouriteViewSet(ModelViewSet):
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if serializer.is_valid():
-            if house_models.Favourite.objects.filter(house=house.id, user=self.request.user).exists() == False:
+            if house_models.Favourite.objects.filter(house=house.id,
+                                                     user=self.request.user).exists() == False:
                 r = serializer.save(user=self.request.user, house=house)
             res['response'] = True
         else:
