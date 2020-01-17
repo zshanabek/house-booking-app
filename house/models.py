@@ -46,7 +46,7 @@ class House(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
     rating = models.FloatField(default=0.0)
-    status = models.IntegerField(default=0)
+    status = models.IntegerField(default=1)
     price = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     guests = models.PositiveIntegerField()

@@ -14,11 +14,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(max_length=None, use_url=True)
 
     class Meta:
         model = house_models.Photo
-        fields = ('image',)
+        fields = ('house', 'image',)
 
 
 class RuleSerializer(serializers.ModelSerializer):

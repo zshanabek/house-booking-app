@@ -16,6 +16,7 @@ from reservation.serializers import ReservationDatesSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import permissions
 from rest_framework import generics, mixins
+from .helpers import get_names
 
 
 class HouseUserList(mixins.ListModelMixin,
@@ -82,22 +83,35 @@ class HouseViewSet(ModelViewSet):
             queryset = queryset.filter(accommodations__id__in=accommodations)
         return queryset
 
-    def create(self, request):
-        serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
-        res = {}
+    def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         house = serializer.save(user=self.request.user)
-        photos = request.data.getlist('photos')
-        blocked_dates = json.loads(request.data['blocked_dates'])
-        for photo in photos:
-            house_models.Photo.objects.create(image=photo, house_id=house.id)
+        blocked_dates = json.loads(self.request.data['blocked_dates'])
         dserializer = home_serializers.BlockedDateIntervalSerializer(
             data=blocked_dates, many=True)
         dserializer.is_valid(raise_exception=True)
         dserializer.save(house=house)
-        res['response'] = True
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        images = dict((self.request.data).lists())['photos']
+        for name in images:
+            modified_data = get_names(house.id, name)
+            file_serializer = home_serializers.PhotoSerializer(
+                data=modified_data)
+            if file_serializer.is_valid(raise_exception=True):
+                file_serializer.save()
+
+    @action(["post"], detail=True)
+    def activate(self, request, *args, **kwargs):
+        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
+        house.status = 1
+        house.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(["post"], detail=True)
+    def deactivate(self, request, *args, **kwargs):
+        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
+        house.status = 0
+        house.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class AccommodationViewSet(ModelViewSet):
