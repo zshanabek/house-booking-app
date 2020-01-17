@@ -179,6 +179,8 @@ class FavouriteViewSet(ModelViewSet):
         return house_models.Favourite.objects.filter(user=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
+        print("============={}=============={}".format(
+            request.user.full_name(), request.data))
         serializer = self.get_serializer(data=request.data)
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
