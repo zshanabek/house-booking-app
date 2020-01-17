@@ -174,13 +174,13 @@ class RuleViewSet(ModelViewSet):
 class FavouriteViewSet(ModelViewSet):
     queryset = house_models.Favourite.objects.all()
     serializer_class = home_serializers.FavouriteSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return house_models.Favourite.objects.filter(user=self.request.user.id)
 
     def list(self, request, *args, **kwargs):
-        return Response(request.headers['Authorization'], status=status.HTTP_200_OK)
+        return Response(request.headers, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
