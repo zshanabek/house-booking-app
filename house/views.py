@@ -86,7 +86,7 @@ class HouseViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
-        house = serializer.save()
+        house = serializer.save(user=self.request.user)
         blocked_dates = json.loads(self.request.data['blocked_dates'])
         dserializer = home_serializers.BlockedDateIntervalSerializer(
             data=blocked_dates, many=True)
