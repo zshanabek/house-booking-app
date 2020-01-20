@@ -17,6 +17,7 @@ from .permissions import IsOwnerOrReadOnly
 from rest_framework import permissions
 from rest_framework import generics, mixins
 from .helpers import get_names
+from cities_light.models import City, Country, Region
 
 
 class HouseUserList(mixins.ListModelMixin,
@@ -87,13 +88,14 @@ class HouseViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         house = serializer.save(user=self.request.user)
-        blocked_dates = json.loads(self.request.data['blocked_dates'])
-        dserializer = home_serializers.BlockedDateIntervalSerializer(
-            data=blocked_dates, many=True)
-        dserializer.is_valid(raise_exception=True)
-        dserializer.save(house=house)
-        images = dict((self.request.data).lists())['photos']
-        for name in images:
+        if 'blocked_dates' in self.request.data:
+            blocked_dates = json.loads(self.request.data['blocked_dates'])
+            dserializer = home_serializers.BlockedDateIntervalSerializer(
+                data=blocked_dates, many=True)
+            dserializer.is_valid(raise_exception=True)
+            dserializer.save(house=house)
+        photos = self.request.data.getlist('photos')
+        for name in photos:
             modified_data = get_names(house.id, name)
             file_serializer = home_serializers.PhotoSerializer(
                 data=modified_data)
@@ -162,8 +164,32 @@ class ReviewViewSet(ModelViewSet):
 
 
 class CityViewSet(ModelViewSet):
-    queryset = house_models.City.objects.all()
+    http_method_names = ['get']
+    queryset = City.objects.all()
     serializer_class = home_serializers.CitySerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = ('name', 'region')
+    ordering_fields = ('name', )
+    pagination_class = None
+
+
+class RegionViewSet(ModelViewSet):
+    http_method_names = ['get']
+    queryset = Region.objects.all()
+    serializer_class = home_serializers.RegionSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = ('name', 'country')
+    ordering_fields = ('name', )
+    pagination_class = None
+
+
+class CountryViewSet(ModelViewSet):
+    http_method_names = ['get']
+    queryset = Country.objects.all()
+    serializer_class = home_serializers.CountrySerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = ('name', )
+    ordering_fields = ('name', )
     pagination_class = None
 
 

@@ -25,13 +25,6 @@ class HouseType(models.Model):
         return self.name
 
 
-class City(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
 class NearBuilding(models.Model):
     name = models.CharField(max_length=255)
 
@@ -57,7 +50,10 @@ class House(models.Model):
         default=0, validators=[MaxValueValidator(100)])
     discount30days = models.PositiveIntegerField(
         default=0, validators=[MaxValueValidator(100)])
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    city = models.ForeignKey('cities_light.City', on_delete=models.CASCADE)
+    region = models.ForeignKey('cities_light.Region', on_delete=models.CASCADE)
+    country = models.ForeignKey(
+        'cities_light.Country', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house_type = models.ForeignKey(HouseType, on_delete=models.CASCADE)
     rules = models.ManyToManyField(Rule)

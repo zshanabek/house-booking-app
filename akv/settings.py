@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'phonenumber_field',
     'channels',
+    'cities_light',
     # own apps
     'account',
     'house',
@@ -170,6 +171,9 @@ USE_TZ = True
 CORS_ORIGIN_ALLOW_ALL = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en', 'kz']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['KZ']
 
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [

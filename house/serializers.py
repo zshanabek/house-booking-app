@@ -2,6 +2,7 @@ from rest_framework import serializers
 from house import models as house_models
 from account.serializers import UserShortSerializer
 from account.models import User
+from cities_light.models import City, Country, Region
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -156,7 +157,11 @@ class HouseCreateSerializer(serializers.ModelSerializer):
     house_type_id = serializers.PrimaryKeyRelatedField(
         queryset=house_models.HouseType.objects.all(), source='house_type', write_only=True)
     city_id = serializers.PrimaryKeyRelatedField(
-        queryset=house_models.City.objects.all(), source='city', write_only=True)
+        queryset=City.objects.all(), source='city', write_only=True)
+    country_id = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all(), source='country', write_only=True)
+    region_id = serializers.PrimaryKeyRelatedField(
+        queryset=Region.objects.all(), source='region', write_only=True)
     rules = RuleRelatedField(
         queryset=house_models.Rule.objects.all(),
         many=True)
@@ -170,7 +175,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.House
         fields = (
-            'id', 'name', 'description', 'city_id', 'rooms', 'floor',
+            'id', 'name', 'description', 'city_id', 'region_id', 'country_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type_id', 'price',
             'beds', 'guests', 'discount7days', 'discount30days', 'accommodations', 'near_buildings', 'rules'
         )
@@ -178,8 +183,20 @@ class HouseCreateSerializer(serializers.ModelSerializer):
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = house_models.City
-        fields = ('id', 'name',)
+        model = City
+        fields = '__all__'
+
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = '__all__'
 
 
 class HouseTypeSerializer(serializers.ModelSerializer):
