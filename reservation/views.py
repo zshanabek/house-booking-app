@@ -25,8 +25,6 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.accepted_house = True
         booking.save()
-        res = {}
-        res['response'] = True
         return Response(res, status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['PATCH'])
@@ -34,8 +32,6 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.accepted_house = False
         booking.save()
-        res = {}
-        res['response'] = True
         return Response(res, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -69,6 +65,4 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.status = Reservation.CANCELED
         booking.save()
-        res = {}
-        res['response'] = True
-        return Response(res, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
