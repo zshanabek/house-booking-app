@@ -25,14 +25,16 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.accepted_house = True
         booking.save()
-        return Response(res, status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Бронь была принята'}
+        return Response(res, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['PATCH'])
     def reject(self, request, *args, **kwargs):
         booking = self.get_object()
         booking.accepted_house = False
         booking.save()
-        return Response(res, status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Бронь была отказана'}
+        return Response(res, status=status.HTTP_200_OK)
 
 
 class ReservationGuestViewSet(viewsets.ModelViewSet):
@@ -65,4 +67,5 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.status = Reservation.CANCELED
         booking.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Статус брони был успешно изменен'}
+        return Response(res, status=status.HTTP_200_OK)

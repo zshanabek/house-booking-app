@@ -105,14 +105,16 @@ class HouseViewSet(ModelViewSet):
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         house.status = 1
         house.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Статус объявления был успешно изменен'}
+        return Response(res, status=status.HTTP_200_OK)
 
     @action(["post"], detail=True)
     def deactivate(self, request, *args, **kwargs):
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         house.status = 0
         house.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Статус объявления был успешно изменен'}
+        return Response(res, status=status.HTTP_200_OK)
 
 
 class AccommodationViewSet(ModelViewSet):
