@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from .permissions import IsGuest, IsHost
+from house.permissions import IsGuest, IsHost
 
 
 class ReservationHostViewSet(viewsets.ModelViewSet):

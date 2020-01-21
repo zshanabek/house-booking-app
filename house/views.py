@@ -13,7 +13,7 @@ from datetime import datetime
 from rest_framework.decorators import action
 from reservation.models import Reservation
 from reservation.serializers import ReservationDatesSerializer
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsGuest, IsHost
 from rest_framework import permissions
 from rest_framework import generics, mixins
 from .helpers import get_names
@@ -237,6 +237,8 @@ class FavouriteViewSet(ModelViewSet):
 class BlockedDateIntervalViewSet(ModelViewSet):
     queryset = house_models.BlockedDateInterval.objects.all()
     serializer_class = home_serializers.BlockedDateIntervalSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     pagination_class = None
 
     def get_queryset(self):
@@ -244,8 +246,12 @@ class BlockedDateIntervalViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         res = {}
-        serializer = self.get_serializer(data=request.data, many=True)
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
+        if house.user != request.user:
+            res['response'] = False
+            res['errors'] = "Only ad owner can create blocked dates"
+            return Response(res, status=status.HTTP_403_FORBIDDEN)
+        serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         serializer.save(house=house)
         return Response(serializer.data, status=status.HTTP_200_OK)
