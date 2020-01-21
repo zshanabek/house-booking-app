@@ -35,7 +35,7 @@ class MessageModelViewSet(ModelViewSet):
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         serializer.is_valid(raise_exception=True)
         message = serializer.save()
-        images = dict((self.request.data).lists())['images']
+        images = self.request.data.getlist('images')
         for name in images:
             modified_data = modify_data(message.id, name)
             file_serializer = ImageSerializer(data=modified_data)
