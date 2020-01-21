@@ -48,6 +48,18 @@
         <field name="is_staff" type="BooleanField">True</field>
         <field name="is_superuser" type="BooleanField">True</field>
     </object>
+    <object model="account.user" pk="5">
+        <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
+        <field name="email" type="CharField">zshanabek@gmail.com</field>
+        <field name="phone" type="CharField">87785547558</field>
+        <field name="birth_day" type="DateField">2012-12-12</field>
+        <field name="gender" type="IntegerField">0</field>
+        <field name="first_name" type="CharField">Jonas</field>
+        <field name="last_name" type="CharField">Bek</field>
+        <field name="is_active" type="BooleanField">True</field>
+        <field name="is_staff" type="BooleanField">True</field>
+        <field name="is_superuser" type="BooleanField">True</field>
+    </object>
     <object model="house.housetype" pk="1">
         <field name="name" type="CharField">Квартира</field>
     </object>
