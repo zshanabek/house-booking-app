@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import generics, serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +8,52 @@ from .serializers import *
 import datetime
 from .models import *
 import pytz
+from rest_framework.authtoken.models import Token
+
 utc = pytz.timezone('Asia/Almaty')
+
+
+class RegisterView(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            token, _ = Token.objects.get_or_create(user=user)
+            user = UserSerializer(
+                user, context=self.get_serializer_context()).data
+            return Response(user, status=status.HTTP_200_OK)
+        else:
+            errors = serializer.errors
+            x = next(iter(errors))
+            error = errors[x][0]
+            data = {'response': False,
+                    'error_message': error, }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Login and Logout
+class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data
+            token, _ = Token.objects.get_or_create(user=user)
+            user = UserSerializer(
+                user, context=self.get_serializer_context()).data
+            response = {
+                'auth_token': token.key,
+                'user': user
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        else:
+            data = {'response': False,
+                    'error_message': 'Invalid login or password'}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
