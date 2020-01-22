@@ -51,7 +51,7 @@ class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.all()
     serializer_class = home_serializers.HouseDetailSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    search_fields = ['address', ]
+    search_fields = ['address', 'name']
     filter_fields = ['floor', 'rooms', 'beds', 'guests',
                      'price', 'house_type', 'rating', 'city', 'user', 'verified']
     ordering_fields = ['rating', 'price']
@@ -207,9 +207,8 @@ class FavouriteViewSet(ModelViewSet):
     def get_queryset(self):
         return house_models.Favourite.objects.filter(user=self.request.user.id)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
+    def perform_create(self, serializer):
+        house = get_object_or_404(house_models.House, pk=self.kwargs['pk'])
         res = {}
         if serializer.is_valid():
             if house_models.Favourite.objects.filter(house=house.id,
@@ -223,6 +222,7 @@ class FavouriteViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         serializer = home_serializers.FavouriteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if house_models.Favourite.objects.filter(house=house.id).exists():
