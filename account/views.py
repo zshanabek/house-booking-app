@@ -74,7 +74,7 @@ def verify_view(request):
                 user = User.objects.filter(phone__iexact=phone)
                 if user.exists():
                     user = user.first()
-                    user.is_active = True
+                    user.is_phone_confirmed = True
                     user.save()
                     return Response(
                         {'response': True, 'message': 'Успешно введен'},

@@ -26,7 +26,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     userpic = models.ImageField(
         upload_to='userpics', max_length=254, blank=True, null=True)
-
+    is_phone_confirmed = models.BooleanField(default=False)
     objects = UserManager()
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -53,7 +53,7 @@ class User(AbstractBaseUser):
 
 
 class OTP(models.Model):
-    phone = models.CharField(max_length=255, unique=True)
+    phone = PhoneNumberField()
     code = models.CharField(max_length=4)
     attempts = models.IntegerField(default=3)
     ban_date = models.DateTimeField(default=None, null=True)
