@@ -63,7 +63,7 @@
     <object model="account.user" pk="6">
         <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
         <field name="email" type="CharField">zshanabek@yandex.kz</field>
-        <field name="phone" type="CharField">87785547558</field>
+        <field name="phone" type="CharField">87785547559</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
         <field name="first_name" type="CharField">Jonas</field>

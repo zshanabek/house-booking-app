@@ -136,12 +136,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
+        'token': 'account.serializers.LoginTokenSerializer',
         'user': 'account.serializers.UserSerializer',
         'current_user': 'account.serializers.UserSerializer'
     }
