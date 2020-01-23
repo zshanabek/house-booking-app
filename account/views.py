@@ -29,7 +29,8 @@ class RegisterView(generics.GenericAPIView):
             x = next(iter(errors))
             error = errors[x][0]
             data = {'response': False,
-                    'error_message': error, }
+                    'error_message': error,
+                    'field': x}
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
