@@ -8,6 +8,7 @@ from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from house.permissions import IsGuest, IsHost
+from .tasks import set_reservation_as_inactive, send_email_task
 
 
 class ReservationHostViewSet(viewsets.ModelViewSet):
@@ -45,26 +46,27 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Reservation.objects.filter(user=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        house = get_object_or_404(House, pk=request.data['house_id'])
+    def perform_create(self, serializer):
+        house = get_object_or_404(House, pk=self.request.data['house_id'])
         res = {}
-        if request.data['guests'] >= house.guests:
+        if self.request.data['guests'] >= house.guests:
             res['response'] = False
             res['errors'] = "The number of booking guests can't exceed the number of house guests"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
-        if house.user == request.user:
+        if house.user == self.request.user:
             res['response'] = False
             res['errors'] = "User can't reserve own house"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=self.request.user)
-        res['response'] = True
-        return Response(res, status=status.HTTP_201_CREATED)
+        reserv = serializer.save(user=self.request.user)
+        send_email_task()
+        set_reservation_as_inactive.apply_async(
+            args=[reserv.id], eta=reserv.check_out)
 
     @action(detail=True, methods=['PATCH'])
     def cancel(self, request, *args, **kwargs):
         booking = self.get_object()
+        booking.message = request.data['message']
         booking.status = Reservation.CANCELED
         booking.save()
         res = {'response': True, 'message': 'Статус брони был успешно изменен'}

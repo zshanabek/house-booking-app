@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from django.utils import timezone
+from datetime import datetime
 
 
 class Accommodation(models.Model):
@@ -39,7 +40,7 @@ class House(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
     rating = models.FloatField(default=0.0)
-    status = models.IntegerField(default=1)
+    status = models.BooleanField(default=True)
     price = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     guests = models.PositiveIntegerField()
@@ -62,6 +63,13 @@ class House(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
+
+    @property
+    def available(self):
+        now = datetime.now()
+        reservations = self.reservation_set.filter(
+            check_in__gte=now, check_in__lte=now)
+        return reservations.exists()
 
 
 class Room(models.Model):

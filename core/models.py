@@ -13,7 +13,7 @@ def deserialize_user(user):
     }
 
 
-class TrackableDateModel(Model):
+class TrackableDate(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
 
@@ -21,7 +21,7 @@ class TrackableDateModel(Model):
         abstract = True
 
 
-class Message(TrackableDateModel):
+class Message(TrackableDate):
     user = ForeignKey(User, on_delete=CASCADE, verbose_name='user',
                       related_name='from_user', db_index=True)
     recipient = ForeignKey(User, on_delete=CASCADE,

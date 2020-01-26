@@ -13,7 +13,7 @@ from datetime import datetime
 from rest_framework.decorators import action
 from reservation.models import Reservation
 from reservation.serializers import ReservationDatesSerializer
-from .permissions import IsOwnerOrReadOnly, IsGuest, IsHost
+from .permissions import IsOwnerOrReadOnly, IsGuest, IsHost, IsGuestLived
 from rest_framework import permissions
 from rest_framework import generics, mixins
 from .helpers import get_names
@@ -140,6 +140,7 @@ class HouseTypeViewSet(ModelViewSet):
 class ReviewViewSet(ModelViewSet):
     queryset = house_models.Review.objects.all()
     serializer_class = home_serializers.ReviewSerializer
+    permission_classes = (IsGuestLived,)
 
     def get_queryset(self):
         return house_models.Review.objects.filter(house=self.kwargs['house_pk'])

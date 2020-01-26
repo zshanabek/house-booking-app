@@ -194,4 +194,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+CELERY_BROKER_URL = 'redis://h:p613e6fe4b6bfeb9a89951420d86b907a1fc6a5e23bcd10f17a964c56cb2d3350@ec2-3-228-33-254.compute-1.amazonaws.com:20299'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 django_heroku.settings(locals())

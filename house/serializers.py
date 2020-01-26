@@ -110,7 +110,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'price',
-            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations'
+            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations',
         )
 
 
