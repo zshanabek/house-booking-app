@@ -49,7 +49,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         house = get_object_or_404(House, pk=self.request.data['house_id'])
         res = {}
-        if self.request.data['guests'] >= house.guests:
+        if self.request.data['guests'] > house.guests:
             res['response'] = False
             res['errors'] = "The number of booking guests can't exceed the number of house guests"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
@@ -59,7 +59,8 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         serializer.is_valid(raise_exception=True)
         reserv = serializer.save(user=self.request.user)
-        send_email_task()
+        send_email_task.delay(house, self.request.user,
+                              house.user, reserv.id)
         set_reservation_as_inactive.apply_async(
             args=[reserv.id], eta=reserv.check_out)
 

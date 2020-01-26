@@ -18,12 +18,11 @@ def set_reservation_as_inactive(reservation_id):
 
 
 @app.task
-def send_email_task():
-    print("========fdf=======")
-    import pdb
-    pdb.set_trace()
-    send_mail('Celery Task Worked!',
-              'This is proof the task worked!',
+def send_email_task(house, guest, house_owner, reservation_id):
+    sleep(5)
+    send_mail('У вас новая бронь!!!',
+              f'Ваш дом {house} забронировал пользователь {guest.full_name()}!',
               'webmaster@localhost',
-              ['gonocir224@eroyal.net'])
+              [house_owner.email],
+              fail_silently=False)
     return None
