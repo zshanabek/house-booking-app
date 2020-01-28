@@ -1,22 +1,15 @@
 from account.models import User
 from django.shortcuts import get_object_or_404
 from core.models import Message, Image
-from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField
+from rest_framework import serializers
+from account.serializers import UserShortSerializer
+from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, IntegerField
 
 
-class MessageModelSerializer(ModelSerializer):
-    user = CharField(source='user.email', read_only=True)
-    recipient = CharField(source='recipient.email')
-    images = SerializerMethodField()
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        recipient = get_object_or_404(
-            User, email=validated_data['recipient']['email'])
-        msg = Message(recipient=recipient,
-                      body=validated_data['body'], user=user)
-        msg.save()
-        return msg
+class MessageListSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer()
+    recipient = UserShortSerializer()
+    images = serializers.SerializerMethodField()
 
     def get_images(self, obj):
         qs = Image.objects.filter(message=obj)
@@ -31,13 +24,26 @@ class MessageModelSerializer(ModelSerializer):
                   'created_at', 'updated_at')
 
 
-class UserModelSerializer(ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
+    user = IntegerField(source='user.id', read_only=True)
+    recipient = IntegerField(source='recipient.id')
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        recipient = get_object_or_404(
+            User, id=validated_data['recipient']['id'])
+        msg = Message(recipient=recipient,
+                      body=validated_data['body'], user=user)
+        msg.save()
+        return msg
+
     class Meta:
-        model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'userpic')
+        model = Message
+        fields = ('id', 'user', 'recipient', 'body', 'images',
+                  'created_at', 'updated_at')
 
 
-class ImageSerializer(ModelSerializer):
+class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image

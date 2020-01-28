@@ -6,9 +6,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication
 from akv import settings
-from core.serializers import MessageModelSerializer, UserModelSerializer, ImageSerializer
+from core.serializers import MessageSerializer, MessageListSerializer, ImageSerializer
 from core.models import Message, Image
 from rest_framework import permissions
+from account.serializers import UserShortSerializer
 
 
 def modify_data(message, image):
@@ -20,16 +21,28 @@ class MessagePagination(PageNumberPagination):
     page_size = settings.MESSAGES_TO_LOAD
 
 
-class MessageModelViewSet(ModelViewSet):
+class MessageViewSet(ModelViewSet):
     queryset = Message.objects.all()
-    serializer_class = MessageModelSerializer
+    serializer_class = MessageListSerializer
     pagination_class = MessagePagination
     permission_classes = (permissions.IsAuthenticated,)
 
+    action_serializers = {
+        'retrieve': MessageListSerializer,
+        'list': MessageListSerializer,
+        'create': MessageSerializer
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'action_serializers'):
+            if self.action in self.action_serializers:
+                return self.action_serializers[self.action]
+        return super(MessageViewSet, self).get_serializer_class()
+
     def perform_create(self, serializer):
-        recipient = self.request.data['recipient']
+        recipient = int(self.request.data['recipient'])
         res = {}
-        if recipient == self.request.user.email:
+        if recipient == self.request.user.id:
             res['response'] = False
             res['errors'] = "User can't send message to himself"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
@@ -48,9 +61,9 @@ class MessageModelViewSet(ModelViewSet):
         target = self.request.query_params.get('target', None)
         if target is not None:
             self.queryset = self.queryset.filter(
-                Q(recipient=request.user, user__email=target) |
-                Q(recipient__email=target, user=request.user))
-        return super(MessageModelViewSet, self).list(request, *args, **kwargs)
+                Q(recipient=request.user, user__id=target) |
+                Q(recipient__id=target, user=request.user))
+        return super(MessageViewSet, self).list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         msg = get_object_or_404(
@@ -63,7 +76,7 @@ class MessageModelViewSet(ModelViewSet):
 
 class ChatModelViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserModelSerializer
+    serializer_class = UserShortSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
@@ -73,5 +86,6 @@ class ChatModelViewSet(ModelViewSet):
         recipient_ids = messages.values_list('recipient_id', flat=True)
         ids = list(user_ids) + list(recipient_ids)
         ids = list(set(ids))
+        ids.remove(request.user.id)
         self.queryset = self.queryset.filter(id__in=ids)
         return super(ChatModelViewSet, self).list(request, *args, **kwargs)
