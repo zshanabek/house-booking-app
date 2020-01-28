@@ -3,7 +3,7 @@
     <object model="account.user" pk="1">
         <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
         <field name="email" type="CharField">admin@mail.com</field>
-        <field name="phone" type="CharField">87785547554</field>
+        <field name="phone" type="CharField">87785547551</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
         <field name="first_name" type="CharField">Zhunisali</field>
@@ -51,7 +51,7 @@
     <object model="account.user" pk="5">
         <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
         <field name="email" type="CharField">zshanabek@gmail.com</field>
-        <field name="phone" type="CharField">87785547558</field>
+        <field name="phone" type="CharField">+77785547558</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>
         <field name="first_name" type="CharField">Jonas</field>
@@ -360,6 +360,7 @@
         <field name="guests" type="IntegerField">1</field>
         <field name="status" type="IntegerField">1</field>
         <field name="created_at" type="DateField">2019-12-22</field>
+        <field name="updated_at" type="DateField">2019-12-22</field>
         <field name="accepted_house" type="BooleanField">False</field>
     </object>
     <object model="reservation.reservation" pk="2">
@@ -372,6 +373,7 @@
         <field name="guests" type="IntegerField">1</field>
         <field name="status" type="IntegerField">1</field>
         <field name="created_at" type="DateField">2019-12-22</field>
+        <field name="updated_at" type="DateField">2019-12-22</field>
         <field name="accepted_house" type="BooleanField">False</field>
     </object>
     <object model="reservation.reservation" pk="3">
@@ -384,6 +386,7 @@
         <field name="guests" type="IntegerField">1</field>
         <field name="status" type="IntegerField">1</field>
         <field name="created_at" type="DateField">2019-12-22</field>
+        <field name="updated_at" type="DateField">2019-12-22</field>
         <field name="accepted_house" type="BooleanField">False</field>
     </object>
     <object model="reservation.reservation" pk="4">
@@ -396,6 +399,7 @@
         <field name="guests" type="IntegerField">1</field>
         <field name="status" type="IntegerField">1</field>
         <field name="created_at" type="DateField">2019-12-22</field>
+        <field name="updated_at" type="DateField">2019-12-22</field>
         <field name="accepted_house" type="BooleanField">False</field>
     </object>
     <object model="reservation.reservation" pk="5">
@@ -408,6 +412,7 @@
         <field name="guests" type="IntegerField">1</field>
         <field name="status" type="IntegerField">1</field>
         <field name="created_at" type="DateField">2019-12-22</field>
+        <field name="updated_at" type="DateField">2019-12-22</field>
         <field name="accepted_house" type="BooleanField">False</field>
     </object>
 </django-objects>

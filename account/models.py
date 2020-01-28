@@ -66,4 +66,4 @@ class OTP(models.Model):
     ban_date = models.DateTimeField(default=None, null=True)
 
     def __str__(self):
-        return self.phone
+        return f"{self.phone}"
