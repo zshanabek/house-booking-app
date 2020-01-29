@@ -4,6 +4,8 @@ from house.models import House
 from account.serializers import UserShortSerializer
 from account.models import User
 from house.serializers import HouseListSerializer
+from datetime import datetime
+from .tasks import send_email_task, set_reservation_as_inactive
 
 
 class ReservationDatesSerializer(serializers.ModelSerializer):
@@ -23,6 +25,6 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('id', 'check_in', 'check_out',
-                  'guests', 'status', 'created_at', 'accepted_house', 'user', 'house_id', 'house', 'owner', 'message')
-        read_only_fields = ('message', 'status',)
+        fields = ('id', 'check_in', 'check_out', 'days', 'guests', 'status', 'created_at',
+                  'accepted_house', 'user', 'house_id', 'house', 'owner', 'message')
+        read_only_fields = ('message', 'status', 'days',)

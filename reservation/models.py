@@ -4,7 +4,7 @@ from house.models import House
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from core.models import TrackableDate
-
+import datetime
 
 class Reservation(TrackableDate):
     DEFAULT = 0
@@ -19,7 +19,14 @@ class Reservation(TrackableDate):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     check_in = models.DateField()
     check_out = models.DateField()
+    days = models.IntegerField()
     guests = models.IntegerField()
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     message = models.CharField(max_length=1000)
     accepted_house = models.BooleanField(default=None, null=True)
+
+
+    def save(self, *args, **kwargs):
+        delta = self.check_out - self.check_in
+        self.days = delta.days
+        super(Reservation, self).save(*args, **kwargs)

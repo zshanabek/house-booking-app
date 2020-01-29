@@ -58,6 +58,8 @@ class User(AbstractBaseUser):
         # Simplest possible answer: Yes, always
         return True
 
+    def to_json(self):
+        return {'full_name': f'{self.first_name} {self.last_name}', 'id': self.id}
 
 class OTP(models.Model):
     phone = PhoneNumberField(unique=True)

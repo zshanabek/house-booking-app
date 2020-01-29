@@ -18,11 +18,10 @@ def set_reservation_as_inactive(reservation_id):
 
 
 @app.task
-def send_email_task(house, guest, house_owner, reservation_id):
-    sleep(5)
-    send_mail('У вас новая бронь!!!',
-              f'Ваш дом {house} забронировал пользователь {guest.full_name()}!',
+def send_email_task(house, guest, owner, owner_email, reservation_id):
+    send_mail('Новая бронь на AKV',
+              f'Здравствуйте, {owner}. Ваш дом {house} забронировал пользователь {guest}!',
               'webmaster@localhost',
-              [house_owner.email],
+              [owner_email],
               fail_silently=False)
     return None

@@ -2,7 +2,7 @@
 <django-objects version="1.0">
     <object model="account.user" pk="1">
         <field name="password" type="CharField">pbkdf2_sha256$150000$uGYf2T6LQ3wK$aqPwjOUqnR2C5Mz0ASj7VSwItsqZnZaETJI01w5WAOI=</field>
-        <field name="email" type="CharField">admin@mail.com</field>
+        <field name="email" type="CharField">150107007@stu.sdu.edu.kz</field>
         <field name="phone" type="CharField">87785547551</field>
         <field name="birth_day" type="DateField">2012-12-12</field>
         <field name="gender" type="IntegerField">0</field>

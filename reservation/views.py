@@ -59,10 +59,9 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         serializer.is_valid(raise_exception=True)
         reserv = serializer.save(user=self.request.user)
-        send_email_task.delay(house, self.request.user,
-                              house.user, reserv.id)
-        set_reservation_as_inactive.apply_async(
-            args=[reserv.id], eta=reserv.check_out)
+        send_email_task(house.name, self.request.user.full_name(),
+                              house.user.full_name(), house.user.email, reserv.id)
+        set_reservation_as_inactive.apply_async(args=[reserv.id], eta=reserv.check_out)
 
     @action(detail=True, methods=['PATCH'])
     def cancel(self, request, *args, **kwargs):

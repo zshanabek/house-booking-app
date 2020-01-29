@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from django.utils import timezone
 from datetime import datetime
+from core.models import TrackableDate
 
 
 class Accommodation(models.Model):
@@ -33,7 +34,7 @@ class NearBuilding(models.Model):
         return self.name
 
 
-class House(models.Model):
+class House(TrackableDate):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=1000)
     address = models.CharField(max_length=255)
@@ -63,6 +64,9 @@ class House(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
+    
+    def to_json(self):
+        return {'name': self.name, 'id': self.id, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
 
     @property
     def available(self):
