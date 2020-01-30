@@ -260,8 +260,5 @@ class BlockedDateIntervalViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         house = get_object_or_404(house_models.House, pk=kwargs['house_pk'])
         queryset = house_models.BlockedDateInterval.objects.filter(house=house)
-        rqueryset = Reservation.objects.filter(house=house, accepted_house=True)
         serializer = self.get_serializer(queryset, many=True)
-        rserializer = ReservationDatesSerializer(rqueryset, many=True)
-        dates = serializer.data + rserializer.data
-        return Response(dates)
+        return Response(serializer.data)
