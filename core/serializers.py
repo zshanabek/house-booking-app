@@ -27,6 +27,7 @@ class MessageListSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     user = IntegerField(source='user.id', read_only=True)
     recipient = IntegerField(source='recipient.id')
+    images = SerializerMethodField()
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -36,6 +37,13 @@ class MessageSerializer(serializers.ModelSerializer):
                       body=validated_data['body'], user=user)
         msg.save()
         return msg
+
+    def get_images(self, obj):
+        qs = Image.objects.filter(message=obj)
+        if len(qs) == 0:
+            return None
+        images = ImageSerializer(qs, many=True).data
+        return images
 
     class Meta:
         model = Message
