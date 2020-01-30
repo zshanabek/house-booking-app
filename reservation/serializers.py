@@ -10,10 +10,11 @@ from .tasks import send_email_task, set_reservation_as_inactive
 
 class ReservationDatesSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
+    income = serializers.ReadOnlyField()
 
     class Meta:
         model = Reservation
-        fields = ('check_in', 'check_out', 'user')
+        fields = ('check_in', 'check_out', 'user', 'income')
 
 
 class ReservationSerializer(serializers.ModelSerializer):

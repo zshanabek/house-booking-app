@@ -25,8 +25,13 @@ class Reservation(TrackableDate):
     message = models.CharField(max_length=1000)
     accepted_house = models.BooleanField(default=None, null=True)
 
+    @property
+    def income(self):
+        return self.house.price * self.days
 
     def save(self, *args, **kwargs):
         delta = self.check_out - self.check_in
         self.days = delta.days
         super(Reservation, self).save(*args, **kwargs)
+
+    
