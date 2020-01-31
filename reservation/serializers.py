@@ -32,7 +32,7 @@ class ReservationDatesSerializer(serializers.ModelSerializer):
 
 class ReservationSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
-    house = HouseShortSerializer()
+    house = HouseShortSerializer(read_only=True)
     house_id = serializers.PrimaryKeyRelatedField(
         queryset=House.objects.all(), source='house', write_only=True)
     owner = UserShortSerializer(read_only=True, source='house.user')
