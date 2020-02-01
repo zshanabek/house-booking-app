@@ -6,6 +6,11 @@ from account.models import User
 from datetime import datetime
 from .tasks import send_email_task, set_reservation_as_inactive
 
+class PhotoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Photo
+        fields = ('house', 'image',)
 
 class HouseShortSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()

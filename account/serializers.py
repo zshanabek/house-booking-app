@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from utils.sms import SMS
 from .models import *
 from django.contrib.auth import authenticate
 from .models import *
