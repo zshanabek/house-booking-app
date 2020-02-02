@@ -179,6 +179,27 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         queryset=house_models.NearBuilding.objects.all(),
         many=True)
 
+    def update(self, instance, validated_data):
+        rules = validated_data.pop('rules', None)
+        accoms = validated_data.pop('accommodations', None)
+        nears = validated_data.pop('near_buildings', None)
+        instance = super().update(instance, validated_data) # if you want to update other fields
+        if rules is not None:
+            instance.rules.clear()
+            for rule in rules:
+                instance.rules.add(rule)
+            instance.save()
+        if accoms is not None:
+            instance.accommodations.clear()
+            for accom in accoms:
+                instance.accommodations.add(accom)
+        if nears is not None:
+            instance.nears.clear()
+            for near in nears:
+                instance.nears.add(near)
+        instance.save()
+        return instance
+
     class Meta:
         model = house_models.House
         fields = (

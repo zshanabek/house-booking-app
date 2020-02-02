@@ -60,6 +60,7 @@ class HouseViewSet(ModelViewSet):
     action_serializers = {
         'retrieve': home_serializers.HouseDetailSerializer,
         'list': home_serializers.HouseListSerializer,
+        'update': home_serializers.HouseCreateSerializer,
         'create': home_serializers.HouseCreateSerializer
     }
 
@@ -84,6 +85,16 @@ class HouseViewSet(ModelViewSet):
             accommodations = accommodations.split(',')
             queryset = queryset.filter(accommodations__id__in=accommodations)
         return queryset
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)

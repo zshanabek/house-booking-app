@@ -22,10 +22,11 @@ def on_open(ws):
     print("### opened ###")
 
 
-token = "30ea81b25ad124c3dcded80dfdbf3c3bd620cf24"
+token = "a65341fbb0a52910aac873a4e23fcc64f1664bcc"
 #token = "ece27aa267d077b65336e90d8b09f376c82741bb"
-host = "localhost:8000"
+#host = "localhost:8000"
 #host = "akv-technopark.herokuapp.com"
+host = "db9c725c.ngrok.io"
 url = "ws://{}/ws?token={}".format(host, token)
 if __name__ == "__main__":
     websocket.enableTrace(True)
