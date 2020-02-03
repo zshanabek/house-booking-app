@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'house',
     'reservation',
     'core',
-    'corsheaders'
+    'corsheaders',
+    'order'
 ]
 
 MIDDLEWARE = [

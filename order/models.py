@@ -1,9 +1,10 @@
 from django.db import models
 from reservation.models import Reservation
+from core.models import TrackableDate
 
-# Create your models here.
-
-class Payment(models.Model):
-    created_at = models.DateField()
+class Order(TrackableDate):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     amount = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.amount}"

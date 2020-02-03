@@ -1,34 +1,44 @@
+import uuid
 import requests
-from rest_framework import status
-import urllib3
+from requests.auth import HTTPBasicAuth
+
+merchant_id = 523916
+income_secret_key = 'DBaU3ZzmALNsExoD'
+outcome_secret_key = 'AcxCrC2HKzXz92cV'
+auth = HTTPBasicAuth(merchant_id, income_secret_key)
+payment_url = "https://api.paybox.money/v4/payments"
+
+def make_uuid():
+    return str(uuid.uuid4())
 
 class Payment:
-    def __init__(self):
-        self.merchant_id = 22403
-        self.amount = 21
-        self.order_id = 1
-        self.description = "payment"
-        self.url = "https://api.paybox.money/v4/payments"
+    def __init__(self, amount, currency, description, order):
+        self.currency = currency
+        self.order = order
+        self.amount = amount
+        self.description = description
 
-    def _get_body(self):
+    def get_body(self):
         body = {
-            "order": "my-super",
-            "amount": 20,
-            "refund_amount": 0,
             "currency": "KZT",
-            "description": "Описание заказа",
-            "payment_system": "TEST",
-            "cleared": True,
-            "expires_at": "Сутки",
-            "language": "ru",
+            "order": self.order,
+            "amount": self.amount,
+            "description": self.description,
         }
         return body
 
-    def initialize_payment(self):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        body = self._get_body()
-        headers = {'Authorization': 'my-app/0.0.1'}
-        r = requests.post(self.url, data=body, verify=False, headers=headers)
-        print(r.text)
-p = Payment()
-p.initialize_payment()
+    def create_payment(self):
+        body = self.get_body()
+        headers = {'X-Idempotency-Key': make_uuid()}
+        r = requests.post(payment_url, json=body, auth=auth, headers=headers)
+        return r
+
+    def get_payment(self, id):
+        r = requests.get(f"{payment_url}/{id}", auth=auth)
+        return r
+
+p = Payment(2000000, "KZT", "Good description", '243254345246')
+result = p.create_payment()
+print(result.json())
+ok = p.get_payment(142972050)
+print(ok)

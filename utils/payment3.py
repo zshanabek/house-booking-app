@@ -13,7 +13,7 @@ class Payment:
         self.secret_key = "DBaU3ZzmALNsExoD"
         self.merchant_id = 523916
         self.order_id = 1
-        self.description = "payment"
+        self.description = "order"
         self.url = "https://api.paybox.money/init_payment.php"
 
     def _get_body(self):
@@ -30,7 +30,7 @@ class Payment:
         body = self._get_body()
         body = collections.OrderedDict(sorted(body.items()))
         lst = list(body.values())
-        res = ["payment.php"] + lst + [self.secret_key] 
+        res = [".php"] + lst + [self.secret_key] 
         res = [str(i) for i in res]
         res = ';'.join(res).encode('utf-8')
         hashed = hashlib.md5(res).hexdigest()
