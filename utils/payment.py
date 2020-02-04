@@ -11,6 +11,9 @@ payment_url = "https://api.paybox.money/v4/payments"
 def make_uuid():
     return str(uuid.uuid4())
 
+def get_payment_details(id):
+    return requests.get(f"{payment_url}/{id}", auth=auth)
+
 class Payment:
     def __init__(self, amount, currency, description, order):
         self.currency = currency
@@ -33,12 +36,3 @@ class Payment:
         r = requests.post(payment_url, json=body, auth=auth, headers=headers)
         return r
 
-    def get_payment(self, id):
-        r = requests.get(f"{payment_url}/{id}", auth=auth)
-        return r
-
-p = Payment(2000000, "KZT", "Good description", '243254345246')
-result = p.create_payment()
-print(result.json())
-ok = p.get_payment(142972050)
-print(ok)

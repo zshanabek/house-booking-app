@@ -1,9 +1,10 @@
 
 from rest_framework.decorators import api_view
+from rest_framework import request
 from .models import Order
 from django.shortcuts import get_object_or_404
 from reservation.models import Reservation
-from utils.payment import Payment
+from utils.payment import Payment, get_payment_details
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -16,6 +17,14 @@ def create_payment(request):
     p = Payment(reserv.income, "KZT", "Оплата за проживание в доме", str(order.id))
     r = p.create_payment()
     if r.status_code == status.HTTP_201_CREATED:
+        return Response(r.json(), status.HTTP_200_OK)
+    else:
+        return Response({'response': False, 'error_message': r.json()}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view()
+def get_payment(request, pk):
+    r = get_payment_details(pk)
+    if r.status_code == status.HTTP_200_OK:
         return Response(r.json(), status.HTTP_200_OK)
     else:
         return Response({'response': False, 'error_message': r.json()}, status.HTTP_500_INTERNAL_SERVER_ERROR)
