@@ -16,6 +16,8 @@ def create_payment(request):
     order = Order.objects.create(amount=reserv.income, reservation=reserv)
     p = Payment(reserv.income, "KZT", "Оплата за проживание в доме", str(order.id))
     r = p.create_payment()
+    order.payment_id = r.json()['id']
+    order.save()
     if r.status_code == status.HTTP_201_CREATED:
         return Response(r.json(), status.HTTP_200_OK)
     else:
@@ -28,3 +30,11 @@ def get_payment(request, pk):
         return Response(r.json(), status.HTTP_200_OK)
     else:
         return Response({'response': False, 'error_message': r.json()}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def get_payment_status(request):
+    if request.data['status']['code'] == 'success':
+        order = Order.objects.filter(id=int(request.data['order'])).first()
+        order.is_paid = True
+        order.save()
+    return Response(request.data, status.HTTP_200_OK)
