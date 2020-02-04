@@ -49,7 +49,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         house = get_object_or_404(House, pk=self.request.data['house_id'])
         res = {}
-        if self.request.data['guests'] > house.guests:
+        if int(self.request.data['guests']) > house.guests:
             res['response'] = False
             res['errors'] = "The number of booking guests can't exceed the number of house guests"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
