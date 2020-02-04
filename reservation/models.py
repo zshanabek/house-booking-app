@@ -23,6 +23,7 @@ class Reservation(TrackableDate):
     guests = models.IntegerField()
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     message = models.CharField(max_length=1000)
+    is_paid = models.BooleanField(default=False)
     accepted_house = models.BooleanField(default=None, null=True)
 
     @property

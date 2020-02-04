@@ -36,5 +36,7 @@ def get_payment_status(request):
     if request.data['status']['code'] == 'success':
         order = Order.objects.filter(id=int(request.data['order'])).first()
         order.is_paid = True
+        order.reservation.is_paid = True
+        order.reservation.save()
         order.save()
     return Response(request.data, status.HTTP_200_OK)
