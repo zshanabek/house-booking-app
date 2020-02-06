@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'channels',
     'cities_light',
+    'push_notifications',
     # own apps
     'account',
     'house',
@@ -54,6 +55,17 @@ INSTALLED_APPS = [
     'corsheaders',
     'order'
 ]
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "FCM_API_KEY": "AAAAlRKePBg:APA91bEw6nGitau0rITkEGsHkaOdnSyQxYMDJiUaovui2z2WcuhI2nc1CUHUaJfm5xlx5Eqg2gAWDM4sS-8-LHB_GEPgUFfIfgrY-hOgz-BJF7TsAn2BjE_EL4Aqsr8nWoxU72TeeaAc",
+    "GCM_API_KEY": "[your api key]",
+    "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
+    "APNS_TOPIC": "com.example.push_test",
+    "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
+    "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
+    "WP_PRIVATE_KEY": "/path/to/your/private.pem",
+    "WP_CLAIMS": {'sub': "mailto: development@example.com"}
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

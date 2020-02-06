@@ -16,6 +16,16 @@ def set_reservation_as_inactive(reservation_id):
     reservation.status = 2
     reservation.save()
 
+@app.task
+def send_reservation_notification(reservation_id):
+    """
+    This celery task sets the 'status' flag of the reservation object 
+    to 2 in the database after the reservation end time has elapsed.
+    """
+    reservation = Reservation.objects.get(pk=reservation_id)
+    reservation.status = 2
+    reservation.save()
+
 
 @app.task
 def send_email_task(house, guest, owner, owner_email, reservation_id):
