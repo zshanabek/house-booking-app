@@ -10,6 +10,7 @@ from .models import *
 import pytz
 from rest_framework.authtoken.models import Token
 import djoser
+from utils.sms import SMS
 
 utc = pytz.timezone('Asia/Almaty')
 
