@@ -17,7 +17,7 @@ def create_payment(request):
         order = Order.objects.create(amount=reserv.income, reservation=reserv)
         p = Payment(reserv.income, "KZT", "Оплата за проживание в доме", str(order.id))
         r = p.create_payment()
-        order.payment_id = r.json()['id']
+        order.payment_id = int(r.json()['id'])
         order.save()
         if r.status_code == status.HTTP_201_CREATED:
             return Response(r.json(), status.HTTP_200_OK)
