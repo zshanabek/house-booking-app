@@ -88,7 +88,8 @@ class HouseViewSet(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         res = {}
@@ -102,12 +103,6 @@ class HouseViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         house = serializer.save(user=self.request.user)
-        if 'blocked_dates' in self.request.data:
-            blocked_dates = json.loads(self.request.data['blocked_dates'])
-            dserializer = home_serializers.BlockedDateIntervalSerializer(
-                data=blocked_dates, many=True)
-            dserializer.is_valid(raise_exception=True)
-            dserializer.save(house=house)
         photos = self.request.data.getlist('photos')
         for name in photos:
             modified_data = get_names(house.id, name)
