@@ -46,4 +46,4 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
         fields = ('id', 'check_in', 'check_out', 'days', 'guests', 'status', 'created_at',
                   'accepted_house', 'user', 'house', 'house_id', 'owner', 'message')
-        read_only_fields = ('message', 'status', 'days',)
+        read_only_fields = ('message', 'status', 'days', 'accepted_house')

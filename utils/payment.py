@@ -36,3 +36,9 @@ class Payment:
         r = requests.post(payment_url, json=body, auth=auth, headers=headers)
         return r
 
+    def send_income_to_host(self):
+        body = self.get_body()
+        headers = {'X-Idempotency-Key': make_uuid()}
+        r = requests.post(payment_url, json=body, auth=auth, headers=headers)
+        return r
+
