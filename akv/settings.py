@@ -80,6 +80,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 TEMPLATES = [
     {
