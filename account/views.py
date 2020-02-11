@@ -22,9 +22,14 @@ class RegisterView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            token = Token.objects.create(user=user)
             user = UserSerializer(
                 user, context=self.get_serializer_context()).data
-            return Response(user, status=status.HTTP_200_OK)
+            response = {
+                'auth_token': token.key,
+                'user': user
+            }
+            return Response(response, status=status.HTTP_200_OK)
         else:
             errors = serializer.errors
             x = next(iter(errors))
