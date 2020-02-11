@@ -142,7 +142,6 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
-        'token': 'account.serializers.LoginTokenSerializer',
         'user': 'account.serializers.UserSerializer',
         'current_user': 'account.serializers.UserSerializer'
     }

@@ -40,6 +40,31 @@ class RegisterView(generics.GenericAPIView):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
+class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data
+            token, _ = Token.objects.get_or_create(user=user)
+            user = UserSerializer(
+                user, context=self.get_serializer_context()).data
+            response = {
+                'auth_token': token.key,
+                'user': user
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        else:
+            errors = serializer.errors
+            x = next(iter(errors))
+            error = errors[x][0]
+            data = {'response': False,
+                    'error_message': error,
+                    'field': x}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 def code_view(request):
     phone = request.data.get('phone')
