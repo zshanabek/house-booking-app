@@ -142,24 +142,30 @@ class HouseCreateSerializer(serializers.ModelSerializer):
     region_id = serializers.PrimaryKeyRelatedField(
         queryset=Region.objects.all(), source='region', write_only=True)
     rules = serializers.ListField(
-        child=serializers.CharField(), write_only=True
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
     )
     accommodations = serializers.ListField(
-        child=serializers.CharField(), write_only=True
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
     )
     near_buildings = serializers.ListField(
-        child=serializers.CharField(), write_only=True
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
     )
-    blocked_dates = BlockedDateIntervalSerializer(many=True)
+    blocked_dates = BlockedDateIntervalSerializer(many=True, required=False)
 
     def create(self, validated_data):
-        rules_data = validated_data.pop('rules')
-        accommodations_data = validated_data.pop('accommodations')
-        near_buildings_data = validated_data.pop('near_buildings')
-        dates_data = validated_data.pop('blocked_dates')
-
+        rules_data = []
+        accommodations_data = []
+        near_buildings_data = []
+        dates_data = []
+        if 'rules' in validated_data:
+            rules_data = validated_data.pop('rules')
+        if 'accommodations' in validated_data:
+            accommodations_data = validated_data.pop('accommodations')
+        if 'near_buildings' in validated_data:
+            near_buildings_data = validated_data.pop('near_buildings')
+        if 'blocked_dates' in validated_data:
+            dates_data = validated_data.pop('blocked_dates')
         house = house_models.House.objects.create(**validated_data)
-
         for date in dates_data:
             house_models.BlockedDateInterval.objects.create(
                 house=house, **date)
