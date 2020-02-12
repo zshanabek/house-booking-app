@@ -137,7 +137,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'forgot_password/confirm?uid={uid}&token={token}',
+    'ACTIVATION_URL': 'activate?uid={uid}&token={token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
@@ -177,9 +179,6 @@ CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en', 'kz']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['KZ']
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'build/static'),
-# ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
