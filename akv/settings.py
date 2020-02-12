@@ -186,6 +186,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 ASGI_APPLICATION = 'akv.routing.application'
 
+DOMAIN = 'akv.kz'
+SITE_NAME = 'AKV'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
