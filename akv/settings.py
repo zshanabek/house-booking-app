@@ -66,6 +66,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.AllowAllUsersModelBackend']
+
 ROOT_URLCONF = 'akv.urls'
 
 AUTH_USER_MODEL = 'account.User'
@@ -80,12 +83,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'build')],
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
