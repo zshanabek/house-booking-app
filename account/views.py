@@ -1,15 +1,15 @@
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, exceptions, status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import *
+from rest_framework.authtoken.models import Token
+from django.db.models import Q
+import pytz
+import djoser
 import datetime
 from .models import *
-import pytz
-from rest_framework.authtoken.models import Token
-import djoser
+from .serializers import *
 from utils.sms import SMS
 
 utc = pytz.timezone('Asia/Almaty')
@@ -45,6 +45,12 @@ class LoginView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        try:
+            User.objects.get(phone=request.data['phone'])
+        except User.DoesNotExist:
+            data = {'response': False,
+                    'error_message': "Нет такого пользователя"}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             user = serializer.validated_data
             token, _ = Token.objects.get_or_create(user=user)
@@ -56,12 +62,8 @@ class LoginView(generics.GenericAPIView):
             }
             return Response(response, status=status.HTTP_200_OK)
         else:
-            errors = serializer.errors
-            x = next(iter(errors))
-            error = errors[x][0]
             data = {'response': False,
-                    'error_message': error,
-                    'field': x}
+                    'error_message': 'Неправильный логин или пароль'}
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
