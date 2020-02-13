@@ -43,7 +43,7 @@ class User(AbstractBaseUser):
                         'first_name', 'last_name', 'user_type')
 
     def __str__(self):
-        return f"{self.id}; {self.email}; {self.first_name} {self.last_name}"
+        return f"{self.id}; {self.email}; {self.phone}; {self.first_name} {self.last_name}"
 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
