@@ -212,14 +212,14 @@ class HouseCreateSerializer(serializers.ModelSerializer):
                     obj = house_models.Accommodation.objects.create(name=acco)
                 instance.accommodations.add(obj)
         if nears is not None:
-            instance.nears.clear()
+            instance.near_buildings.clear()
             for near in nears:
                 try:
                     obj = get_object_or_404(
                         house_models.NearBuilding, name=near)
                 except:
                     obj = house_models.NearBuilding.objects.create(name=near)
-                instance.nears.add(obj)
+                instance.near_buildings.add(obj)
         instance.save()
         return instance
 
