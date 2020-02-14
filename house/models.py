@@ -53,7 +53,8 @@ class House(TrackableDate):
     discount30days = models.PositiveIntegerField(
         default=0, validators=[MaxValueValidator(100)])
     city = models.ForeignKey('cities_light.City', on_delete=models.CASCADE)
-    region = models.ForeignKey('cities_light.Region', on_delete=models.CASCADE, null=True)
+    region = models.ForeignKey(
+        'cities_light.Region', on_delete=models.CASCADE, null=True)
     country = models.ForeignKey(
         'cities_light.Country', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -64,7 +65,7 @@ class House(TrackableDate):
 
     def __str__(self):
         return "{} {}".format(self.id, self.name)
-    
+
     def to_json(self):
         return {'name': self.name, 'id': self.id, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
 
