@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'gender', 'phone',
                   'first_name', 'last_name', 'birth_day', 'userpic', 'is_active', 'is_phone_confirmed', 'user_type')
+        read_only_fields = ('is_active',)
 
 
 class LoginTokenSerializer(TokenSerializer):
