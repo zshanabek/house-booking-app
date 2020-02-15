@@ -1,0 +1,73 @@
+.CheckboxGroup {
+  &--title {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  &--title-sm {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #000000;
+  }
+  &--label {
+    overflow: hidden;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 32px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+    position: relative;
+    padding-left: 50px;
+    width: 50%;
+    margin-bottom: 25px;
+    &::before {
+      content: "";
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      left: 0;
+      border: 2px solid #a3a2a2;
+      border-radius: 3px;
+    }
+    &-checked {
+      &::before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        content: "\2713";
+        background: #cd3232;
+        border: none;
+      }
+    }
+  }
+  &--group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  &--sm {
+    font-size: 16px;
+    line-height: 20px;
+    padding-left: 36px;
+    margin-bottom: 10px;
+    &::before {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
