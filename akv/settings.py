@@ -174,6 +174,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en', 'kz']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['KZ']
+ASGI_APPLICATION = "akv.routing.application"
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/static/'
@@ -195,7 +196,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-CELERY_BROKER_URL = 'redis://h:p613e6fe4b6bfeb9a89951420d86b907a1fc6a5e23bcd10f17a964c56cb2d3350@ec2-3-226-204-177.compute-1.amazonaws.com:31449'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
