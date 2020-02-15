@@ -1,0 +1,24 @@
+.Footer {
+  height: 70px;
+  width: 100%;
+  background-color: #cd3232;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__text {
+    font-family: "Montserrat";
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 425px) {
+  .Footer__text {
+    font-size: 14px;
+  }
+}

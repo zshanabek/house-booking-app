@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -177,9 +177,9 @@ CITIES_LIGHT_INCLUDE_COUNTRIES = ['KZ']
 ASGI_APPLICATION = "akv.routing.application"
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/static/'
-
 MEDIA_URL = '/media/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
+STATIC_ROOT = '/var/www/static/'
 MEDIA_ROOT = '/var/www/media/'
 
 ASGI_APPLICATION = 'akv.routing.application'

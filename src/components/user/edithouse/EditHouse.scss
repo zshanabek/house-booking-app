@@ -1,0 +1,99 @@
+.EditAd {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+  &__title {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 39px;
+    display: flex;
+    align-items: center;
+    color: #cd3232;
+    margin-bottom: 70px;
+  }
+  &__label {
+    margin-bottom: 20px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  &__input {
+    &--wrapper {
+      position: relative;
+    }
+    &--limit {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 17px;
+      display: flex;
+      align-items: center;
+      text-align: right;
+      color: #bab3b3;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+    &--price {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 26px;
+      line-height: 32px;
+      display: flex;
+      align-items: center;
+      text-align: right;
+      color: #000000;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+    width: 100%;
+    padding: 10px 70px 10px 10px;
+    border: none;
+    border-bottom: 1px solid #d2d2d2;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+  }
+  &__datepicker {
+    margin-bottom: 30px;
+  }
+  &__submit {
+    align-self: center;
+    width: 100%;
+    border: none;
+    background: #cd3232;
+    border-radius: 50px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    margin-top: 50px;
+    &:disabled {
+      background: lightgray;
+    }
+  }
+}
+
+.EditAd .NewAd__pick-image {
+  margin-bottom: 60px;
+}
