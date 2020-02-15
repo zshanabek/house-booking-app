@@ -51,6 +51,8 @@ def payment_status_webhook(request):
 
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
 
     def get_queryset(self):
         reservs = self.request.user.reservation_set.all()
