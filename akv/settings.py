@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'build')],
+        'DIRS': [os.path.join(BASE_DIR, '/var/www/akv/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
