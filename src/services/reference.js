@@ -1,13 +1,13 @@
 import axios from "axios";
 import { url } from "./config";
 
-const HOUSE_TYPES_PATH = "/api/house_types";
-const CITIES_PATH = "/api/cities";
-const REGIONS_PATH = "/api/regions";
-const COUNTRIES_PATH = "/api/countries";
-const ACCOMMODATIONS_PATH = "/api/accommodations";
-const NEAR_BUILDINGS_PATH = "/api/near_buildings";
-const RULES_PATH = "/api/rules";
+const HOUSE_TYPES_PATH = "/api/house_types/";
+const CITIES_PATH = "/api/cities/";
+const REGIONS_PATH = "/api/regions/";
+const COUNTRIES_PATH = "/api/countries/";
+const ACCOMMODATIONS_PATH = "/api/accommodations/";
+const NEAR_BUILDINGS_PATH = "/api/near_buildings/";
+const RULES_PATH = "/api/rules/";
 
 export function houseTypes() {
   return axios({
