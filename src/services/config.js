@@ -1,4 +1,4 @@
-export const url = "http://185.22.65.18";
+export const url = "https://akv.kz";
 // export const url = "https://akv-technopark.herokuapp.com";
 
 export const phraseOverrides = {
