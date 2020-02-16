@@ -4,7 +4,7 @@ import { url } from "./config";
 const SIGN_IN_PATH = "/api/auth/token/login/";
 const CURRENT_USER_PATH = "/api/auth/users/me/";
 const SIGN_UP_PATH = "/api/auth/users/";
-const LOG_OUT_PATH = "/api/auth/token/logout";
+const LOG_OUT_PATH = "/api/auth/token/logout/";
 const SEND_CODE_PATH = "/api/auth/send_code";
 const VERIFY_CODE_PATH = "/api/auth/verify";
 const RESET_PASSWORD_PATH = "/api/auth/users/reset_password/";

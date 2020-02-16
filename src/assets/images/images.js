@@ -9,6 +9,16 @@ export const dacha = require("./dacha.png");
 export const houses = require("./house.png");
 export const hotels = require("./hotel.jpeg");
 
+export const bao = require("./recomendations/bao.jpg");
+export const charyn = require("./recomendations/charyn.jpg");
+export const emel = require("./recomendations/emel.jpg");
+export const ile = require("./recomendations/ile.jpg");
+export const shym = require("./recomendations/shym.jpg");
+export const medeu = require("./recomendations/medeu.jpg");
+export const koktobe = require("./recomendations/koktobe.jpg");
+export const kaindy = require("./recomendations/kaindy.jpg");
+// // export const  = require('./recomendations/.jpg')
+
 export const eventsImage1 = require("./events/eventsImage1.png");
 export const eventsImage2 = require("./events/eventsImage2.png");
 export const eventsImage3 = require("./events/eventsImage3.png");

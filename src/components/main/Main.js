@@ -15,11 +15,14 @@ import { Options } from "../UIComponents/Select";
 import { signIn, signUp, signOut } from "../../actions/user.action";
 
 import {
-  almaty,
-  nursultan,
-  aktobe,
-  shymkent,
-  pavlodar,
+  bao,
+  charyn,
+  emel,
+  ile,
+  shym,
+  medeu,
+  koktobe,
+  kaindy,
   apartments,
   dacha,
   houses,
@@ -119,8 +122,8 @@ class Main extends Component {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: 3,
+        slidesToScroll: 3,
         responsive: [
           {
             breakpoint: 992,
@@ -245,14 +248,11 @@ class Main extends Component {
             <Row>
               <Col sm={12} md={6} lg={7}>
                 <div className="Main__details">
-                  <h1 className="Main__title">AKV.kz предлагает</h1>
+                  <h1 className="Main__title">akv.kz</h1>
                   <p className="Main__description">
-                    • Быстро наити себе уютное и комфортное жилье на любой
-                    выбор!
-                    <br /> • Зарабатывать не выходя из дома разместив обьявление
-                    в нашем сайте!
-                    <br /> • Возможность бронировать или сдавать жилье
-                    круглосуточно 24/7!
+                    • Быстрый поиск жилья и возможность бронирования 24/7
+                    <br /> • Удобная онлайн платформа для размещения вашего
+                    жилья
                   </p>
                 </div>
               </Col>
@@ -466,39 +466,70 @@ class Main extends Component {
             <h1 className="Section__title">Рекомендуем вам</h1>
             <Slider {...slickSettings}>
               <SlickItem
-                image={almaty}
+                image={bao}
                 city__id={75}
                 onClick={this.openCity}
-                title="Алматы"
-                description="Солнечный город, утопающий в зелени, с широкими улицами, красивыми зданиями, многочисленными парками и скверами."
+                title="Большое Алматинское озеро"
+                description="Настоящая лагуна в обрамлении снежных вершин. Название Большое Алматинское озеро говорит за себя, большое озеро захватывающее дух и впечатляющее размахом, расположенное среди заснеженных вершин."
               />
               <SlickItem
-                image={nursultan}
+                image={koktobe}
                 city__id={74}
                 onClick={this.openCity}
-                title="Нурсултан"
-                description="Город будущего, город мечты. который не стоит на месте и постоянно развивается"
+                title="Гора Кок Тобе"
+                description="город как “на ладони”.
+                Аттракционы, скалодром, мини-зоопарк, кафе и рестораны, венчающиеся огромным единственным высокогорным колесом обозрения в мире и телевизионной башней, всё это - Кок тобе."
               />
               <SlickItem
-                image={shymkent}
+                image={shym}
                 city__id={32}
                 onClick={this.openCity}
-                title="Шымкент"
-                description="Город переживший немало веков и расширающися. сохраняя историю страны"
+                title="Горнолыжный курорт «Чимбулак»"
+                description="Самый быстрый снег
+                Расположенный в живописном ущелье Заилийского Алатау на высоте 2260 м над уровнем моря в 25 км от центра города Алматы, горнолыжный курорт “Чимбулак” справа и слева окружен величественными горами со снежными склонами и вечно зелеными елями."
               />
               <SlickItem
-                image={aktobe}
+                image={medeu}
                 city__id={12}
                 onClick={this.openCity}
-                title="Актобе"
-                description="Зеленый современный мегаполис со своими достопримечательностями, скульптурами и памятниками."
+                title="Каток Медео"
+                description="“Сказка” на льду
+                Высокогорный ледовый каток находится в урочище Медео и  является уникальной достопримечательностью Алматы, Медео — крупнейший в мире высокогорный комплекс для зимних видов спорта с самой большой площадью искусственного ледового поля — 10,5 тыс."
               />
               <SlickItem
-                image={pavlodar}
+                image={emel}
                 city__id={47}
                 onClick={this.openCity}
-                title="Павлодар"
-                description="Длительная суровая зима с устойчивым снежным покровом и жаркое лето с небольшим количеством осадков."
+                title="Алтын-Эмель"
+                description="Настоящая пустыня
+                Алтын-Эмель это красные горы, желтые пески, зеленые тугайные джунгли, дикие пейзажи и завораживающие закаты. Притягательная энергия этого места вовлечет вас в интересное и практически мистическое путешествие по степям."
+              />
+              <SlickItem
+                image={ile}
+                city__id={47}
+                onClick={this.openCity}
+                title="Иле-Алатауский национальный парк"
+                description="Первозданная природа
+
+                Иле-Алатауский национальный парк является прародителем всех яблок, в парке всё еще произрастают предки сегодняшних яблок, целые рощи, вследствие город назван в честь этого фрукта и знаменит благодаря сорту яблок “Апорт” который не имеет равных в аромате и вкусе."
+              />
+              <SlickItem
+                image={kaindy}
+                city__id={47}
+                onClick={this.openCity}
+                title="Озеро Каинды"
+                description="Мачты затонувших кораблей
+
+                Название озера происходит от казахского Кайин — береза.Вода в Березовом озере очень холодная и тем не менее его обожают дайверы — подводные съемки очень красивы."
+              />
+              <SlickItem
+                image={charyn}
+                city__id={47}
+                onClick={this.openCity}
+                title="Чарынский каньон"
+                description="Долина замков
+
+                Чарынский каньон - памятник природы, сложенный из осадочных пород, привлекает к себе много взглядов и является местом куда стекается тысячи туристов со всего мира."
               />
             </Slider>
           </div>
@@ -538,7 +569,9 @@ function EventItem(props) {
         <img className="Events__item--image" src={props.image} alt="" />
         <div className="Events__item--details">
           <h5 className="Events__item--title">{props.title}</h5>
-          <p className="Events__item--description">{props.description}</p>
+          <p className="Events__item--description">
+            {props.description.substring(0, 50)}
+          </p>
           <p className="Events__item--date-place">
             <span style={{ fontWeight: 300 }}>Цена:</span> {props.price}
           </p>
