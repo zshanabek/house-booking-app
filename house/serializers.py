@@ -79,6 +79,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     city = serializers.ReadOnlyField(source='city.name')
     house_type = serializers.ReadOnlyField(source='house_type.name')
     is_favourite = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
     rules = RuleSerializer(many=True)
     accommodations = AccommodationSerializer(many=True)
@@ -90,6 +91,11 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     def get_is_favourite(self, obj):
         if self.context['request'].user.id is not None:
             return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        return False
+
+    def get_is_owner(self, obj):
+        if self.context['request'].user == obj.user:
+            return True
         return False
 
     def get_photos(self, obj):
@@ -119,7 +125,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'price',
-            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations', 'reservations'
+            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'is_owner', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations', 'reservations'
         )
 
 
