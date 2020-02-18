@@ -198,5 +198,5 @@ CHANNEL_LAYERS = {
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 django_heroku.settings(locals())
