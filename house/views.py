@@ -93,6 +93,14 @@ class HouseViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         res = {}
+        instance.photos.all().delete()
+        photos = self.request.data.getlist('photos')
+        for name in photos:
+            modified_data = get_names(instance.id, name)
+            file_serializer = home_serializers.PhotoSerializer(
+                data=modified_data)
+            if file_serializer.is_valid(raise_exception=True):
+                file_serializer.save()
         res['response'] = True
         res['message'] = 'Объявление было успешно изменено'
         return Response(res)

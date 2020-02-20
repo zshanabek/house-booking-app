@@ -201,7 +201,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         nears = validated_data.pop('near_buildings', None)
         instance = super().update(instance, validated_data)
         if rules is not None:
-            instance.rules.clear()
+            instance.rules.all().delete()
             for rule in rules:
                 try:
                     obj = get_object_or_404(house_models.Rule, name=rule)
@@ -209,7 +209,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
                     obj = house_models.Rule.objects.create(name=rule)
                 instance.rules.add(obj)
         if accoms is not None:
-            instance.accommodations.clear()
+            instance.accommodations.all().delete()
             for acco in accoms:
                 try:
                     obj = get_object_or_404(
@@ -218,7 +218,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
                     obj = house_models.Accommodation.objects.create(name=acco)
                 instance.accommodations.add(obj)
         if nears is not None:
-            instance.near_buildings.clear()
+            instance.near_buildings.all().delete()
             for near in nears:
                 try:
                     obj = get_object_or_404(
