@@ -33,8 +33,13 @@ class MessageSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         recipient = get_object_or_404(
             User, id=validated_data['recipient']['id'])
+        body = ''
+        if 'body' in validated_data:
+            body = validated_data['body']
+        else:
+            body = None
         msg = Message(recipient=recipient,
-                      body=validated_data['body'], user=user)
+                      body=body, user=user)
         msg.save()
         return msg
 

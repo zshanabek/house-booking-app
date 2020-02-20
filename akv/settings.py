@@ -11,12 +11,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -72,7 +71,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -84,7 +83,6 @@ AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -92,12 +90,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'build')],
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, '/var/www/akv/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,12 +144,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'forgot_password/confirm?uid={uid}&token={token}',
+    'ACTIVATION_URL': 'activate?uid={uid}&token={token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
-        'token': 'account.serializers.LoginTokenSerializer',
         'user': 'account.serializers.UserSerializer',
         'current_user': 'account.serializers.UserSerializer'
     }
@@ -187,16 +184,18 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en', 'kz']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['KZ']
+ASGI_APPLICATION = "akv.routing.application"
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'build/static'),
-# ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, '/var/www/static')]
+STATIC_ROOT = '/var/www/static/'
+MEDIA_ROOT = '/var/www/media/'
 
 ASGI_APPLICATION = 'akv.routing.application'
+
+DOMAIN = 'akv.kz'
+SITE_NAME = 'AKV'
 
 CHANNEL_LAYERS = {
     'default': {
@@ -207,8 +206,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-CELERY_BROKER_URL = 'redis://h:p613e6fe4b6bfeb9a89951420d86b907a1fc6a5e23bcd10f17a964c56cb2d3350@ec2-3-228-33-254.compute-1.amazonaws.com:20299'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-
-django_heroku.settings(locals())
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880

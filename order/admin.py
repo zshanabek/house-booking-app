@@ -1,4 +1,10 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, site
 from .models import Order
 
-admin.site.register(Order)
+
+class OrderAdmin(ModelAdmin):
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'created_at'
+
+
+site.register(Order, OrderAdmin)

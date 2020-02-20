@@ -86,6 +86,7 @@ class ChatModelViewSet(ModelViewSet):
         recipient_ids = messages.values_list('recipient_id', flat=True)
         ids = list(user_ids) + list(recipient_ids)
         ids = list(set(ids))
-        ids.remove(request.user.id)
+        if request.user.id in ids:
+            ids.remove(request.user.id)
         self.queryset = self.queryset.filter(id__in=ids)
         return super(ChatModelViewSet, self).list(request, *args, **kwargs)

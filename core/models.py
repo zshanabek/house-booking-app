@@ -26,7 +26,7 @@ class Message(TrackableDate):
                       related_name='from_user', db_index=True)
     recipient = ForeignKey(User, on_delete=CASCADE,
                            verbose_name='recipient', related_name='to_user', db_index=True)
-    body = TextField(max_length=2000)
+    body = TextField(max_length=2000, null=True)
 
     def __str__(self):
         return '{} {}'.format(self.id, self.body)
@@ -55,7 +55,8 @@ class Message(TrackableDate):
         if the message is new.
         """
         new = self.id
-        self.body = self.body.strip()  # Trimming whitespaces from the body
+        if self.body:
+            self.body = self.body.strip()  # Trimming whitespaces from the body
         super(Message, self).save(*args, **kwargs)
         if new is None:
             self.notify_ws_clients()

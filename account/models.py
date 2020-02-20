@@ -36,14 +36,14 @@ class User(AbstractBaseUser):
     is_phone_confirmed = models.BooleanField(default=False)
     objects = UserManager()
     EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('phone', 'birth_day', 'gender',
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = ('email', 'birth_day', 'gender',
                        'first_name', 'last_name')
     FIELDS_TO_UPDATE = ('birth_day', 'email', 'gender',
                         'first_name', 'last_name', 'user_type')
 
     def __str__(self):
-        return f"{self.id}; {self.email}; {self.first_name} {self.last_name}"
+        return f"{self.id}; {self.email}; {self.phone}; {self.first_name} {self.last_name}"
 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
@@ -60,6 +60,7 @@ class User(AbstractBaseUser):
 
     def to_json(self):
         return {'full_name': f'{self.first_name} {self.last_name}', 'id': self.id}
+
 
 class OTP(models.Model):
     phone = PhoneNumberField(unique=True)

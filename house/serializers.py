@@ -5,6 +5,8 @@ from account.models import User
 from cities_light.models import City, Country, Region
 from reservation.models import Reservation
 import reservation.serializers as rserializers
+from django.shortcuts import get_object_or_404
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = UserShortSerializer(read_only=True)
@@ -77,6 +79,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     city = serializers.ReadOnlyField(source='city.name')
     house_type = serializers.ReadOnlyField(source='house_type.name')
     is_favourite = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
     rules = RuleSerializer(many=True)
     accommodations = AccommodationSerializer(many=True)
@@ -88,6 +91,11 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     def get_is_favourite(self, obj):
         if self.context['request'].user.id is not None:
             return house_models.Favourite.objects.filter(user=self.context['request'].user, house=obj).exists()
+        return False
+
+    def get_is_owner(self, obj):
+        if self.context['request'].user == obj.user:
+            return True
         return False
 
     def get_photos(self, obj):
@@ -106,7 +114,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         qs = house_models.House.objects.filter(city=obj.city)
         houses = HouseListSerializer(qs, many=True).data[:2]
         return houses
-    
+
     def get_reservations(self, obj):
         qs = Reservation.objects.filter(house=obj)
         reservs = rserializers.ReservationDatesSerializer(qs, many=True).data
@@ -117,47 +125,17 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'price',
-            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations', 'reservations'
+            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'is_owner', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations', 'reservations'
         )
 
 
-class RuleRelatedField(serializers.RelatedField):
-    def display_value(self, instance):
-        return instance
+class BlockedDateIntervalSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer(read_only=True, source='house.user')
 
-    def to_representation(self, value):
-        return str(value)
-
-    def to_internal_value(self, data):
-        if (house_models.Rule.objects.filter(name=data).exists() == False):
-            new_rule = house_models.Rule.objects.create(name=data)
-        return house_models.Rule.objects.get(name=data)
-
-
-class AccommodationRelatedField(serializers.RelatedField):
-    def display_value(self, instance):
-        return instance
-
-    def to_representation(self, value):
-        return str(value)
-
-    def to_internal_value(self, data):
-        if (house_models.Accommodation.objects.filter(name=data).exists() == False):
-            new_rule = house_models.Accommodation.objects.create(name=data)
-        return house_models.Accommodation.objects.get(name=data)
-
-
-class NearBuildingRelatedField(serializers.RelatedField):
-    def display_value(self, instance):
-        return instance
-
-    def to_representation(self, value):
-        return str(value)
-
-    def to_internal_value(self, data):
-        if (house_models.NearBuilding.objects.filter(name=data).exists() == False):
-            new_rule = house_models.NearBuilding.objects.create(name=data)
-        return house_models.NearBuilding.objects.get(name=data)
+    class Meta:
+        model = house_models.BlockedDateInterval
+        fields = ('check_in', 'check_out', 'user')
+        read_only_fields = ('user',)
 
 
 class HouseCreateSerializer(serializers.ModelSerializer):
@@ -169,34 +147,85 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         queryset=Country.objects.all(), source='country', write_only=True)
     region_id = serializers.PrimaryKeyRelatedField(
         queryset=Region.objects.all(), source='region', write_only=True)
-    rules = RuleRelatedField(
-        queryset=house_models.Rule.objects.all(),
-        many=True)
-    accommodations = AccommodationRelatedField(
-        queryset=house_models.Accommodation.objects.all(),
-        many=True)
-    near_buildings = NearBuildingRelatedField(
-        queryset=house_models.NearBuilding.objects.all(),
-        many=True)
+    rules = serializers.ListField(
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
+    )
+    accommodations = serializers.ListField(
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
+    )
+    near_buildings = serializers.ListField(
+        child=serializers.CharField(allow_blank=True), write_only=True, required=False
+    )
+    blocked_dates = BlockedDateIntervalSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        rules_data = []
+        accommodations_data = []
+        near_buildings_data = []
+        dates_data = []
+        if 'rules' in validated_data:
+            rules_data = validated_data.pop('rules')
+        if 'accommodations' in validated_data:
+            accommodations_data = validated_data.pop('accommodations')
+        if 'near_buildings' in validated_data:
+            near_buildings_data = validated_data.pop('near_buildings')
+        if 'blocked_dates' in validated_data:
+            dates_data = validated_data.pop('blocked_dates')
+        house = house_models.House.objects.create(**validated_data)
+        for date in dates_data:
+            house_models.BlockedDateInterval.objects.create(
+                house=house, **date)
+        for rule in rules_data:
+            try:
+                obj = get_object_or_404(house_models.Rule, name=rule)
+            except:
+                obj = house_models.Rule.objects.create(name=rule)
+            house.rules.add(obj)
+        for acco in accommodations_data:
+            try:
+                obj = get_object_or_404(house_models.Accommodation, name=acco)
+            except:
+                obj = house_models.Accommodation.objects.create(name=acco)
+            house.accommodations.add(obj)
+        for near in near_buildings_data:
+            try:
+                obj = get_object_or_404(house_models.NearBuilding, name=near)
+            except:
+                obj = house_models.NearBuilding.objects.create(name=near)
+            house.near_buildings.add(obj)
+        return house
 
     def update(self, instance, validated_data):
         rules = validated_data.pop('rules', None)
         accoms = validated_data.pop('accommodations', None)
         nears = validated_data.pop('near_buildings', None)
-        instance = super().update(instance, validated_data) # if you want to update other fields
+        instance = super().update(instance, validated_data)
         if rules is not None:
             instance.rules.clear()
             for rule in rules:
-                instance.rules.add(rule)
-            instance.save()
+                try:
+                    obj = get_object_or_404(house_models.Rule, name=rule)
+                except:
+                    obj = house_models.Rule.objects.create(name=rule)
+                instance.rules.add(obj)
         if accoms is not None:
             instance.accommodations.clear()
-            for accom in accoms:
-                instance.accommodations.add(accom)
+            for acco in accoms:
+                try:
+                    obj = get_object_or_404(
+                        house_models.Accommodation, name=acco)
+                except:
+                    obj = house_models.Accommodation.objects.create(name=acco)
+                instance.accommodations.add(obj)
         if nears is not None:
-            instance.nears.clear()
+            instance.near_buildings.clear()
             for near in nears:
-                instance.nears.add(near)
+                try:
+                    obj = get_object_or_404(
+                        house_models.NearBuilding, name=near)
+                except:
+                    obj = house_models.NearBuilding.objects.create(name=near)
+                instance.near_buildings.add(obj)
         instance.save()
         return instance
 
@@ -205,7 +234,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'city_id', 'region_id', 'country_id', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type_id', 'price',
-            'beds', 'guests', 'discount7days', 'discount30days', 'accommodations', 'near_buildings', 'rules'
+            'beds', 'guests', 'discount7days', 'discount30days', 'rules', 'accommodations', 'near_buildings', 'blocked_dates'
         )
 
 
@@ -239,11 +268,3 @@ class FavouriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = house_models.Favourite
         fields = ('house',)
-
-
-class BlockedDateIntervalSerializer(serializers.ModelSerializer):
-    user = UserShortSerializer(read_only=True, source='house.user')
-
-    class Meta:
-        model = house_models.BlockedDateInterval
-        fields = ('check_in', 'check_out', 'user')
