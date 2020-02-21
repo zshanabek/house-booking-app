@@ -54,6 +54,7 @@ class MessageViewSet(ModelViewSet):
             file_serializer = ImageSerializer(data=modified_data)
             if file_serializer.is_valid(raise_exception=True):
                 file_serializer.save()
+        message.notify_ws_clients()
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.queryset.filter(Q(recipient=request.user) |

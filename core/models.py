@@ -32,7 +32,16 @@ class Message(TrackableDate):
         return '{} {}'.format(self.id, self.body)
 
     def to_json(self):
-        return {'text': self.body, 'id': self.id, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
+        images = []
+        msg = {'body': self.body, 'id': self.id, 'created_at': str(
+            self.created_at), 'updated_at': str(self.updated_at)}
+        for i in self.images.all():
+            a = {}
+            a['message'] = i.id
+            a['image'] = i.image.url
+            images.append(a)
+        msg['images'] = images
+        return msg
 
     def characters(self):
         return len(self.body)
@@ -58,8 +67,6 @@ class Message(TrackableDate):
         if self.body:
             self.body = self.body.strip()  # Trimming whitespaces from the body
         super(Message, self).save(*args, **kwargs)
-        if new is None:
-            self.notify_ws_clients()
 
     class Meta:
         app_label = 'core'
