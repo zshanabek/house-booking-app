@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from house.permissions import IsGuest, IsHost
 from .tasks import set_reservation_as_inactive, send_email_task
+import datetime
 
 
 class ReservationHostViewSet(viewsets.ModelViewSet):
@@ -68,6 +69,11 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
     def cancel(self, request, *args, **kwargs):
         booking = self.get_object()
         booking.message = request.data['message']
+        d = booking.check_in - datetime.date.today()
+        if (booking.accepted_house and booking.status == 0 and d.days <= 3):
+            res = {'response': False,
+                   'message': 'Бронь нельзя отменить по правилам отмены бронирования. Надо отменять за 3 дня до чекина'}
+            return Response(res, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         booking.status = Reservation.CANCELED
         booking.save()
         res = {'response': True, 'message': 'Статус брони был успешно изменен'}
