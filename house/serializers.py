@@ -6,6 +6,7 @@ from cities_light.models import City, Country, Region
 from reservation.models import Reservation
 import reservation.serializers as rserializers
 from django.shortcuts import get_object_or_404
+from .models import BlockedDateInterval
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -49,6 +50,13 @@ class HouseCoordinatesSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'longitude', 'latitude', 'city')
 
 
+class BlockedDateIntervalSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = house_models.BlockedDateInterval
+        fields = ('check_in', 'check_out')
+
+
 class HouseListSerializer(serializers.ModelSerializer):
     city = serializers.ReadOnlyField(source='city.name')
     house_type = serializers.ReadOnlyField(source='house_type.name')
@@ -87,6 +95,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField()
     recommendations = serializers.SerializerMethodField()
     reservations = serializers.SerializerMethodField()
+    blocked_dates = serializers.SerializerMethodField()
 
     def get_is_favourite(self, obj):
         if self.context['request'].user.id is not None:
@@ -116,26 +125,22 @@ class HouseDetailSerializer(serializers.ModelSerializer):
         return houses
 
     def get_reservations(self, obj):
-        qs = Reservation.objects.filter(house=obj)
+        qs = Reservation.objects.filter(house=obj, accepted_house=True)
         reservs = rserializers.ReservationDatesSerializer(qs, many=True).data
         return reservs
+
+    def get_blocked_dates(self, obj):
+        qs = BlockedDateInterval.objects.filter(house=obj)
+        bdates = BlockedDateIntervalSerializer(qs, many=True).data
+        return bdates
 
     class Meta:
         model = house_models.House
         fields = (
             'id', 'name', 'description', 'rooms', 'floor',
             'address', 'longitude', 'latitude', 'house_type', 'price',
-            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'is_owner', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reviews', 'recommendations', 'reservations'
+            'status', 'beds', 'guests', 'rating', 'city', 'is_favourite', 'discount7days', 'discount30days', 'available', 'is_owner', 'photos', 'accommodations', 'near_buildings', 'rules', 'user', 'reservations', 'blocked_dates', 'reviews', 'recommendations'
         )
-
-
-class BlockedDateIntervalSerializer(serializers.ModelSerializer):
-    user = UserShortSerializer(read_only=True, source='house.user')
-
-    class Meta:
-        model = house_models.BlockedDateInterval
-        fields = ('check_in', 'check_out', 'user')
-        read_only_fields = ('user',)
 
 
 class HouseCreateSerializer(serializers.ModelSerializer):
@@ -201,7 +206,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
         nears = validated_data.pop('near_buildings', None)
         instance = super().update(instance, validated_data)
         if rules is not None:
-            instance.rules.clear()
+            instance.rules.all().delete()
             for rule in rules:
                 try:
                     obj = get_object_or_404(house_models.Rule, name=rule)
@@ -209,7 +214,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
                     obj = house_models.Rule.objects.create(name=rule)
                 instance.rules.add(obj)
         if accoms is not None:
-            instance.accommodations.clear()
+            instance.accommodations.all().delete()
             for acco in accoms:
                 try:
                     obj = get_object_or_404(
@@ -218,7 +223,7 @@ class HouseCreateSerializer(serializers.ModelSerializer):
                     obj = house_models.Accommodation.objects.create(name=acco)
                 instance.accommodations.add(obj)
         if nears is not None:
-            instance.near_buildings.clear()
+            instance.near_buildings.all().delete()
             for near in nears:
                 try:
                     obj = get_object_or_404(

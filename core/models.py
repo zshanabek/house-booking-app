@@ -7,10 +7,14 @@ from channels.layers import get_channel_layer
 
 
 def deserialize_user(user):
-    return {
+    msg = {
         'id': user.id, 'email': user.email,
         'first_name': user.first_name, 'last_name': user.last_name
     }
+    msg['userpic'] = None
+    if user.userpic and hasattr(user.userpic, 'url'):
+        msg['userpic'] = user.userpic.url
+    return msg
 
 
 class TrackableDate(Model):
@@ -32,7 +36,16 @@ class Message(TrackableDate):
         return '{} {}'.format(self.id, self.body)
 
     def to_json(self):
-        return {'text': self.body, 'id': self.id, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
+        images = []
+        msg = {'body': self.body, 'id': self.id, 'created_at': str(
+            self.created_at), 'updated_at': str(self.updated_at)}
+        for i in self.images.all():
+            a = {}
+            a['message'] = i.id
+            a['image'] = i.image.url
+            images.append(a)
+        msg['images'] = images
+        return msg
 
     def characters(self):
         return len(self.body)
@@ -42,7 +55,8 @@ class Message(TrackableDate):
         Inform client there is a new message.
         """
         notification = {'type': 'recieve_group_message', 'user': deserialize_user(
-            self.user), 'message': self.to_json()}
+            self.user), 'recipient': deserialize_user(
+            self.recipient), 'message': self.to_json()}
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "{}".format(self.user.id), notification)
@@ -58,8 +72,6 @@ class Message(TrackableDate):
         if self.body:
             self.body = self.body.strip()  # Trimming whitespaces from the body
         super(Message, self).save(*args, **kwargs)
-        if new is None:
-            self.notify_ws_clients()
 
     class Meta:
         app_label = 'core'

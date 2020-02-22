@@ -6,6 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from core.models import TrackableDate
 import datetime
 
+
 class Reservation(TrackableDate):
     DEFAULT = 0
     CANCELED = 1
@@ -22,7 +23,7 @@ class Reservation(TrackableDate):
     days = models.IntegerField()
     guests = models.IntegerField()
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
-    message = models.CharField(max_length=1000)
+    message = models.CharField(max_length=1000, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
     accepted_house = models.BooleanField(default=None, null=True)
 
@@ -35,4 +36,5 @@ class Reservation(TrackableDate):
         self.days = delta.days
         super(Reservation, self).save(*args, **kwargs)
 
-    
+    def __str__(self):
+        return f"House: {self.house.name}; User: {self.user.email}; Owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out}; accepted: {self.accepted_house}; paid: {self.is_paid}"
