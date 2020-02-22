@@ -35,3 +35,6 @@ class Reservation(TrackableDate):
         delta = self.check_out - self.check_in
         self.days = delta.days
         super(Reservation, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"House: {self.house.name}; User: {self.user.email}; Owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out}; accepted: {self.accepted_house}; paid: {self.is_paid}"
