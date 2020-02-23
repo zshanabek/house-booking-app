@@ -14,9 +14,9 @@ class ReservationManager(models.Manager):
         check_out = kwargs.get("check_out")
         house = kwargs.get("house")
         filter_params = dict(check_in__lte=check_out, check_out__gte=check_in)
-        reservs = Reservation.objects.filter(
+        reservs = self.filter(
             **filter_params, house=house)
-        return self.filter()
+        return reservs
 
 
 class Reservation(TrackableDate):
