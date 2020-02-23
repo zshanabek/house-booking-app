@@ -73,15 +73,14 @@ class HouseViewSet(ModelViewSet):
     def get_queryset(self):
         dates = self.request.query_params.get('dates', None)
         accommodations = self.request.query_params.get('accommodations', None)
-        queryset = house_models.House.objects.filter(
-            ~Q(user=self.request.user))
+        queryset = house_models.House.objects.all()
         check_in = self.request.query_params.get('check_in', None)
         check_out = self.request.query_params.get('check_out', None)
         if check_in and check_out:
             check_in = datetime.strptime(check_in, '%Y-%m-%d')
             check_out = datetime.strptime(check_out, '%Y-%m-%d')
             queryset = queryset.filter(
-                Q(blocked_dates__check_in__lte=check_in), Q(blocked_dates__check_out__lte=check_out))
+                Q(blocked_dates__check_in__gte=check_in), Q(blocked_dates__check_out__lte=check_out))
         if accommodations:
             accommodations = accommodations.split(',')
             queryset = queryset.filter(accommodations__id__in=accommodations)

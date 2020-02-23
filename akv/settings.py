@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'channels',
     'cities_light',
-    'push_notifications',
+    'fcm_django',
     # own apps
     'account',
     'house',

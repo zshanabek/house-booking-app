@@ -39,11 +39,14 @@ class Message(TrackableDate):
         images = []
         msg = {'body': self.body, 'id': self.id, 'created_at': str(
             self.created_at), 'updated_at': str(self.updated_at)}
-        for i in self.images.all():
-            a = {}
-            a['message'] = i.id
-            a['image'] = i.image.url
-            images.append(a)
+        if len(self.images.all()) == 0:
+            images = None
+        else:
+            for i in self.images.all():
+                a = {}
+                a['message'] = i.id
+                a['image'] = i.image.url
+                images.append(a)
         msg['images'] = images
         return msg
 

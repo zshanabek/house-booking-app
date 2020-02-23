@@ -19,6 +19,11 @@ from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'devices', FCMDeviceAuthorizedViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +34,7 @@ urlpatterns = [
     path('api/', include('house.urls')),
     path('api/', include('reservation.urls')),
     path('api/', include('core.urls')),
+    path('api/', include(router.urls)),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
 ]
 

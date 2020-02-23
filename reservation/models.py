@@ -7,6 +7,18 @@ from core.models import TrackableDate
 import datetime
 
 
+class ReservationManager(models.Manager):
+
+    def check_reservation(self, **kwargs):
+        check_in = kwargs.get("check_in")
+        check_out = kwargs.get("check_out")
+        house = kwargs.get("house")
+        filter_params = dict(check_in__lte=check_out, check_out__gte=check_in)
+        reservs = Reservation.objects.filter(
+            **filter_params, house=house)
+        return self.filter()
+
+
 class Reservation(TrackableDate):
     DEFAULT = 0
     CANCELED = 1
@@ -27,6 +39,7 @@ class Reservation(TrackableDate):
     is_paid = models.BooleanField(default=False)
     accepted_house = models.BooleanField(default=None, null=True)
 
+    objects = ReservationManager()
     @property
     def income(self):
         return self.house.price * self.days
