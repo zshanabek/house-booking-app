@@ -42,6 +42,7 @@ class HouseCoordinatesList(mixins.ListModelMixin,
     filter_fields = ['city', ]
     search_fields = ['address', ]
     ordering_fields = ['rating', 'price']
+    pagination_class = None
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

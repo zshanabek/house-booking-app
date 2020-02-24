@@ -44,10 +44,11 @@ class NearBuildingSerializer(serializers.ModelSerializer):
 
 
 class HouseCoordinatesSerializer(serializers.ModelSerializer):
+    house_type = serializers.ReadOnlyField(source='house_type.name')
 
     class Meta:
         model = house_models.House
-        fields = ('id', 'name', 'longitude', 'latitude', 'city')
+        fields = ('id', 'name', 'house_type', 'longitude', 'latitude', 'city')
 
 
 class BlockedDateIntervalSerializer(serializers.ModelSerializer):
