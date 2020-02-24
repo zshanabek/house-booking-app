@@ -219,11 +219,13 @@ class RuleViewSet(ModelViewSet):
 
 class FavouriteViewSet(ModelViewSet):
     queryset = house_models.Favourite.objects.all()
-    serializer_class = home_serializers.FavouriteSerializer
+    serializer_class = home_serializers.HouseListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return house_models.Favourite.objects.filter(user=self.request.user.id)
+        favourites = house_models.Favourite.objects.filter(
+            user=self.request.user.id).values_list('house', flat=True)
+        return house_models.House.objects.filter(id__in=favourites)
 
     def perform_create(self, serializer):
         house = get_object_or_404(house_models.House, pk=self.kwargs['pk'])
@@ -239,8 +241,6 @@ class FavouriteViewSet(ModelViewSet):
         return Response(res, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
-        serializer = home_serializers.FavouriteSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         house = get_object_or_404(house_models.House, pk=kwargs['pk'])
         res = {}
         if house_models.Favourite.objects.filter(house=house.id).exists():
@@ -248,7 +248,6 @@ class FavouriteViewSet(ModelViewSet):
             res['response'] = True
         else:
             res['response'] = False
-            res['errors'] = serializer.errors
         return Response(res, status=status.HTTP_200_OK)
 
 
