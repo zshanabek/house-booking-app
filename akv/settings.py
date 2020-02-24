@@ -187,7 +187,7 @@ ASGI_APPLICATION = "akv.routing.application"
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, '/var/www/static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build')]
 STATIC_ROOT = '/var/www/static/'
 MEDIA_ROOT = '/var/www/media/'
 
