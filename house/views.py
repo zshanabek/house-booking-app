@@ -52,7 +52,8 @@ class HouseCoordinatesList(mixins.ListModelMixin,
 class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.all()
     serializer_class = home_serializers.HouseDetailSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter]
     search_fields = ['address', 'name']
     filter_fields = ['floor', 'rooms', 'beds', 'guests',
                      'price', 'house_type', 'rating', 'city', 'user', 'verified']
@@ -71,22 +72,6 @@ class HouseViewSet(ModelViewSet):
             if self.action in self.action_serializers:
                 return self.action_serializers[self.action]
         return super(HouseViewSet, self).get_serializer_class()
-
-    def get_queryset(self):
-        dates = self.request.query_params.get('dates', None)
-        accommodations = self.request.query_params.get('accommodations', None)
-        queryset = house_models.House.objects.all()
-        check_in = self.request.query_params.get('check_in', None)
-        check_out = self.request.query_params.get('check_out', None)
-        if check_in and check_out:
-            check_in = datetime.strptime(check_in, '%Y-%m-%d')
-            check_out = datetime.strptime(check_out, '%Y-%m-%d')
-            queryset = queryset.filter(
-                Q(blocked_dates__check_in__gte=check_in), Q(blocked_dates__check_out__lte=check_out))
-        if accommodations:
-            accommodations = accommodations.split(',')
-            queryset = queryset.filter(accommodations__id__in=accommodations)
-        return queryset
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
