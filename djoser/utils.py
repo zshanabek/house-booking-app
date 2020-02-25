@@ -1,6 +1,8 @@
 from django.contrib.auth import login, logout, user_logged_in, user_logged_out
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from rest_framework.response import Response
+from rest_framework import status
 
 from djoser.conf import settings
 
@@ -34,5 +36,8 @@ def logout_user(request):
 class ActionViewMixin(object):
     def post(self, request, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return self._action(serializer)
+        if serializer.is_valid():
+            return self._action(serializer)
+        data = {'response': False,
+                'error_message': 'Неправильный логин или пароль'}
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)

@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = tuple(User.REQUIRED_FIELDS) + (
             settings.USER_ID_FIELD,
             settings.LOGIN_FIELD,
-        )
+        ) + ('userpic', 'is_active', 'is_phone_confirmed', 'user_type')
         read_only_fields = (settings.LOGIN_FIELD,)
 
     def update(self, instance, validated_data):
@@ -32,7 +32,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True)
 
     default_error_messages = {
         "cannot_create_user": settings.CONSTANTS.messages.CANNOT_CREATE_USER_ERROR
@@ -99,7 +100,8 @@ class UserCreatePasswordRetypeSerializer(UserCreateSerializer):
 
 
 class TokenCreateSerializer(serializers.Serializer):
-    password = serializers.CharField(required=False, style={"input_type": "password"})
+    password = serializers.CharField(
+        required=False, style={"input_type": "password"})
 
     default_error_messages = {
         "invalid_credentials": settings.CONSTANTS.messages.INVALID_CREDENTIALS_ERROR,
@@ -109,7 +111,8 @@ class TokenCreateSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = None
-        self.fields[settings.LOGIN_FIELD] = serializers.CharField(required=False)
+        self.fields[settings.LOGIN_FIELD] = serializers.CharField(
+            required=False)
 
     def validate(self, attrs):
         password = attrs.get("password")
@@ -212,7 +215,8 @@ class PasswordSerializer(serializers.Serializer):
         try:
             validate_password(attrs["new_password"], user)
         except django_exceptions.ValidationError as e:
-            raise serializers.ValidationError({"new_password": list(e.messages)})
+            raise serializers.ValidationError(
+                {"new_password": list(e.messages)})
         return super().validate(attrs)
 
 

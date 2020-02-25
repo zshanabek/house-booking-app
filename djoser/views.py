@@ -5,7 +5,8 @@ from rest_framework import generics, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-
+from rest_framework.authtoken.models import Token
+from .serializers import UserSerializer
 from djoser import signals, utils
 from djoser.compat import get_user_email
 from djoser.conf import settings
@@ -24,9 +25,13 @@ class TokenCreateView(utils.ActionViewMixin, generics.GenericAPIView):
     def _action(self, serializer):
         token = utils.login_user(self.request, serializer.user)
         token_serializer_class = settings.SERIALIZERS.token
-        return Response(
-            data=token_serializer_class(token).data, status=status.HTTP_200_OK
-        )
+        user = UserSerializer(
+            serializer.user, context=self.get_serializer_context()).data
+        response = {
+            'auth_token': token_serializer_class(token).data['auth_token'],
+            'user': user
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class TokenDestroyView(views.APIView):
@@ -144,6 +149,29 @@ class UserViewSet(viewsets.ModelViewSet):
             settings.EMAIL.activation(self.request, context).send(to)
         elif settings.SEND_CONFIRMATION_EMAIL:
             settings.EMAIL.confirmation(self.request, context).send(to)
+        return user
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = self.perform_create(serializer)
+            token = Token.objects.create(user=user)
+            user = UserSerializer(
+                user, context=self.get_serializer_context()).data
+            response = {
+                'auth_token': token.key,
+                'user': user
+            }
+            headers = self.get_success_headers(serializer.data)
+            return Response(response, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            errors = serializer.errors
+            x = next(iter(errors))
+            error = errors[x][0]
+            data = {'response': False,
+                    'error_message': error,
+                    'field': x}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_update(self, serializer):
         super().perform_update(serializer)

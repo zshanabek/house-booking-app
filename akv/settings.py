@@ -150,10 +150,6 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'SERIALIZERS': {
-        'user': 'account.serializers.UserSerializer',
-        'current_user': 'account.serializers.UserSerializer'
-    }
 }
 
 MESSAGES_TO_LOAD = 15
