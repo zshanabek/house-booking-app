@@ -32,7 +32,7 @@ class Reservation(TrackableDate):
     house = models.ForeignKey(House, on_delete=models.CASCADE)
     check_in = models.DateField()
     check_out = models.DateField()
-    days = models.IntegerField(null=True)
+    days = models.IntegerField()
     guests = models.IntegerField()
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     message = models.CharField(max_length=1000, null=True, blank=True)

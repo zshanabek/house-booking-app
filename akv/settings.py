@@ -144,8 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'forgot_password/confirm?uid={uid}&token={token}',
-    'ACTIVATION_URL': 'activate?uid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'ACTIVATION_URL': 'activate?uid={uid}&token={token}',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
