@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = tuple(User.REQUIRED_FIELDS) + (
             settings.USER_ID_FIELD,
             settings.LOGIN_FIELD,
-        ) + ('userpic', 'is_active', 'is_phone_confirmed', 'user_type')
+        ) + ('userpic', 'is_active', 'is_phone_confirmed', 'user_type', 'iban')
         read_only_fields = (settings.LOGIN_FIELD,)
 
     def update(self, instance, validated_data):

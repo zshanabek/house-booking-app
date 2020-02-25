@@ -34,13 +34,14 @@ class User(AbstractBaseUser):
     userpic = models.ImageField(
         upload_to='userpics', max_length=254, blank=True, null=True)
     is_phone_confirmed = models.BooleanField(default=False)
+    iban = models.CharField(max_length=20, blank=True, null=True)
     objects = UserManager()
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ('email', 'birth_day', 'gender',
                        'first_name', 'last_name')
     FIELDS_TO_UPDATE = ('birth_day', 'email', 'gender',
-                        'first_name', 'last_name', 'user_type')
+                        'first_name', 'last_name', 'user_type', 'iban')
 
     def __str__(self):
         return f"{self.id}; {self.email}; {self.phone}; {self.first_name} {self.last_name}"

@@ -6,11 +6,13 @@ from account.models import User
 from datetime import datetime
 from .tasks import send_email_task, set_reservation_as_inactive
 
+
 class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Photo
         fields = ('house', 'image',)
+
 
 class HouseShortSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
@@ -21,6 +23,7 @@ class HouseShortSerializer(serializers.ModelSerializer):
             return None
         photos = PhotoSerializer(p_qs, many=True).data
         return photos
+
     class Meta:
         model = House
         fields = ('id', 'name', 'photos')
@@ -45,5 +48,6 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ('id', 'check_in', 'check_out', 'days', 'guests', 'status', 'created_at',
-                  'accepted_house', 'user', 'house', 'house_id', 'owner', 'message')
-        read_only_fields = ('message', 'status', 'days', 'accepted_house')
+                  'accepted_house', 'is_paid', 'user', 'house', 'house_id', 'owner', 'message')
+        read_only_fields = ('message', 'status', 'days',
+                            'accepted_house', 'is_paid')
