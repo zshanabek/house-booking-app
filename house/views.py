@@ -18,6 +18,7 @@ from rest_framework import permissions
 from rest_framework import generics, mixins
 from .helpers import get_names
 from cities_light.models import City, Country, Region
+from rest_framework.decorators import api_view
 
 
 class HouseUserList(mixins.ListModelMixin,
@@ -228,28 +229,31 @@ class FavouriteViewSet(ModelViewSet):
             user=self.request.user.id).values_list('house', flat=True)
         return house_models.House.objects.filter(id__in=favourites)
 
-    def perform_create(self, serializer):
-        house = get_object_or_404(house_models.House, pk=self.kwargs['pk'])
-        res = {}
-        if serializer.is_valid():
-            if house_models.Favourite.objects.filter(house=house.id,
-                                                     user=self.request.user).exists() == False:
-                r = serializer.save(user=self.request.user, house=house)
-            res['response'] = True
-        else:
-            res['response'] = False
-            res['errors'] = serializer.errors
-        return Response(res, status=status.HTTP_200_OK)
 
-    def destroy(self, request, *args, **kwargs):
-        house = get_object_or_404(house_models.House, pk=kwargs['pk'])
-        res = {}
-        if house_models.Favourite.objects.filter(house=house.id).exists():
-            house_models.Favourite.objects.filter(house=house.id).delete()
-            res['response'] = True
-        else:
-            res['response'] = False
-        return Response(res, status=status.HTTP_200_OK)
+@api_view(['POST'])
+def favourites_create(request, pk):
+    house = get_object_or_404(house_models.House, pk=pk)
+    res = {}
+    if house_models.Favourite.objects.filter(house=house.id,
+                                             user=request.user).exists() == False:
+        r = house_models.Favourite.objects.create(
+            user=request.user, house=house)
+        res['response'] = True
+    else:
+        res['response'] = False
+    return Response(res, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def favourites_delete(request, pk):
+    house = get_object_or_404(house_models.House, pk=pk)
+    res = {}
+    if house_models.Favourite.objects.filter(house=house.id).exists():
+        house_models.Favourite.objects.filter(house=house.id).delete()
+        res['response'] = True
+    else:
+        res['response'] = False
+    return Response(res, status=status.HTTP_200_OK)
 
 
 class BlockedDateIntervalViewSet(ModelViewSet):

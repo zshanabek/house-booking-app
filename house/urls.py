@@ -4,14 +4,6 @@ from house import views as hviews
 from rest_framework.routers import DefaultRouter
 
 
-favourites_create = hviews.FavouriteViewSet.as_view({
-    'post': 'create'
-})
-
-favourites_delete = hviews.FavouriteViewSet.as_view({
-    'delete': 'destroy'
-})
-
 router = DefaultRouter()
 router.register(r'houses', hviews.HouseViewSet, 'House')
 router.register(r'house_types', hviews.HouseTypeViewSet)
@@ -31,8 +23,8 @@ houses_router.register(r'blocked_dates', hviews.BlockedDateIntervalViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(houses_router.urls)),
-    path('houses/<int:pk>/save_favourite/', favourites_create),
-    path('houses/<int:pk>/cancel_favourite/', favourites_delete),
+    path('houses/<int:pk>/save_favourite/', hviews.favourites_create),
+    path('houses/<int:pk>/cancel_favourite/', hviews.favourites_delete),
     path('my_houses/', hviews.HouseUserList.as_view()),
     path('coordinates/', hviews.HouseCoordinatesList.as_view())
 ]
