@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import MinLengthValidator
 
 GUEST = 0
 HOST = 1
@@ -34,12 +35,13 @@ class User(AbstractBaseUser):
     userpic = models.ImageField(
         upload_to='userpics', max_length=254, blank=True, null=True)
     is_phone_confirmed = models.BooleanField(default=False)
-    iban = models.CharField(max_length=20, blank=True, null=True)
+    iban = models.CharField(max_length=20, validators=[
+                            MinLengthValidator(20)], blank=True, null=True)
     objects = UserManager()
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ('email', 'birth_day', 'gender',
-                       'first_name', 'last_name')
+                       'first_name', 'last_name', 'iban')
     FIELDS_TO_UPDATE = ('birth_day', 'email', 'gender',
                         'first_name', 'last_name', 'user_type', 'iban')
 
