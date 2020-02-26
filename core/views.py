@@ -10,6 +10,7 @@ from core.serializers import MessageSerializer, MessageListSerializer, ImageSeri
 from core.models import Message, Image
 from rest_framework import permissions
 from account.serializers import UserShortSerializer
+from slugify import slugify
 
 
 def modify_data(message, image):
@@ -49,8 +50,10 @@ class MessageViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         message = serializer.save()
         images = self.request.data.getlist('images')
-        for name in images:
-            modified_data = modify_data(message.id, name)
+        for image in images:
+            names = image.name.split('.')
+            image.name = slugify(names[0]) + '.' + names[1]
+            modified_data = modify_data(message.id, image)
             file_serializer = ImageSerializer(data=modified_data)
             if file_serializer.is_valid(raise_exception=True):
                 file_serializer.save()

@@ -100,7 +100,6 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.media',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -186,7 +185,7 @@ ASGI_APPLICATION = "akv.routing.application"
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build')]
-STATIC_ROOT = '/var/www/static/'
+STATIC_ROOT = 'static/'
 MEDIA_ROOT = '/var/www/media/'
 
 ASGI_APPLICATION = 'akv.routing.application'
