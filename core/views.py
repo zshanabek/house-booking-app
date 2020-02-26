@@ -52,7 +52,7 @@ class MessageViewSet(ModelViewSet):
         images = self.request.data.getlist('images')
         for image in images:
             names = image.name.split('.')
-            image.name = slugify(names[0]) + '.' + names[1]
+            image.name = slugify(names[0]) + '.' + names[-1]
             modified_data = modify_data(message.id, image)
             file_serializer = ImageSerializer(data=modified_data)
             if file_serializer.is_valid(raise_exception=True):
