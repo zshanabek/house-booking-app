@@ -50,4 +50,4 @@ class Reservation(TrackableDate):
         super(Reservation, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"House: {self.house.name}; User: {self.user.email}; Owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out}; accepted: {self.accepted_house}; paid: {self.is_paid}"
+        return f"id: {self.id}; House: {self.house.id}-{self.house.name}; User: {self.user.email}; House owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out}; accepted: {self.accepted_house}; paid: {self.is_paid}"
