@@ -78,9 +78,8 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.message = request.data['message']
         d = booking.check_in - datetime.date.today()
-        if (booking.accepted_house and booking.status == 0 and d.days <= 3):
-            res = {'response': False,
-                   'message': 'Бронь нельзя отменить по правилам отмены бронирования. Надо отменять за 3 дня до чекина'}
+        if (booking.accepted_house and booking.status == 0 and booking.is_paid and d.days <= 3):
+            res = {'response': False, 'message': 'Оплаченную бронь нельзя отменить по правилам отмены бронирования. Надо отменять за 3 дня до начала проживания'}
             return Response(res, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         booking.status = Reservation.CANCELED
         booking.save()
