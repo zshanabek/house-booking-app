@@ -193,6 +193,9 @@ class CityViewSet(ModelViewSet):
     ordering_fields = ('name', )
     pagination_class = None
 
+    def get_queryset(self):
+        return City.objects.order_by('name')
+
 
 class RegionViewSet(ModelViewSet):
     http_method_names = ['get']
@@ -203,6 +206,9 @@ class RegionViewSet(ModelViewSet):
     ordering_fields = ('name', )
     pagination_class = None
 
+    def get_queryset(self):
+        return Region.objects.order_by('name')
+
 
 class CountryViewSet(ModelViewSet):
     http_method_names = ['get']
@@ -212,6 +218,9 @@ class CountryViewSet(ModelViewSet):
     filter_fields = ('name', )
     ordering_fields = ('name', )
     pagination_class = None
+
+    def get_queryset(self):
+        return Country.objects.order_by('name')
 
 
 class RuleViewSet(ModelViewSet):
