@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'reservation',
     'core',
     'corsheaders',
-    'order'
+    'order',
+    'extra',
 ]
 
 PUSH_NOTIFICATIONS_SETTINGS = {

@@ -34,6 +34,7 @@ urlpatterns = [
     path('api/', include('house.urls')),
     path('api/', include('reservation.urls')),
     path('api/', include('core.urls')),
+    path('api/', include('extra.urls')),
     path('api/', include(router.urls)),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
 ]
