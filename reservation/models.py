@@ -29,7 +29,8 @@ class Reservation(TrackableDate):
         (EXPIRED, 'Expired')
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
+    house = models.ForeignKey(
+        House, on_delete=models.CASCADE, related_name='reservations')
     check_in = models.DateField()
     check_out = models.DateField()
     days = models.IntegerField()

@@ -8,7 +8,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from house import serializers as home_serializers
 from house import models as house_models
 from url_filter.integrations.drf import DjangoFilterBackend
-from django.db.models import Q
 from datetime import datetime
 from rest_framework.decorators import action
 from reservation.models import Reservation
@@ -19,6 +18,7 @@ from rest_framework import generics, mixins
 from .helpers import get_names
 from cities_light.models import City, Country, Region
 from rest_framework.decorators import api_view
+from django.db.models import Q
 
 
 class HouseUserList(mixins.ListModelMixin,
@@ -76,8 +76,8 @@ class HouseViewSet(ModelViewSet):
         if check_in and check_out:
             check_in = datetime.strptime(check_in, '%Y-%m-%d')
             check_out = datetime.strptime(check_out, '%Y-%m-%d')
-            queryset = queryset.filter(
-                Q(blocked_dates__check_in__gte=check_in), Q(blocked_dates__check_out__lte=check_out))
+            queryset = queryset.exclude(Q(
+                reservations__check_in__lte=check_out) & Q(reservations__check_out__gte=check_in) | Q(blocked_dates__check_in__lte=check_out) & Q(blocked_dates__check_out__gte=check_in))
         if accommodations:
             accommodations = accommodations.split(',')
             queryset = queryset.filter(accommodations__id__in=accommodations)
