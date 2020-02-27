@@ -1,6 +1,7 @@
 import requests
 import random
 from rest_framework import status
+import os
 
 
 class SMS:
@@ -19,6 +20,7 @@ class SMS:
             'psw': self.password,
             'phones': self.phone,
         }
+        print(body)
         return body
 
     def send_message(self, message):
