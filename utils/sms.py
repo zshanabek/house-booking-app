@@ -5,8 +5,8 @@ from rest_framework import status
 
 class SMS:
     def __init__(self, phone):
-        self.login = 'akvproject'
-        self.password = 'N9dBdbRrWGmcJjP'
+        self.login = os.environ.get('SMSC_LOGIN')
+        self.password = os.environ.get('SMSC_PSW')
         self.phone = phone
         self.url = "https://smsc.kz/sys/send.php"
 
