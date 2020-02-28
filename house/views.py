@@ -114,6 +114,12 @@ class HouseViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
         house = serializer.save(user=self.request.user)
+        if 'blocked_dates' in self.request.data:
+            blocked_dates = json.loads(self.request.data['blocked_dates'])
+            dserializer = home_serializers.BlockedDateIntervalSerializer(
+                data=blocked_dates, many=True)
+            dserializer.is_valid(raise_exception=True)
+            dserializer.save(house=house)
         photos = self.request.data.getlist('photos')
         for name in photos:
             modified_data = get_names(house.id, name)
