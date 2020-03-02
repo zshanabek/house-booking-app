@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -151,9 +152,11 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'LOGIN_AFTER_REGISTRATION': True
 }
 
-MESSAGES_TO_LOAD = 15
+
+MESSAGES_TO_LOAD = 50
 
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL_HOST = 'smtp.sendgrid.net'
@@ -185,8 +188,8 @@ ASGI_APPLICATION = "akv.routing.application"
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build')]
-STATIC_ROOT = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = '/var/www/static/'
 MEDIA_ROOT = '/var/www/media/'
 
 ASGI_APPLICATION = 'akv.routing.application'
@@ -207,3 +210,5 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+django_heroku.settings(locals())
