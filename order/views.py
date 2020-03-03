@@ -57,5 +57,5 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         reservs = self.request.user.reservation_set.all()
-        qs = Order.objects.filter(reservation__in=reservs)
+        qs = Order.objects.filter(reservation__in=reservs, is_paid=True)
         return qs

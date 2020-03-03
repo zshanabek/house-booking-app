@@ -85,4 +85,3 @@ whitenoise==5.0.1
 wrapt==1.11.2
 zipp==2.2.0
 zope.interface==4.7.1
-django-heroku==0.3.1
