@@ -8,7 +8,7 @@ from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from house.permissions import IsGuest, IsHost
-from .tasks import set_reservation_as_inactive, send_email_task
+from .tasks import set_reservation_as_inactive_after_approve, set_reservation_as_inactive_after_request, send_email_task
 import datetime
 
 
@@ -27,6 +27,9 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.status = 1
         booking.save()
+        tomorrow = booking.created_at + datetime.timedelta(days=1)
+        set_reservation_as_inactive_after_approve.apply_async(
+            args=[booking.id], eta=tomorrow)
         res = {'response': True, 'message': 'Бронь была принята'}
         return Response(res, status=status.HTTP_200_OK)
 
@@ -71,9 +74,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
         tomorrow = reserv.created_at + datetime.timedelta(days=1)
         send_email_task(house.name, self.request.user.full_name(),
                         house.user.full_name(), house.user.email, reserv.id)
-        set_reservation_as_inactive.apply_async(
-            args=[reserv.id], eta=reserv.check_out)
-        set_reservation_as_inactive.apply_async(
+        set_reservation_as_inactive_after_request.apply_async(
             args=[reserv.id], eta=tomorrow)
 
     @action(detail=True, methods=['PATCH'])

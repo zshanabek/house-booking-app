@@ -8,6 +8,7 @@ from utils.payment import Payment, get_payment_details
 from rest_framework.response import Response
 from .serializers import OrderSerializer
 from house.permissions import IsOwnerOrReadOnly
+from reservation.tasks import set_reservation_as_inactive
 
 
 @api_view(['POST'])
@@ -47,6 +48,8 @@ def payment_status_webhook(request):
         order.reservation.status = 3
         order.reservation.save()
         order.save()
+    set_reservation_as_inactive.apply_async(
+        args=[order.reservation.id], eta=order.reservation.check_out)
     return Response(request.data, status.HTTP_200_OK)
 
 
