@@ -13,8 +13,9 @@ def set_reservation_as_inactive(reservation_id):
     to 2 in the database after the reservation end time has elapsed.
     """
     reservation = Reservation.objects.get(pk=reservation_id)
-    reservation.status = 2
+    reservation.status = 6
     reservation.save()
+
 
 @app.task
 def send_reservation_notification(reservation_id):

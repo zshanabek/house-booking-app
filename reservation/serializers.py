@@ -44,10 +44,11 @@ class ReservationSerializer(serializers.ModelSerializer):
     house_id = serializers.PrimaryKeyRelatedField(
         queryset=House.objects.all(), source='house', write_only=True)
     owner = UserShortSerializer(read_only=True, source='house.user')
+    status_name = serializers.CharField(
+        source='get_status_display', read_only=True)
 
     class Meta:
         model = Reservation
-        fields = ('id', 'check_in', 'check_out', 'days', 'guests', 'status', 'created_at',
-                  'accepted_house', 'is_paid', 'user', 'house', 'house_id', 'owner', 'message')
-        read_only_fields = ('message', 'status', 'days',
-                            'accepted_house', 'is_paid')
+        fields = ('id', 'check_in', 'check_out', 'days', 'guests', 'status',
+                  'status_name', 'created_at', 'user', 'house', 'house_id', 'owner', 'message')
+        read_only_fields = ('message', 'status', 'days', 'status_name')

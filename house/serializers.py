@@ -127,7 +127,7 @@ class HouseDetailSerializer(serializers.ModelSerializer):
 
     def get_reservations(self, obj):
         qs = Reservation.objects.filter(
-            house=obj, accepted_house=True, is_paid=True)
+            house=obj, status=3)
         reservs = rserializers.ReservationDatesSerializer(qs, many=True).data
         return reservs
 

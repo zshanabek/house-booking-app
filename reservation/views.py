@@ -25,7 +25,7 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['PATCH'])
     def accept(self, request, *args, **kwargs):
         booking = self.get_object()
-        booking.accepted_house = True
+        booking.status = 1
         booking.save()
         res = {'response': True, 'message': 'Бронь была принята'}
         return Response(res, status=status.HTTP_200_OK)
@@ -33,7 +33,7 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['PATCH'])
     def reject(self, request, *args, **kwargs):
         booking = self.get_object()
-        booking.accepted_house = False
+        booking.status = 2
         booking.save()
         res = {'response': True, 'message': 'Бронь была отказана'}
         return Response(res, status=status.HTTP_200_OK)
@@ -68,18 +68,21 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             res['errors'] = "В эти даты жилье занято"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         reserv = serializer.save(user=self.request.user)
+        tomorrow = reserv.created_at + datetime.timedelta(days=1)
         send_email_task(house.name, self.request.user.full_name(),
                         house.user.full_name(), house.user.email, reserv.id)
         set_reservation_as_inactive.apply_async(
             args=[reserv.id], eta=reserv.check_out)
+        set_reservation_as_inactive.apply_async(
+            args=[reserv.id], eta=tomorrow)
 
     @action(detail=True, methods=['PATCH'])
     def cancel(self, request, *args, **kwargs):
         booking = self.get_object()
         booking.message = request.data['message']
         d = booking.check_in - datetime.date.today()
-        if (booking.accepted_house and booking.status == 0 and booking.is_paid and d.days <= 3):
-            res = {'response': False, 'message': 'Оплаченную бронь нельзя отменить по правилам отмены бронирования. Надо отменять за 3 дня до начала проживания'}
+        if (booking.status == 3 and d.days <= 5):
+            res = {'response': False, 'message': 'Оплаченную бронь нельзя отменить по правилам отмены бронирования. Надо отменять за 5 дней до начала проживания'}
             return Response(res, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         booking.status = Reservation.CANCELED
         booking.save()

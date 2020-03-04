@@ -14,7 +14,7 @@ from house.permissions import IsOwnerOrReadOnly
 def create_payment(request):
     reservation_id = request.data.get('reservation_id')
     reserv = get_object_or_404(Reservation, pk=reservation_id)
-    if reserv.status != 1 and reserv.accepted_house:
+    if reserv.status == 1:
         order = Order.objects.create(
             amount=reserv.income, reservation=reserv)
         p = Payment(reserv.income, "KZT",
@@ -44,7 +44,7 @@ def payment_status_webhook(request):
     if request.data['status']['code'] == 'success':
         order = Order.objects.filter(id=int(request.data['order'])).first()
         order.is_paid = True
-        order.reservation.is_paid = True
+        order.reservation.status = 3
         order.reservation.save()
         order.save()
     return Response(request.data, status.HTTP_200_OK)

@@ -20,13 +20,21 @@ class ReservationManager(models.Manager):
 
 
 class Reservation(TrackableDate):
-    DEFAULT = 0
-    CANCELED = 1
-    EXPIRED = 2
+    REQUEST = 0
+    APPROVED = 1
+    REJECTED = 2
+    PAID = 3
+    CANCELED = 4
+    EXPIRED = 5
+    INACTIVE = 6
     STATUS_CHOICES = (
-        (DEFAULT, 'Default'),
+        (REQUEST, 'Request'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+        (PAID, 'Paid'),
         (CANCELED, 'Canceled'),
-        (EXPIRED, 'Expired')
+        (EXPIRED, 'Expired'),
+        (INACTIVE, 'Inactive'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(
@@ -37,8 +45,6 @@ class Reservation(TrackableDate):
     guests = models.IntegerField()
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     message = models.CharField(max_length=1000, null=True, blank=True)
-    is_paid = models.BooleanField(default=False)
-    accepted_house = models.BooleanField(default=None, null=True)
 
     objects = ReservationManager()
     @property
@@ -51,4 +57,4 @@ class Reservation(TrackableDate):
         super(Reservation, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"id: {self.id}; House: {self.house.id}-{self.house.name}; User: {self.user.email}; House owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out}; accepted: {self.accepted_house}; paid: {self.is_paid}"
+        return f"id: {self.id}; House: {self.house.id}-{self.house.name}; User: {self.user.email}; House owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out};"
