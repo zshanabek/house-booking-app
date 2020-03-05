@@ -26,7 +26,6 @@ class Reservation(TrackableDate):
     PAID = 3
     CANCELED = 4
     EXPIRED = 5
-    INACTIVE = 6
     STATUS_CHOICES = (
         (REQUEST, 'Request'),
         (APPROVED, 'Approved'),
@@ -34,7 +33,6 @@ class Reservation(TrackableDate):
         (PAID, 'Paid'),
         (CANCELED, 'Canceled'),
         (EXPIRED, 'Expired'),
-        (INACTIVE, 'Inactive'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(

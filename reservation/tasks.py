@@ -15,7 +15,7 @@ def set_reservation_as_inactive(reservation_id):
 
     reservation = Reservation.objects.get(pk=reservation_id)
     if reservation.status == 3:
-        reservation.status = 6
+        reservation.status = 5
         reservation.save()
 
 
@@ -23,7 +23,7 @@ def set_reservation_as_inactive(reservation_id):
 def set_reservation_as_inactive_after_approve(reservation_id):
     reservation = Reservation.objects.get(pk=reservation_id)
     if reservation.status == 1:
-        reservation.status = 6
+        reservation.status = 5
         reservation.save()
 
 
@@ -31,7 +31,7 @@ def set_reservation_as_inactive_after_approve(reservation_id):
 def set_reservation_as_inactive_after_request(reservation_id):
     reservation = Reservation.objects.get(pk=reservation_id)
     if reservation.status == 0:
-        reservation.status = 6
+        reservation.status = 5
         reservation.save()
 
 
@@ -71,6 +71,17 @@ def send_email_on_approve(house, guest, owner, owner_email, reservation_id):
 def send_email_on_reject(house, guest, owner, owner_email, reservation_id):
     send_mail('Ответ по брони на AKV',
               f'Здравствуйте, {owner}. Вашу бронь для дома {house} отклонили',
+              'webmaster@localhost',
+              [owner_email],
+              fail_silently=False)
+    return None
+
+
+@app.task
+def send_email_on_cancel(house, guest, owner, owner_email, reservation_id):
+    booking = Reservation.objects.get(pk=reservation_id)
+    send_mail('Отмена брони на AKV',
+              f'Здравствуйте, {owner}. Пользователь {guest} отменил бронь на жилье {house}. Даты брони. Check in: {booking.check_in}; Check out: {booking.check_out}.',
               'webmaster@localhost',
               [owner_email],
               fail_silently=False)

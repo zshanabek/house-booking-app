@@ -1,15 +1,16 @@
 from django.shortcuts import render
-from .models import Reservation
-from .serializers import ReservationSerializer
 from rest_framework.response import Response
-from house.models import House
 from rest_framework import viewsets
 from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from house.permissions import IsGuest, IsHost
-from .tasks import *
+from django.db.models import Q
 import datetime
+from house.permissions import IsGuest, IsHost
+from house.models import House
+from .serializers import ReservationSerializer
+from .models import Reservation
+from .tasks import *
 
 
 class ReservationHostViewSet(viewsets.ModelViewSet):
@@ -19,7 +20,8 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         houses = self.request.user.house_set.all()
-        qs = Reservation.objects.filter(house__in=houses)
+        qs = Reservation.objects.filter(
+            Q(house__in=houses) & ~Q(status=4) & ~Q(status=5))
         return qs
 
     @action(detail=True, methods=['PATCH'])
@@ -91,5 +93,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         booking.status = Reservation.CANCELED
         booking.save()
+        send_email_on_cancel(booking.house.name, self.request.user.full_name(),
+                             booking.house.user.full_name(), booking.house.user.email, booking.id)
         res = {'response': True, 'message': 'Статус брони был успешно изменен'}
         return Response(res, status=status.HTTP_200_OK)
