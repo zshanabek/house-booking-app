@@ -4,7 +4,7 @@ from house.models import House, Photo
 from account.serializers import UserShortSerializer
 from account.models import User
 from datetime import datetime
-from .tasks import send_email_task, set_reservation_as_inactive
+from .tasks import set_reservation_as_inactive
 
 
 class PhotoSerializer(serializers.ModelSerializer):

@@ -8,7 +8,7 @@ from rest_framework import permissions, status
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from house.permissions import IsGuest, IsHost
-from .tasks import set_reservation_as_inactive_after_approve, set_reservation_as_inactive_after_request, send_email_task
+from .tasks import *
 import datetime
 
 
@@ -28,6 +28,8 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking.status = 1
         booking.save()
         tomorrow = booking.created_at + datetime.timedelta(days=1)
+        send_email_on_approve(booking.house.name, self.request.user.full_name(),
+                              booking.house.user.full_name(), booking.house.user.email, booking.id)
         set_reservation_as_inactive_after_approve.apply_async(
             args=[booking.id], eta=tomorrow)
         res = {'response': True, 'message': 'Бронь была принята'}
@@ -38,6 +40,8 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
         booking = self.get_object()
         booking.status = 2
         booking.save()
+        send_email_on_reject(booking.house.name, self.request.user.full_name(),
+                             booking.house.user.full_name(), booking.house.user.email, booking.id)
         res = {'response': True, 'message': 'Бронь была отказана'}
         return Response(res, status=status.HTTP_200_OK)
 
@@ -72,8 +76,8 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         reserv = serializer.save(user=self.request.user)
         tomorrow = reserv.created_at + datetime.timedelta(days=1)
-        send_email_task(house.name, self.request.user.full_name(),
-                        house.user.full_name(), house.user.email, reserv.id)
+        send_email_on_request(house.name, self.request.user.full_name(),
+                              house.user.full_name(), house.user.email, reserv.id)
         set_reservation_as_inactive_after_request.apply_async(
             args=[reserv.id], eta=tomorrow)
 
