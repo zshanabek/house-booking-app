@@ -11,6 +11,8 @@ from core.models import Message, Image
 from rest_framework import permissions
 from account.serializers import UserShortSerializer
 from slugify import slugify
+import re
+from rest_framework import status
 
 
 def modify_data(message, image):
@@ -40,14 +42,23 @@ class MessageViewSet(ModelViewSet):
                 return self.action_serializers[self.action]
         return super(MessageViewSet, self).get_serializer_class()
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         recipient = int(self.request.data['recipient'])
         res = {}
+        data = self.request.data['body']
         if recipient == self.request.user.id:
             res['response'] = False
             res['errors'] = "User can't send message to himself"
             return Response(res, status=status.HTTP_403_FORBIDDEN)
-        serializer.is_valid(raise_exception=True)
+        emails = re.findall(r'[\w\.-]+@[\w\.-]+', data)
+        phones = re.findall(
+            r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', data)
+        if len(emails) or len(phones) > 0:
+            res['response'] = False
+            res['errors'] = "User can't send message with email or phone"
+            return Response(res, status=status.HTTP_403_FORBIDDEN)
         message = serializer.save()
         images = self.request.data.getlist('images')
         for image in images:
@@ -58,6 +69,7 @@ class MessageViewSet(ModelViewSet):
             if file_serializer.is_valid(raise_exception=True):
                 file_serializer.save()
         message.notify_ws_clients()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.queryset.filter(Q(recipient=request.user) |
