@@ -4,6 +4,7 @@ from house.models import House
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from core.models import TrackableDate
+from django.db.models import Q
 import datetime
 
 
@@ -13,9 +14,9 @@ class ReservationManager(models.Manager):
         check_in = kwargs.get("check_in")
         check_out = kwargs.get("check_out")
         house = kwargs.get("house")
-        filter_params = dict(check_in__lte=check_out, check_out__gte=check_in)
-        reservs = self.filter(
-            **filter_params, house=house)
+        user = kwargs.get("user")
+        reservs = self.filter(Q(check_in__lte=check_out) & Q(
+            check_out__gte=check_in) & Q(house=house) & ((Q(status=3) | Q(status=1)) | (Q(user=user) & Q(status=0))))
         return reservs
 
 

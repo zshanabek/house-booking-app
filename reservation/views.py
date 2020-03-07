@@ -71,7 +71,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
         check_in = serializer.validated_data['check_in']
         check_out = serializer.validated_data['check_out']
         reservs = Reservation.objects.check_reservation(
-            check_in=check_in, check_out=check_out, house=house)
+            check_in=check_in, check_out=check_out, house=house, user=self.request.user)
         if reservs.exists():
             res['response'] = False
             res['errors'] = "В эти даты жилье занято"
