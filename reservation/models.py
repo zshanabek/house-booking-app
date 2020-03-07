@@ -52,7 +52,7 @@ class Reservation(TrackableDate):
 
     def save(self, *args, **kwargs):
         delta = self.check_out - self.check_in
-        self.days = delta.days
+        self.days = delta.days + 1
         super(Reservation, self).save(*args, **kwargs)
 
     def __str__(self):
