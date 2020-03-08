@@ -21,7 +21,7 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         houses = self.request.user.house_set.all()
         qs = Reservation.objects.filter(
-            Q(house__in=houses) & ~Q(status=4) & ~Q(status=5))
+            Q(house__in=houses) & ~Q(status=4) & ~Q(status=5)).order_by('status')
         return qs
 
     @action(detail=True, methods=['PATCH'])
@@ -54,7 +54,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsGuest]
 
     def get_queryset(self):
-        return Reservation.objects.filter(user=self.request.user)
+        return Reservation.objects.filter(user=self.request.user).order_by('status')
 
     def perform_create(self, serializer):
         house = get_object_or_404(House, pk=self.request.data['house_id'])
