@@ -20,8 +20,7 @@ class ReservationHostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         houses = self.request.user.house_set.all()
-        qs = Reservation.objects.filter(
-            Q(house__in=houses) & ~Q(status=4) & ~Q(status=5)).order_by('status')
+        qs = Reservation.objects.filter(house__in=houses).order_by('status')
         return qs
 
     @action(detail=True, methods=['PATCH'])
