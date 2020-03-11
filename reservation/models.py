@@ -1,3 +1,6 @@
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.db import models
 from account.models import User
 from house.models import House
@@ -50,6 +53,12 @@ class Reservation(TrackableDate):
     def income(self):
         return self.house.price * self.days
 
+    def to_json(self):
+        images = []
+        msg = {'id': self.id, 'house': self.house.to_json(), 'check_in': str(self.check_in), 'check_out': str(self.check_out), 'days': self.days, 'guests': self.guests, 'status': self.status,
+               'message': self.message, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at), 'user': self.user.to_json(), 'owner': self.house.user.to_json()}
+        return msg
+
     def save(self, *args, **kwargs):
         delta = self.check_out - self.check_in
         self.days = delta.days + 1
@@ -57,3 +66,15 @@ class Reservation(TrackableDate):
 
     def __str__(self):
         return f"id: {self.id}; House: {self.house.id}-{self.house.name}; User: {self.user.email}; House owner: {self.house.user.email}; check in: {self.check_in}; check out: {self.check_out};"
+
+    def notify_ws_clients(self):
+        """
+        Inform client there is a new booking.
+        """
+        notification = {'type': 'recieve_reservation',
+                        'reservation': self.to_json()}
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "{}".format(self.house.user.id), notification)
+        async_to_sync(channel_layer.group_send)(
+            "{}".format(self.user.id), notification)

@@ -6,17 +6,6 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
 
-def deserialize_user(user):
-    msg = {
-        'id': user.id, 'email': user.email,
-        'first_name': user.first_name, 'last_name': user.last_name
-    }
-    msg['userpic'] = None
-    if user.userpic and hasattr(user.userpic, 'url'):
-        msg['userpic'] = user.userpic.url
-    return msg
-
-
 class TrackableDate(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -57,9 +46,8 @@ class Message(TrackableDate):
         """
         Inform client there is a new message.
         """
-        notification = {'type': 'recieve_group_message', 'user': deserialize_user(
-            self.user), 'recipient': deserialize_user(
-            self.recipient), 'message': self.to_json()}
+        notification = {'type': 'recieve_group_message', 'user': self.user.to_json(), 'recipient':
+                        self.recipient.to_json(), 'message': self.to_json()}
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "{}".format(self.user.id), notification)

@@ -45,6 +45,10 @@ class User(AbstractBaseUser):
     FIELDS_TO_UPDATE = ('birth_day', 'email', 'gender',
                         'first_name', 'last_name', 'user_type', 'iban')
 
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
     def __str__(self):
         return f"{self.id}; {self.email}; {self.phone}; {self.first_name} {self.last_name}"
 
@@ -62,7 +66,12 @@ class User(AbstractBaseUser):
         return True
 
     def to_json(self):
-        return {'full_name': f'{self.first_name} {self.last_name}', 'id': self.id}
+        msg = {'id': self.id, 'email': self.email,
+               'first_name': self.first_name, 'last_name': self.last_name}
+        msg['userpic'] = None
+        if self.userpic and hasattr(self.userpic, 'url'):
+            msg['userpic'] = self.userpic.url
+        return msg
 
 
 class OTP(models.Model):

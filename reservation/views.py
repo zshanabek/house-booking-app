@@ -77,6 +77,7 @@ class ReservationGuestViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_403_FORBIDDEN)
         reserv = serializer.save(user=self.request.user)
         tomorrow = reserv.created_at + datetime.timedelta(days=1)
+        reserv.notify_ws_clients()
         send_email_on_request(house.name, self.request.user.full_name(),
                               house.user.full_name(), house.user.email, reserv.id)
         set_reservation_as_inactive_after_request.apply_async(
