@@ -43,7 +43,7 @@ class House(TrackableDate):
     rating = models.FloatField(default=0.0)
     status = models.BooleanField(default=True)
     price = models.PositiveIntegerField()
-    beds = models.PositiveIntegerField()
+    beds = models.PositiveIntegerField(default=0)
     guests = models.PositiveIntegerField()
     rooms = models.PositiveIntegerField()
     floor = models.IntegerField()
@@ -67,7 +67,7 @@ class House(TrackableDate):
         return "{} {}".format(self.id, self.name)
 
     def to_json(self):
-        return {'name': self.name, 'id': self.id, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
+        return {'id': self.id, 'name': self.name, 'created_at': str(self.created_at), 'updated_at': str(self.updated_at)}
 
     @property
     def available(self):
