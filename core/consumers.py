@@ -55,7 +55,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(message))
 
 
-class ReservationConsumer(AsyncWebsocketConsumer):
+class RequestConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'] == AnonymousUser():
             raise DenyConnection("Invalid User")
