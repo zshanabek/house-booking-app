@@ -1,4 +1,5 @@
 import json
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from rest_framework import status
 from rest_framework.response import Response
@@ -49,6 +50,11 @@ class HouseCoordinatesList(mixins.ListModelMixin,
         return self.list(request, *args, **kwargs)
 
 
+class HouseSetPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size'
+
+
 class HouseViewSet(ModelViewSet):
     queryset = house_models.House.objects.filter(status=True)
     serializer_class = home_serializers.HouseDetailSerializer
@@ -60,6 +66,7 @@ class HouseViewSet(ModelViewSet):
     ordering_fields = ['rating', 'price']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
+    pagination_class = HouseSetPagination
     action_serializers = {
         'retrieve': home_serializers.HouseDetailSerializer,
         'list': home_serializers.HouseListSerializer,

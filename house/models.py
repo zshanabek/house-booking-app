@@ -63,6 +63,10 @@ class House(TrackableDate):
     accommodations = models.ManyToManyField(Accommodation)
     near_buildings = models.ManyToManyField(NearBuilding)
 
+    class Meta:
+        verbose_name = "Объявление"
+        verbose_name_plural = "Объявления"
+
     def __str__(self):
         return "{} {}".format(self.id, self.name)
 
@@ -112,6 +116,10 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(
         House, on_delete=models.CASCADE, related_name='reviews')
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
 
     def __str__(self):
         return '%s' % (self.body)

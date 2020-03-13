@@ -300,7 +300,8 @@ class UserViewSet(viewsets.ModelViewSet):
             to = [get_user_email(user)]
             settings.EMAIL.username_changed_confirmation(
                 self.request, context).send(to)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        res = {'response': True, 'message': 'Номер успешно изменен'}
+        return Response(res, status=status.HTTP_200_OK)
 
     @action(["post"], detail=False, url_path="reset_{}".format(User.USERNAME_FIELD))
     def reset_username(self, request, *args, **kwargs):

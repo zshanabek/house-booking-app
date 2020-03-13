@@ -49,6 +49,11 @@ class Reservation(TrackableDate):
     message = models.CharField(max_length=1000, null=True, blank=True)
 
     objects = ReservationManager()
+
+    class Meta:
+        verbose_name = "Бронирование"
+        verbose_name_plural = "Бронирования"
+
     @property
     def income(self):
         return self.house.price * self.days
