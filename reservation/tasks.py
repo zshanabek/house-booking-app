@@ -86,3 +86,13 @@ def send_email_on_cancel(house, guest, owner, owner_email, reservation_id):
               [owner_email],
               fail_silently=False)
     return None
+
+
+@app.task
+def send_email_on_message_send(msg):
+    send_mail('Новое сообщение на AKV',
+              f'Здравствуйте, {msg.recipient.full_name()}. Пользователь {msg.user.full_name()} написал вам сообщение на платформе AKV.\nСообщение: {msg.body}.\nПожалуйста ответьте ему, зайдя в платформу akv.kz',
+              'webmaster@localhost',
+              [msg.recipient.email],
+              fail_silently=False)
+    return None

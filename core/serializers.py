@@ -4,6 +4,7 @@ from core.models import Message, Image
 from rest_framework import serializers
 from account.serializers import UserShortSerializer
 from rest_framework.serializers import ModelSerializer, CharField, SerializerMethodField, IntegerField
+from reservation.tasks import send_email_on_message_send
 
 
 class MessageListSerializer(serializers.ModelSerializer):
@@ -40,6 +41,7 @@ class MessageSerializer(serializers.ModelSerializer):
             body = None
         msg = Message(recipient=recipient,
                       body=body, user=user)
+        send_email_on_message_send(msg)
         msg.save()
         return msg
 
