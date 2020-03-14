@@ -12,12 +12,20 @@ class Accommodation(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Удобство"
+        verbose_name_plural = "Удобства"
+
 
 class Rule(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Правило"
+        verbose_name_plural = "Правила"
 
 
 class HouseType(models.Model):
@@ -26,12 +34,20 @@ class HouseType(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Вид жилья"
+        verbose_name_plural = "Виды жилья"
+
 
 class NearBuilding(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Ближайшая организация"
+        verbose_name_plural = "Ближайшие организации"
 
 
 class House(TrackableDate):
@@ -81,19 +97,6 @@ class House(TrackableDate):
         return reservations.exists()
 
 
-class Room(models.Model):
-    name = models.CharField(max_length=255)
-    is_room = models.BooleanField()
-
-
-class HouseRoom(models.Model):
-    house = models.ForeignKey(House, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    description = models.TextField()
-    count = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(99)])
-
-
 def nameFile(instance, filename):
     return '/'.join(['images', filename])
 
@@ -107,12 +110,15 @@ class Photo(models.Model):
     def __str__(self):
         return "{} | {}".format(self.house, self.image)
 
+    class Meta:
+        verbose_name = "Фотография"
+        verbose_name_plural = "Фотографии объявлений"
 
-class Review(models.Model):
+
+class Review(TrackableDate):
     body = models.CharField(max_length=1000)
     stars = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)])
-    created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(
         House, on_delete=models.CASCADE, related_name='reviews')
@@ -125,9 +131,13 @@ class Review(models.Model):
         return '%s' % (self.body)
 
 
-class Favourite(models.Model):
+class Favourite(TrackableDate):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     house = models.ForeignKey(House, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Избранный"
+        verbose_name_plural = "Избранные"
 
 
 class BlockedDateInterval(models.Model):
@@ -138,3 +148,7 @@ class BlockedDateInterval(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.check_in.strftime("%Y/%m/%d"), self.check_out.strftime("%Y/%m/%d"))
+
+    class Meta:
+        verbose_name = "Несвободная дата"
+        verbose_name_plural = "Несвободные даты"

@@ -92,7 +92,7 @@ class AbstractCountry(Base):
     phone = models.CharField(max_length=20, null=True, blank=True)
 
     class Meta(Base.Meta):
-        verbose_name_plural = _('countries')
+        verbose_name_plural = _('Страны')
         abstract = True
 
 
@@ -110,8 +110,8 @@ class AbstractRegion(Base):
 
     class Meta(Base.Meta):
         unique_together = (('country', 'name'), ('country', 'slug'))
-        verbose_name = _('region/state')
-        verbose_name_plural = _('regions/states')
+        verbose_name = _('Область')
+        verbose_name_plural = _('Области')
         abstract = True
 
     def get_display_name(self):
@@ -132,6 +132,8 @@ class ToSearchTextField(models.TextField):
     Trivial TextField subclass that passes values through to_search
     automatically.
     """
+
+
 ToSearchTextField.register_lookup(ToSearchIContainsLookup)
 
 
@@ -172,7 +174,7 @@ class AbstractCity(Base):
 
     class Meta(Base.Meta):
         unique_together = (('region', 'name'), ('region', 'slug'))
-        verbose_name_plural = _('cities')
+        verbose_name_plural = _('Города')
         abstract = True
 
     def get_display_name(self):

@@ -66,8 +66,8 @@ class Message(TrackableDate):
 
     class Meta:
         app_label = 'core'
-        verbose_name = 'message'
-        verbose_name_plural = 'messages'
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
         ordering = ('-created_at',)
 
 
@@ -80,6 +80,10 @@ class Image(Model):
         Message, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(
         upload_to=nameFile, max_length=254, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Картинка"
+        verbose_name_plural = "Картинки сообщений"
 
     def __str__(self):
         return "{} | {}".format(self.message.body, self.image)

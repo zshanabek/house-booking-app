@@ -1,14 +1,22 @@
-from django.contrib import admin
 from house import models as house_models
+from django.contrib.admin import ModelAdmin, site
 
 
-admin.site.register(house_models.House)
-admin.site.register(house_models.Room)
-admin.site.register(house_models.HouseRoom)
-admin.site.register(house_models.Photo)
-admin.site.register(house_models.Accommodation)
-admin.site.register(house_models.HouseType)
-admin.site.register(house_models.NearBuilding)
-admin.site.register(house_models.Rule)
-admin.site.register(house_models.Favourite)
-admin.site.register(house_models.BlockedDateInterval)
+class HouseAdmin(ModelAdmin):
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'created_at'
+
+
+class FavouriteAdmin(ModelAdmin):
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'created_at'
+
+
+site.register(house_models.House, HouseAdmin)
+site.register(house_models.Photo)
+site.register(house_models.Accommodation)
+site.register(house_models.HouseType)
+site.register(house_models.NearBuilding)
+site.register(house_models.Rule)
+site.register(house_models.Favourite, FavouriteAdmin)
+site.register(house_models.BlockedDateInterval)
