@@ -196,6 +196,17 @@ class ReviewViewSet(ModelViewSet):
             res['errors'] = serializer.errors
         return Response(res, status=status.HTTP_200_OK)
 
+    def destroy(self, request, *args, **kwargs):
+        res = {}
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            res['response'] = True
+        except:
+            res['response'] = False
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        return Response(res, status=status.HTTP_200_OK)
+
 
 class CityViewSet(ModelViewSet):
     http_method_names = ['get']
