@@ -4,7 +4,6 @@ from requests.auth import HTTPBasicAuth
 
 merchant_id = 523916
 income_secret_key = 'DBaU3ZzmALNsExoD'
-outcome_secret_key = 'AcxCrC2HKzXz92cV'
 auth = HTTPBasicAuth(merchant_id, income_secret_key)
 payment_url = "https://api.paybox.money/v4/payments"
 
